@@ -1,0 +1,10 @@
+description = 'Giraf Rest: Core'
+dependencies {
+    compile group: 'javax.transaction', name: 'jta', version:'1.1'
+    compile group: 'commons-dbcp', name: 'commons-dbcp', version:'1.4'
+
+    compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.38'
+    compile group: 'org.hsqldb', name: 'hsqldb', version:'2.3.3'
+
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version:'5.1.0.Final'
+}

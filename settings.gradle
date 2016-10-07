@@ -1,0 +1,4 @@
+rootProject.name = 'giraf-rest'
+include ':core'
+include ':persistence'
+include ':services'

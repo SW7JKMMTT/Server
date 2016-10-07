@@ -1,0 +1,18 @@
+<enunciate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-2.3.0.xsd">
+
+    <title>REST API</title>
+    <description>Description here</description>
+    <contact>Contact email</contact>
+    <copyright>Copyright notice</copyright>
+
+    <modules>
+        <enunciate slug="Web App API"
+                   version="v1.0"/>
+
+        <jaxrs groupBy="path">
+            <application path="/api"/>
+        </jaxrs>
+        <jackson1 disabled="true" />
+    </modules>
+</enunciate>

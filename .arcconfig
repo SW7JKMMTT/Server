@@ -1,0 +1,7 @@
+{
+  "phabricator.uri" : "http://web.giraf.cs.aau.dk",
+  "unit.engine": "GradleTestEngine",
+  "phutil_libraries": [
+	".arclib"
+  ]
+}

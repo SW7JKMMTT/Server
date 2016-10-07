@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Import necessary DAO and DB transaction management classes -->
+    <import resource="classpath:dao-config.xml"/>
+
+    <!-- Inject DAO classes in service -->
+    <bean id="userService"
+          class="dk.aau.giraf.rest.services.UserService" />
+    <bean id="authService"
+          class="dk.aau.giraf.rest.services.AuthenticationService" />
+    <bean id="pictogramService"
+          class="dk.aau.giraf.rest.services.PictogramService" />
+    <bean id="publicPictogramService"
+          class="dk.aau.giraf.rest.services.PublicPictogramService" />
+    <bean id="departmentService"
+          class="dk.aau.giraf.rest.services.DepartmentService" />
+    <bean id="sequenceService"
+          class="dk.aau.giraf.rest.services.SequenceService"/>
+    <bean id="choiceService"
+          class="dk.aau.giraf.rest.services.ChoiceService"/>
+
+    <tx:annotation-driven />
+    <context:annotation-config />
+    <context:component-scan base-package="dk.aau.giraf.rest" />
+
+</beans>
