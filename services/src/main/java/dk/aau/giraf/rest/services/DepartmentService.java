@@ -2,20 +2,21 @@ package dk.aau.giraf.rest.services;
 
 import dk.aau.giraf.rest.core.Choice;
 import dk.aau.giraf.rest.core.Department;
+import dk.aau.giraf.rest.core.Pictogram;
 import dk.aau.giraf.rest.core.User;
 import dk.aau.giraf.rest.core.authentication.PermissionType;
 import dk.aau.giraf.rest.persistence.DepartmentDao;
+import dk.aau.giraf.rest.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NoContentException;
 import java.util.Collection;
+import java.util.Map;
 
 @Transactional
 @Path("/department")
@@ -125,5 +126,27 @@ public class DepartmentService {
         Department department = departmentDao.byId(id);
         pictogramService.setDepartment(department);
         return pictogramService;
+    }
+
+    @Autowired
+    private UserDao userDao;
+
+    @GET
+    @Path("/test")
+    @Produces("application/json")
+    public Department createPictogram(@Context User user)
+            throws javassist.NotFoundException
+    {
+        Department dep = new Department();
+        dep.setName("Test");
+        User user1 = new User(dep, "Wutface", "password");
+        User user2 = new User(dep, "Wutface01", "sataiergay");
+
+        departmentDao.add(dep);
+        userDao.add(user1);
+        userDao.add(user2);
+        dep.addMember(user1);
+        dep.addMember(user2);
+        return dep;
     }
 }

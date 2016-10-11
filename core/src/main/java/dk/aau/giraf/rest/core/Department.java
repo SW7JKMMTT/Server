@@ -3,18 +3,21 @@ package dk.aau.giraf.rest.core;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dk.aau.giraf.rest.core.weekschedule.WeekSchedule;
+import org.bson.types.ObjectId;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "Department")
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private ObjectId id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -23,7 +26,8 @@ public class Department {
     @LazyCollection(LazyCollectionOption.EXTRA)
     private Collection<User> members;
 
-    protected Department() {
+    public Department() {
+        members = new ArrayList<User>();
     }
 
     public Department(String name) {
@@ -34,11 +38,11 @@ public class Department {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "department")
     private Collection<WeekSchedule> weekSchedules;
 
-    public long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -64,18 +68,23 @@ public class Department {
         this.name = name;
     }
 
-    @Override
-    public int hashCode() {
-        return (int)(getId() ^ (getId() >>> 32));
+    public void addMember(User user) {
+        getMembers().add(user);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj == null || this.getClass() != obj.getClass()) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Department that = (Department)obj;
+        Department that = (Department) o;
 
-        return this.getId() == that.getId();
+        return getId().equals(that.getId());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

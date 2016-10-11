@@ -102,7 +102,7 @@ public class UserService {
 
         User authenticatedUser = token.getUser();
 
-        if(!authenticatedUser.hasPermission(PermissionType.Guardian) && authenticatedUser.getId() != id)
+        if(!authenticatedUser.hasPermission(PermissionType.Guardian))
             throw new NotAuthorizedException(
                 "Non-Guardians can't retrieve detailed userdata from anyone but themselves");
 

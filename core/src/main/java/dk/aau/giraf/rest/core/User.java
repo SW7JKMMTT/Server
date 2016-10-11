@@ -10,13 +10,13 @@ import dk.aau.giraf.rest.core.authentication.PermissionType;
 import dk.aau.giraf.rest.core.weekschedule.WeekSchedule;
 import dk.aau.giraf.rest.core.weekschedule.WeekdayFrame;
 import dk.aau.giraf.rest.core.weekschedule.WeekdayFrameProgress;
+import org.bson.types.ObjectId;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 
 @Entity
 @Table(name = "User")
@@ -24,7 +24,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private ObjectId id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "department_id", nullable = false)
@@ -72,11 +72,11 @@ public class User {
         this.permissions = new ArrayList<>();
     }
 
-    public long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -196,17 +196,18 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) other;
+        User user = (User) o;
 
-        return getId() == user.getId();
+        return getId() != null ? getId().equals(user.getId()) : user.getId() == null;
+
     }
 
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        return getId() != null ? getId().hashCode() : 0;
     }
 }

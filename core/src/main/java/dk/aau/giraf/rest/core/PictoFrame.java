@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "PictoFrame")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @PrimaryKeyJoinColumn(name = "frame_id", referencedColumnName = "id")
 public abstract class PictoFrame extends Frame {
     @Column(nullable = false, unique = false)

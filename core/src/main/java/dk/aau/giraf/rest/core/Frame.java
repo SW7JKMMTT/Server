@@ -11,7 +11,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "Frame")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, property = "type")
 public abstract class Frame {
     @Id

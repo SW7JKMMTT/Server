@@ -99,9 +99,13 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
               depends-on="flyway">
             <property name="dataSource" ref="dataSource" />
             <property name="jpaVendorAdapter">
-                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                    <property name="showSql" value="true" />
-                    <property name="databasePlatform" value="${rest.db.dialect}"/>
+                <bean class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter">
+                    <property name="providerStr" value="mongodb"/>
+                    <property name="host" value="deeznuts.local" />
+                    <property name="username" value="program" />
+                    <property name="password" value="program" />
+                    <property name="database" value="test" />
+                    <property name="createDatabase" value="true" />
                 </bean>
             </property>
             <property name="jpaProperties">
