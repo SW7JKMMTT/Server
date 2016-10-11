@@ -22,7 +22,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
     @Override
     public void remove(T obj) {
-        em.remove(obj);
+        em.remove(em.merge(obj));
     }
 
     protected T getFirst(TypedQuery<T> query) {

@@ -27,11 +27,12 @@ public class Department {
     private Collection<User> members;
 
     public Department() {
-        members = new ArrayList<User>();
+        members = new ArrayList<>();
     }
 
     public Department(String name) {
         this.name = name;
+        members = new ArrayList<>();
     }
 
     @JsonIgnore

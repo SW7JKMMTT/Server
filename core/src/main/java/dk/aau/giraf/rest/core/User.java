@@ -70,6 +70,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.permissions = new ArrayList<>();
+        this.authTokens = new ArrayList<>();
     }
 
     public ObjectId getId() {
@@ -209,5 +210,13 @@ public class User {
     @Override
     public int hashCode() {
         return getId() != null ? getId().hashCode() : 0;
+    }
+
+    public void addToken(AuthToken token) {
+        authTokens.add(token);
+    }
+
+    public void revokeToken(AuthToken token) {
+        authTokens.remove(token);
     }
 }

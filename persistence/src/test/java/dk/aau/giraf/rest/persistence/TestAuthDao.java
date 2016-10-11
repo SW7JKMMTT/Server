@@ -3,14 +3,23 @@ package dk.aau.giraf.rest.persistence;
 import dk.aau.giraf.rest.core.Department;
 import dk.aau.giraf.rest.core.User;
 import dk.aau.giraf.rest.core.authentication.AuthToken;
+import dk.aau.giraf.rest.given.GivenAuthToken;
+import dk.aau.giraf.rest.given.GivenDepartment;
+import dk.aau.giraf.rest.given.GivenUser;
+import org.hibernate.Session;
+import org.hibernate.ogm.OgmSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
@@ -43,7 +52,11 @@ public class TestAuthDao {
 
     @Test
     public void testAdd() throws Exception {
-        User u = userDao.byUsername(department, "Jeff");
+        Department dep = new Department();
+        dep.setName("monstertruck2");
+        departmentDao.add(dep);
+        userDao.add(new User(dep, "Jeff", "password"));
+        User u = userDao.byUsername(dep, "Jeff");
         AuthToken token = new AuthToken("AABBCC", u);
 
         assertNull(authDao.byTokenStr("AABBCC"));
@@ -53,11 +66,12 @@ public class TestAuthDao {
 
     @Test
     public void testRemove() throws Exception {
-        User u = userDao.byUsername(department, "Jeff");
-        AuthToken token = new AuthToken("AABBCC", u);
-        authDao.add(token);
+        Department monster = new GivenDepartment().withName("mmonstertruck").in(departmentDao);
+        User jeff = new GivenUser().withName("Jeff").withPassword("1000").inDepartment(monster).in(userDao);
+        AuthToken token = new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
 
         assertNotNull(authDao.byTokenStr("AABBCC"));
+        jeff.revokeToken(token);
         authDao.remove(token);
         assertNull(authDao.byTokenStr("AABBCC"));
     }

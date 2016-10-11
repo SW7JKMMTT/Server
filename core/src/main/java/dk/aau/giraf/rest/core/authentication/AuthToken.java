@@ -2,6 +2,7 @@ package dk.aau.giraf.rest.core.authentication;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dk.aau.giraf.rest.core.User;
+import org.bson.types.ObjectId;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -15,7 +16,7 @@ import java.util.Random;
 public class AuthToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private ObjectId id;
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -49,7 +50,7 @@ public class AuthToken {
     protected AuthToken() {
     }
 
-    public long getId() {
+    public ObjectId getId() {
         return id;
     }
 
