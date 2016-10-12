@@ -13,26 +13,22 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
               p:ignoreResourceNotFound="true">
             <property name="locations">
                 <list>
-                    <value>classpath:db-local.properties</value>
+                    <value>classpath:db.properties</value>
                     <value>classpath:files.properties</value>
                 </list>
             </property>
         </bean>
 
-        <bean id="dataSource"
-              class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
-            <property name="username" value="${rest.db.username}"/>
-            <property name="password" value="${rest.db.password}"/>
-            <property name="url" value="${rest.db.url}"/>
-            <property name="driverClassName" value="${rest.db.driver}"/>
-        </bean>
-        <bean id="flyway-migration-location" class="java.util.ArrayList">
-            <constructor-arg>
-                <list>
-                    <value>classpath:sql.migration</value>
-                    <value>classpath:sql.localdata</value>
-                </list>
-            </constructor-arg>
+        <bean id="mongo" class="cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean"
+              p:bindIp="${mongo.db.host}"
+              p:port="${mongo.db.port}"/>
+
+        <bean id="vendorAdapter" class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter" depends-on="mongo">
+            <property name="host" value="${mongo.db.host}" />
+            <property name="port" value="${mongo.db.port}" />
+            <property name="createDatabase" value="true" />
+            <property name="providerStr" value="${mongo.db.driver}" />
+            <property name="database" value="${mongo.db.database}" />
         </bean>
     </beans>
 
@@ -44,18 +40,18 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
               p:ignoreResourceNotFound="true">
             <property name="locations">
                 <list>
-                    <value>classpath:db.properties</value>
+                    <value>classpath:db-prod.properties</value>
                     <value>classpath:files.properties</value>
                 </list>
             </property>
         </bean>
 
-        <bean id="dataSource"
-              class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-            <property name="username" value="${rest.db.username}"/>
-            <property name="password" value="${rest.db.password}"/>
-            <property name="url" value="${rest.db.url}"/>
-            <property name="driverClassName" value="${rest.db.driver}"/>
+        <bean id="vendorAdapter" class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter">
+            <property name="host" value="${mongo.db.host}" />
+            <property name="port" value="${mongo.db.port}" />
+            <property name="createDatabase" value="true" />
+            <property name="providerStr" value="${mongo.db.driver}" />
+            <property name="database" value="${mongo.db.database}" />
         </bean>
     </beans>
 
@@ -67,55 +63,30 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
               p:ignoreResourceNotFound="true">
             <property name="locations">
                 <list>
+                    <value>classpath:db-prod.properties</value>
                     <value>classpath:files-prod.properties</value>
                 </list>
             </property>
         </bean>
 
-        <bean id="dataSource"
-              class="org.springframework.jndi.JndiObjectFactoryBean">
-            <property name="jndiName" value="MySqlDS" />
-        </bean>
-
-        <bean id="flyway-migration-location" class="java.util.ArrayList">
-            <constructor-arg>
-                <list>
-                    <value>classpath:sql.migration</value>
-                </list>
-            </constructor-arg>
+        <bean id="vendorAdapter" class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter">
+            <property name="host" value="${mongo.db.host}" />
+            <property name="port" value="${mongo.db.port}" />
+            <property name="createDatabase" value="true" />
+            <property name="providerStr" value="${mongo.db.driver}" />
+            <property name="database" value="${mongo.db.database}" />
         </bean>
     </beans>
 
     <beans>
-        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
-            <property name="locations" ref="flyway-migration-location" />
-            <property name="dataSource" ref="dataSource" />
-        </bean>
-
         <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
         <bean id="entityManagerFactory"
-              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-              depends-on="flyway">
-            <property name="dataSource" ref="dataSource" />
-            <property name="jpaVendorAdapter">
-                <bean class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter">
-                    <property name="providerStr" value="mongodb"/>
-                    <property name="host" value="deeznuts.local" />
-                    <property name="username" value="program" />
-                    <property name="password" value="program" />
-                    <property name="database" value="test" />
-                    <property name="createDatabase" value="true" />
-                </bean>
-            </property>
-            <property name="jpaProperties">
-                <props>
-                    <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
-                </props>
-            </property>
+              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="vendorAdapter">
+            <property name="jpaVendorAdapter" ref="vendorAdapter" />
             <property name="packagesToScan">
                 <list>
-                    <value>dk.aau.giraf.rest</value>
+                    <value>dk.aau.giraf.rest.core</value>
                 </list>
             </property>
         </bean>

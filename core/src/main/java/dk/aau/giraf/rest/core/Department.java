@@ -23,7 +23,6 @@ public class Department {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "department")
-    @LazyCollection(LazyCollectionOption.EXTRA)
     private Collection<User> members;
 
     public Department() {

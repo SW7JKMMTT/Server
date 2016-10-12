@@ -4,34 +4,9 @@
 
     <import resource="classpath:dao-config.xml"/>
 
-    <bean id="mongo" class="cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean"
-          p:bindIp="127.0.0.1"
-          p:port="1338"
-          />
-
-    <bean name="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-          p:ignoreUnresolvablePlaceholders="true"
-          p:ignoreResourceNotFound="true">
-        <property name="locations">
-            <list>
-                <value>classpath:db.properties</value>
-            </list>
-        </property>
-    </bean>
-
     <bean id="entityManagerFactory"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="mongo">
-        <property name="dataSource" ref="dataSource" />
-        <property name="jpaVendorAdapter">
-            <bean class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter">
-                <property name="host" value="127.0.0.1" />
-                <property name="port" value="1338" />
-                <property name="createDatabase" value="true" />
-                <property name="providerStr" value="mongodb" />
-                <property name="database" value="test" />
-            </bean>
-        </property>
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="vendorAdapter">
+        <property name="jpaVendorAdapter" ref="vendorAdapter" />
         <property name="packagesToScan">
             <list>
                 <value>dk.aau.giraf.rest.core</value>

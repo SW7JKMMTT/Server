@@ -1,5 +1,7 @@
 package dk.aau.giraf.rest.persistence;
 
+import com.mongodb.MongoClient;
+import dk.aau.giraf.rest.DatabaseTest;
 import dk.aau.giraf.rest.core.Department;
 import dk.aau.giraf.rest.core.User;
 import dk.aau.giraf.rest.core.authentication.AuthToken;
@@ -30,7 +32,7 @@ import static org.junit.Assert.*;
 // apply the transaction manager to the test class so every DAO methods are executed
 // within a transaction
 @Transactional
-public class TestAuthDao {
+public class TestAuthDao extends DatabaseTest{
 
     @Resource
     DepartmentDao departmentDao;
@@ -39,11 +41,6 @@ public class TestAuthDao {
     @Resource
     private UserDao userDao;
     private Department department;
-
-    @Before
-    public void getDepartmentId() {
-        department = departmentDao.byName("LEGACY");
-    }
 
     @Test
     public void testIsInjected() {
@@ -78,20 +75,33 @@ public class TestAuthDao {
 
     @Test
     public void testByTokenStr() throws Exception {
-        AuthToken token = authDao.byTokenStr("FAKETOKEN");
+        Department monster = new GivenDepartment().withName("mmonstertruck").in(departmentDao);
+        User jeff = new GivenUser().withName("Jeff").withPassword("1000").inDepartment(monster).in(userDao);
+        new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
+
+        AuthToken token = authDao.byTokenStr("AABBCC");
         assertNotNull(token);
     }
 
     @Test
     public void testByTokenStrRightData() throws Exception {
-        AuthToken token = authDao.byTokenStr("FAKETOKEN");
+        Department monster = new GivenDepartment().withName("mmonstertruck").in(departmentDao);
+        User jeff = new GivenUser().withName("Jeff").withPassword("1000").inDepartment(monster).in(userDao);
+        new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
+
+        AuthToken token = authDao.byTokenStr("AABBCC");
         assertNotNull(token);
-        assertEquals(token.getUser().getUsername(), "Jeff");
+        assertEquals(token.getUser().getUsername(), jeff.getUsername());
     }
 
     @Test
     public void testByUser() throws Exception {
-        User u = userDao.byUsername(department, "Jeff");
+        Department monster = new GivenDepartment().withName("mmonstertruck").in(departmentDao);
+        User jeff = new GivenUser().withName("Jeff").withPassword("1000").inDepartment(monster).in(userDao);
+        new GivenAuthToken().forUser(jeff).withToken("FAKETOKEN").in(authDao);
+        new GivenAuthToken().forUser(jeff).withToken("MOBILETOKEN").in(authDao);
+
+        User u = userDao.byUsername(monster, "Jeff");
 
         AuthToken token1 = authDao.byTokenStr("FAKETOKEN");
         AuthToken token2 = authDao.byTokenStr("MOBILETOKEN");
