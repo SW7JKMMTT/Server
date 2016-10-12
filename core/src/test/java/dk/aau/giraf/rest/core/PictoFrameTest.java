@@ -23,13 +23,9 @@ public class PictoFrameTest {
     @Before
     public void prepareData(){
         department1 = new Department("meme");
-        department1.setId(69L);
         department2 = new Department("dank");
-        department2.setId(911L);
         user1 = new User(department1, "test1", "hunter2");
         user2 = new User(department2, "test2", "hunter2");
-        user1.setId(1L);
-        user2.setId(2L);
     }
 
     /**

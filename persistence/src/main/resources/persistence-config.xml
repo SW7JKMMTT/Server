@@ -19,8 +19,8 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="mongo" class="cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean"
-              p:bindIp="${mongo.db.host}"
+        <bean id="mongo" class="dk.aau.giraf.rest.persistence.spring.EmbeddedMongoFactoryBean"
+              p:host="${mongo.db.host}"
               p:port="${mongo.db.port}"/>
 
         <bean id="vendorAdapter" class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter" depends-on="mongo">
