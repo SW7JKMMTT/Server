@@ -1,4 +1,4 @@
-rootProject.name = 'giraf-rest'
+rootProject.name = 'server-rest'
 include ':core'
 include ':persistence'
 include ':services'

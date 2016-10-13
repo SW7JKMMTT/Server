@@ -10,7 +10,7 @@ buildscript {
 }
 apply plugin: 'war'
 
-description = 'Giraf Rest: Service'
+description = 'TRUCKNUTS Rest: Service'
 dependencies {
     compile group: 'org.springframework', name: 'spring-orm', version:'4.2.5.RELEASE'
     compile group: 'org.springframework', name: 'spring-tx', version:'4.2.5.RELEASE'

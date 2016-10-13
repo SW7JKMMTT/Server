@@ -9,22 +9,13 @@
 
     <!-- Inject DAO classes in service -->
     <bean id="userService"
-          class="dk.aau.giraf.rest.services.UserService" />
+          class="rocks.stalin.sw708e16.server.services.UserService" />
     <bean id="authService"
-          class="dk.aau.giraf.rest.services.AuthenticationService" />
-    <bean id="pictogramService"
-          class="dk.aau.giraf.rest.services.PictogramService" />
-    <bean id="publicPictogramService"
-          class="dk.aau.giraf.rest.services.PublicPictogramService" />
-    <bean id="departmentService"
-          class="dk.aau.giraf.rest.services.DepartmentService" />
-    <bean id="sequenceService"
-          class="dk.aau.giraf.rest.services.SequenceService"/>
-    <bean id="choiceService"
-          class="dk.aau.giraf.rest.services.ChoiceService"/>
+          class="rocks.stalin.sw708e16.server.services.AuthenticationService"
+          name="WEW"/>
 
     <tx:annotation-driven />
     <context:annotation-config />
-    <context:component-scan base-package="dk.aau.giraf.rest" />
+    <context:component-scan base-package="rocks.stalin.sw708e16.server" />
 
 </beans>

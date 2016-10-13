@@ -2,7 +2,7 @@ plugins {
     id "org.flywaydb.flyway" version "4.0"
 }
 
-description = 'Giraf Rest: Database'
+description = 'TRUCKNUTS Rest: Database'
 
 dependencies {
     compile project(':core')

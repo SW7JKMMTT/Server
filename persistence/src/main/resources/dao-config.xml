@@ -11,7 +11,7 @@
 
     <tx:annotation-driven />
     <context:annotation-config />
-    <context:component-scan base-package="dk.aau.giraf.rest" />
+    <context:component-scan base-package="rocks.stalin.sw708e16.server" />
 
     <import resource="classpath:persistence-config.xml"/>
 

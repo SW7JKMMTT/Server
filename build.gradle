@@ -11,7 +11,7 @@ allprojects  {
     apply plugin: 'jetty'
     apply plugin: 'java'
 
-    group = 'dk.aau.giraf.rest'
+    group = 'rocks.stalin.sw708e16.server'
     version = '1.0.0'
 
 	checkstyle {

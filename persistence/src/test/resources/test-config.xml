@@ -9,7 +9,7 @@
         <property name="jpaVendorAdapter" ref="vendorAdapter" />
         <property name="packagesToScan">
             <list>
-                <value>dk.aau.giraf.rest.core</value>
+                <value>rocks.stalin.sw708e16.server.core</value>
             </list>
         </property>
     </bean>

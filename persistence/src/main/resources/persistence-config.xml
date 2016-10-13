@@ -19,11 +19,11 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="mongo" class="dk.aau.giraf.rest.persistence.spring.EmbeddedMongoFactoryBean"
+        <bean id="mongo" class="rocks.stalin.sw708e16.server.persistence.spring.EmbeddedMongoFactoryBean"
               p:host="${mongo.db.host}"
               p:port="${mongo.db.port}"/>
 
-        <bean id="vendorAdapter" class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter" depends-on="mongo">
+        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOGMJpaVendorAdapter" depends-on="mongo">
             <property name="host" value="${mongo.db.host}" />
             <property name="port" value="${mongo.db.port}" />
             <property name="createDatabase" value="true" />
@@ -46,7 +46,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="vendorAdapter" class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter">
+        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOGMJpaVendorAdapter">
             <property name="host" value="${mongo.db.host}" />
             <property name="port" value="${mongo.db.port}" />
             <property name="createDatabase" value="true" />
@@ -69,7 +69,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="vendorAdapter" class="dk.aau.giraf.rest.persistence.spring.HibernateOGMJpaVendorAdapter">
+        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOGMJpaVendorAdapter">
             <property name="host" value="${mongo.db.host}" />
             <property name="port" value="${mongo.db.port}" />
             <property name="createDatabase" value="true" />
@@ -86,7 +86,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             <property name="jpaVendorAdapter" ref="vendorAdapter" />
             <property name="packagesToScan">
                 <list>
-                    <value>dk.aau.giraf.rest.core</value>
+                    <value>rocks.stalin.sw708e16.server.core</value>
                 </list>
             </property>
         </bean>
@@ -95,12 +95,8 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
         <bean id="transactionManager"
               class="org.springframework.orm.jpa.JpaTransactionManager"/>
 
-        <bean id="userIconFileDaoImpl" class="dk.aau.giraf.rest.persistence.file.dao.UserIconFileDaoImpl">
+        <bean id="userIconFileDaoImpl" class="rocks.stalin.sw708e16.server.persistence.file.dao.UserIconFileDaoImpl">
             <property name="storagePath" value="${usericons.location}" />
-        </bean>
-
-        <bean id="pictogramImageFileDaoImpl" class="dk.aau.giraf.rest.persistence.file.dao.PictogramImageFileDaoImpl">
-            <property name="storagePath" value="${pictogramimage.location}" />
         </bean>
 
         <tx:annotation-driven transaction-manager="transactionManager"/>

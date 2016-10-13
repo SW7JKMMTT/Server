@@ -1,4 +1,4 @@
-description = 'Giraf Rest: Core'
+description = 'TRUCKNUTS Rest: Core'
 dependencies {
     compile group: 'javax.transaction', name: 'jta', version:'1.1'
     compile group: 'commons-dbcp', name: 'commons-dbcp', version:'1.4'
