@@ -19,7 +19,7 @@ import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
 import java.util.logging.Logger;
 
 public class EmbeddedMongoFactoryBean implements FactoryBean<MongodExecutable>, DisposableBean {
-    private Logger logger = Logger.getLogger("dk.aau.giraf.rest.persistence.spring");
+    private Logger logger = Logger.getLogger("rocks.stalic.sw708e16.server.persistence.spring");
 
     private String version;
     private String host;
