@@ -2,12 +2,11 @@ package rocks.stalin.sw708e16.server.core;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
-import org.bson.types.ObjectId;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.Collections;
 
 @Entity
 @Table(name = "User")
-@JsonIgnoreProperties( {"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +34,9 @@ public class User {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserIcon icon;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+    private Driver driver;
 
     protected User() {
     }

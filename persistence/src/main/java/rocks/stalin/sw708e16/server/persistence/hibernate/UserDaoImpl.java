@@ -1,11 +1,10 @@
 package rocks.stalin.sw708e16.server.persistence.hibernate;
 
-import rocks.stalin.sw708e16.server.core.User;
-import rocks.stalin.sw708e16.server.persistence.BaseDaoImpl;
-import rocks.stalin.sw708e16.server.persistence.UserDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.User;
+import rocks.stalin.sw708e16.server.persistence.UserDao;
 
 import javax.persistence.TypedQuery;
 import java.util.Collection;

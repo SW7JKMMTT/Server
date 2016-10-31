@@ -1,4 +1,6 @@
-package rocks.stalin.sw708e16.server.persistence;
+package rocks.stalin.sw708e16.server.persistence.hibernate;
+
+import rocks.stalin.sw708e16.server.persistence.BaseDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
