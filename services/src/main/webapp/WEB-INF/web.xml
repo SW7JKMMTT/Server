@@ -9,6 +9,11 @@
         <param-name>resteasy.role.based.security</param-name>
         <param-value>true</param-value>
     </context-param>
+    
+    <context-param>
+        <param-name>resteasy.scan.providers</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
     <listener>
         <listener-class>
