@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server;
+package rocks.stalin.sw708e16.test;
 
 import com.mongodb.MongoClient;
 import org.junit.Before;

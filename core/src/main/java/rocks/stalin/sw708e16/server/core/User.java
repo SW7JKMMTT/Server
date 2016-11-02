@@ -38,6 +38,7 @@ public class User {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     private Driver driver;
 
+
     protected User() {
     }
 
@@ -92,6 +93,14 @@ public class User {
     @JsonGetter
     public boolean getHasIcon() {
         return icon != null;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
 
     /**

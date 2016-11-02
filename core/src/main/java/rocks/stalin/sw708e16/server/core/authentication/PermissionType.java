@@ -1,7 +1,7 @@
 package rocks.stalin.sw708e16.server.core.authentication;
 
 /**
- * The different roles/accesslevels in giraf.
+ * The different roles/accesslevels.
  */
 public enum PermissionType {
     /**
@@ -9,11 +9,6 @@ public enum PermissionType {
      * impact themselves.
      */
     User(Constants.USER),
-    /**
-     * Guardians are the people assigned to take care of other people. They control the data of a department. Guardians
-     * can do stuff that impacts their entire department.
-     */
-    Guardian(Constants.GUARDIAN),
     /**
      * A superuser is part of the giraf team. They are allowed to do things that impact multiple departments.
      */
@@ -31,10 +26,6 @@ public enum PermissionType {
 
     //Keep this updated with the enum values
     public static class Constants {
-        /**
-         * Guardian role string.
-         */
-        public static final String GUARDIAN = "Guardian";
         /**
          * SuperUser role string.
          */

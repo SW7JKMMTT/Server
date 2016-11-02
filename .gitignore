@@ -17,6 +17,7 @@ giraf-rest.ipr
 
 #Web services build
 build/
+classes/
 
 ## Plugin-specific files:
 

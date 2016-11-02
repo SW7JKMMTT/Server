@@ -17,6 +17,7 @@ dependencies {
     compile group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: '3.0.16.Final'
     compile project(':core')
     compile project(':persistence')
+    testCompile project(':test')
 }
 //Documentation generation (also provides other features
 apply plugin: "com.webcohesion.enunciate"

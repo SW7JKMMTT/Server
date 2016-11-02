@@ -11,7 +11,7 @@ allprojects  {
     apply plugin: 'jetty'
     apply plugin: 'java'
 
-    group = 'rocks.stalin.sw708e16.server'
+    group = 'rocks.stalin.sw708e16'
     version = '1.0.0'
 
 	checkstyle {

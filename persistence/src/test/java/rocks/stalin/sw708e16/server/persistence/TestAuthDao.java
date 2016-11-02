@@ -1,15 +1,15 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import rocks.stalin.sw708e16.server.DatabaseTest;
+import rocks.stalin.sw708e16.test.DatabaseTest;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
-import rocks.stalin.sw708e16.server.given.GivenAuthToken;
-import rocks.stalin.sw708e16.server.given.GivenUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.test.given.GivenAuthToken;
+import rocks.stalin.sw708e16.test.given.GivenUser;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 // Load the beans to configure, here the DAOs
-@ContextConfiguration(locations = {"classpath:test-config.xml"})
+@ContextConfiguration(locations = {"classpath:dao-config.xml"})
 // apply the transaction manager to the test class so every DAO methods are executed
 // within a transaction
 @Transactional
