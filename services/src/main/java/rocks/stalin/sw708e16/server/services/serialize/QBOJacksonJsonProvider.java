@@ -26,6 +26,7 @@ public class QBOJacksonJsonProvider implements ContextResolver<ObjectMapper> {
         mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("bsonSerializer", new Version(1, 0, 0, "final", null, null));
         module.addSerializer(ObjectId.class, new ObjectIdSerializer());
+        module.addDeserializer(ObjectId.class, new ObjectIdDeserializer());
         mapper.registerModule(module);
     }
 

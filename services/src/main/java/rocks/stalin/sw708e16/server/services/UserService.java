@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.services;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.UserIcon;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
+import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.persistence.AuthDao;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
@@ -80,17 +82,8 @@ public class UserService {
     @GET
     @Path("/{uid}")
     @Produces("application/json")
-    public User getUserById(@PathParam("uid") long id, @Context SecurityContext context) {
-        AuthToken token = authDao.byTokenStr(context.getAuthenticationScheme());
-        if (token == null)
-            throw new NotAuthorizedException("Only authorized users can retrieve detailed userdata");
-
-        User authenticatedUser = token.getUser();
-
-        if (!authenticatedUser.hasPermission(PermissionType.SuperUser))
-            throw new NotAuthorizedException(
-                    "Non-Guardians can't retrieve detailed userdata from anyone but themselves");
-
+    @RolesAllowed({PermissionType.Constants.SUPERUSER})
+    public User getUserById(@PathParam("uid") ObjectId id) {
         User user = userDao.byId(id);
 
         if (user == null)
@@ -113,7 +106,7 @@ public class UserService {
     @Produces("application/json")
     @Consumes("application/json")
     @RolesAllowed({PermissionType.Constants.SUPERUSER})
-    public User modifyUser(@PathParam("uid") long id, User newUser, @Context SecurityContext context) {
+    public User modifyUser(@PathParam("uid") ObjectId id, User newUser, @Context SecurityContext context) {
         AuthToken token = authDao.byTokenStr(context.getAuthenticationScheme());
 
         User user = userDao.byId(id);
@@ -134,7 +127,7 @@ public class UserService {
     @GET
     @Path("/{uid}/icon")
     @Produces("image/png")
-    public InputStream getUserIcon(@PathParam("uid") long id) throws IOException {
+    public InputStream getUserIcon(@PathParam("uid") ObjectId id) throws IOException {
         User user = userDao.byId(id);
         if (user == null)
             throw new NotFoundException("User not found");
@@ -161,7 +154,7 @@ public class UserService {
     @Consumes("image/png")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public User setUserIcon(@PathParam("uid") long id, InputStream is, @Context User auser)
+    public User setUserIcon(@PathParam("uid") ObjectId id, InputStream is, @Context User auser)
             throws IOException {
         User user = userDao.byId(id);
         if (user == null)

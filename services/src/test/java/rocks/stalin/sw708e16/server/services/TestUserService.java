@@ -60,4 +60,14 @@ public class TestUserService extends DatabaseTest {
         Assert.assertEquals(userDao.byUsername(u1.getUsername()), userInserted);
     }
 
+    @Test
+    public void TestGetById() throws Exception {
+        User u1 = new GivenUser().withName("u1").withPassword("password").in(userDao);
+        new GivenUser().withName("u2").withPassword("password").in(userDao);
+
+        User gottenUser = userService.getUserById(u1.getId());
+
+        Assert.assertEquals(u1, gottenUser);
+    }
+
 }
