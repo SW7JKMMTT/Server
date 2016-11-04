@@ -3,7 +3,6 @@ package rocks.stalin.sw708e16.server.services;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,14 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.test.DatabaseTest;
-import rocks.stalin.sw708e16.test.given.GivenUser;
+import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 // Load the beans to configure, here the DAOs

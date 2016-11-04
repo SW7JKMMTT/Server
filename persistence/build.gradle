@@ -6,7 +6,7 @@ description = 'TRUCKNUTS Rest: Database'
 
 dependencies {
     compile project(':core')
-    compile project(':test')
+    testCompile project(':test')
 
     compile group:  'org.flywaydb', name: 'flyway-core', version: '4.0'
 

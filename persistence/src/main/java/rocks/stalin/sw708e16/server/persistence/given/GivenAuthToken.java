@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.test.given;
+package rocks.stalin.sw708e16.server.persistence.given;
 
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
