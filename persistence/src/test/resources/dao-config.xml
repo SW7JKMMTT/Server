@@ -14,8 +14,4 @@
     <context:component-scan base-package="rocks.stalin.sw708e16.server" />
 
     <import resource="classpath:persistence-config.xml"/>
-
-    <bean id="inserter" class="rocks.stalin.sw708e16.server.persistence.spring.datainserter.InserterBean"
-          init-method="insert" depends-on="transactionManager">
-    </bean>
 </beans>

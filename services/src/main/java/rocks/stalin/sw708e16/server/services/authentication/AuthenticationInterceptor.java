@@ -20,7 +20,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Provider
-@Service
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationInterceptor implements ContainerRequestFilter {
     private static Pattern authPattern = Pattern.compile("Sleepy token=(?<token>.*)");
