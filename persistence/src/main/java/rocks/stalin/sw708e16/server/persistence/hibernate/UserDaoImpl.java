@@ -14,6 +14,11 @@ import java.util.Collection;
 @Repository
 @Primary
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
+    /**
+     * Find a {@link User} by the username.
+     * @param username The username to search by
+     * @return The first {@link User} in the database with the username
+     */
     public User byUsername(final String username) {
         TypedQuery<User> query =
             em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);

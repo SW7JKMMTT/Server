@@ -1,11 +1,12 @@
 package rocks.stalin.sw708e16.server.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.persistence.AuthDao;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.Collection;
 import java.util.Map;
 
+@Component
 @Transactional
 @Path("/auth")
 public class AuthenticationService {
@@ -51,7 +53,7 @@ public class AuthenticationService {
     /**
      * Get the {@link AuthToken tokens} for the currently authenticated user.
      *
-     * @param context The {@link SecurityContext securitycontext} of the current request.
+     * @param user The {@link User user} of the current request.
      * @return A collection of the {@link AuthToken tokens} of the user.
      */
     @Path("/")
@@ -59,11 +61,10 @@ public class AuthenticationService {
     @Produces("application/json")
     @Consumes("application/json")
     @PermitAll()
-    public Collection<AuthToken> listTokens(@Context SecurityContext context) {
-        AuthToken token = authDao.byTokenStr(context.getAuthenticationScheme());
-        if(token == null)
-            throw new NotAuthorizedException("Unknown authentication token");
+    public Collection<AuthToken> listTokens(@Context User user) {
+        if(user == null)
+            throw new NotAuthorizedException("Unknown user");
 
-        return token.getUser().getAuthTokens();
+        return user.getAuthTokens();
     }
 }

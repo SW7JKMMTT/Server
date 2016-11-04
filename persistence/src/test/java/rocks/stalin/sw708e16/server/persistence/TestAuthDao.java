@@ -1,13 +1,13 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import rocks.stalin.sw708e16.test.DatabaseTest;
-import rocks.stalin.sw708e16.server.core.User;
-import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.User;
+import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
+import rocks.stalin.sw708e16.test.DatabaseTest;
 import rocks.stalin.sw708e16.test.given.GivenAuthToken;
 import rocks.stalin.sw708e16.test.given.GivenUser;
 
@@ -37,8 +37,8 @@ public class TestAuthDao extends DatabaseTest {
     @Test
     public void testAdd() throws Exception {
         userDao.add(new User("Jeff", "password"));
-        User u = userDao.byUsername("Jeff");
-        AuthToken token = new AuthToken("AABBCC", u);
+        User jeff = userDao.byUsername("Jeff");
+        AuthToken token = new AuthToken("AABBCC", jeff);
 
         assertNull(authDao.byTokenStr("AABBCC"));
         authDao.add(token);
@@ -81,12 +81,12 @@ public class TestAuthDao extends DatabaseTest {
         new GivenAuthToken().forUser(jeff).withToken("FAKETOKEN").in(authDao);
         new GivenAuthToken().forUser(jeff).withToken("MOBILETOKEN").in(authDao);
 
-        User u = userDao.byUsername("Jeff");
+        User databaseJeff = userDao.byUsername("Jeff");
 
         AuthToken token1 = authDao.byTokenStr("FAKETOKEN");
         AuthToken token2 = authDao.byTokenStr("MOBILETOKEN");
 
-        Collection<AuthToken> at = u.getAuthTokens();
+        Collection<AuthToken> at = databaseJeff.getAuthTokens();
         assertEquals(at.size(), 2);
         assertTrue(at.contains(token1));
         assertTrue(at.contains(token2));

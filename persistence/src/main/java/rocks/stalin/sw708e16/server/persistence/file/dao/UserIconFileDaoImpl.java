@@ -1,12 +1,12 @@
 package rocks.stalin.sw708e16.server.persistence.file.dao;
 
-import rocks.stalin.sw708e16.server.core.UserIcon;
-import rocks.stalin.sw708e16.server.persistence.UserIconFactory;
-import rocks.stalin.sw708e16.server.persistence.file.Readable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.UserIcon;
+import rocks.stalin.sw708e16.server.persistence.UserIconFactory;
+import rocks.stalin.sw708e16.server.persistence.file.Readable;
 
 import java.io.IOException;
 

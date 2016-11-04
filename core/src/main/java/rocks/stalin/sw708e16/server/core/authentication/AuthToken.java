@@ -1,8 +1,8 @@
 package rocks.stalin.sw708e16.server.core.authentication;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import rocks.stalin.sw708e16.server.core.User;
 import org.bson.types.ObjectId;
+import rocks.stalin.sw708e16.server.core.User;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -31,18 +31,27 @@ public class AuthToken {
     @Temporal(TemporalType.DATE)
     private Date expires;
 
+
+    /**
+     * Create with specified token.
+     * @param token The token string
+     * @param user The {@link User} owning the token
+     */
     public AuthToken(String token, User user) {
         this.token = token;
         this.user = user;
         created = Calendar.getInstance().getTime();
     }
 
+    /**
+     * Create with a randomly generated token.
+     * @param user The {@link User} the token is for
+     */
     public AuthToken(User user) {
         //Make token
         Random random = new SecureRandom();
-        String token = new BigInteger(120, random).toString(32);
 
-        this.token = token;
+        this.token = new BigInteger(120, random).toString(32);
         this.user = user;
         created = Calendar.getInstance().getTime();
     }

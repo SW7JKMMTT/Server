@@ -1,27 +1,17 @@
 package rocks.stalin.sw708e16.server.persistence.spring;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.spi.PersistenceProvider;
-
 import org.hibernate.ogm.cfg.OgmProperties;
-import org.hibernate.dialect.DB2Dialect;
-import org.hibernate.dialect.DerbyTenSevenDialect;
-import org.hibernate.dialect.H2Dialect;
-import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.dialect.InformixDialect;
-import org.hibernate.dialect.MySQL5Dialect;
-import org.hibernate.dialect.Oracle12cDialect;
-import org.hibernate.dialect.SQLServer2012Dialect;
-import org.hibernate.dialect.SybaseDialect;
 import org.hibernate.ogm.datastore.spi.DatastoreProvider;
-import org.hibernate.ogm.options.spi.Option;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.spi.PersistenceProvider;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * {@link org.springframework.orm.jpa.JpaVendorAdapter} implementation for Hibernate
@@ -41,7 +31,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
  * @since 2.0
  * @see HibernateJpaDialect
  */
-public class HibernateOGMJpaVendorAdapter implements JpaVendorAdapter {
+public class HibernateOgmJpaVendorAdapter implements JpaVendorAdapter {
 
     private final HibernateJpaDialect jpaDialect = new HibernateJpaDialect();
 
@@ -65,8 +55,10 @@ public class HibernateOGMJpaVendorAdapter implements JpaVendorAdapter {
     private Optional<String> providerStr;
 
 
-    @SuppressWarnings("deprecation")
-    public HibernateOGMJpaVendorAdapter() {
+    /**
+     * Create a new Hibernate OGM vendor adapter.
+     */
+    public HibernateOgmJpaVendorAdapter() {
         this.persistenceProvider = new org.hibernate.ogm.jpa.HibernateOgmPersistence();
         this.entityManagerFactoryInterface = org.hibernate.jpa.HibernateEntityManagerFactory.class;
         this.entityManagerInterface = org.hibernate.jpa.HibernateEntityManager.class;
@@ -78,8 +70,10 @@ public class HibernateOGMJpaVendorAdapter implements JpaVendorAdapter {
      * Hibernate Session, that is, whether to apply a transaction-specific
      * isolation level and/or the transaction's read-only flag to the underlying
      * JDBC Connection.
+     *
      * <p>See {@link HibernateJpaDialect#setPrepareConnection(boolean)} for details.
      * This is just a convenience flag passed through to {@code HibernateJpaDialect}.
+     *
      * <p>On Hibernate 5.2, this flag remains {@code true} by default like against
      * previous Hibernate versions. The vendor adapter manually enforces Hibernate's
      * new connection handling mode {@code DELAYED_ACQUISITION_AND_HOLD} in that case
@@ -105,6 +99,7 @@ public class HibernateOGMJpaVendorAdapter implements JpaVendorAdapter {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Map<String, Object> getJpaPropertyMap() {
         Map<String, Object> jpaProperties = new HashMap<>();
 
@@ -170,30 +165,54 @@ public class HibernateOGMJpaVendorAdapter implements JpaVendorAdapter {
         this.password = password;
     }
 
+    /**
+     * Get the {@link DatastoreProvider} instance.
+     * @return An instance of a {@link DatastoreProvider}
+     */
     public Optional<DatastoreProvider> getProviderInstance() {
         return providerInstance;
     }
 
+    /**
+     * Set the {@link DatastoreProvider} from an instance.
+     * @param providerInstance the {@link DatastoreProvider} instance
+     */
     public void setProviderInstance(DatastoreProvider providerInstance) {
         this.providerInstance = Optional.of(providerInstance);
         this.providerClass = Optional.empty();
         this.providerStr = Optional.empty();
     }
 
+    /**
+     * Get the {@link DatastoreProvider} subclass.
+     * @return A subclass of {@link DatastoreProvider}
+     */
     public Optional<Class<DatastoreProvider>> getProviderClass() {
         return providerClass;
     }
 
+    /**
+     * Set the {@link DatastoreProvider} from a class.
+     * @param providerClass A subclass of {@link DatastoreProvider}
+     */
     public void setProviderClass(Class<DatastoreProvider> providerClass) {
         this.providerClass = Optional.of(providerClass);
         this.providerInstance = Optional.empty();
         this.providerStr = Optional.empty();
     }
 
+    /**
+     * Get the string specifying a {@link DatastoreProvider} class.
+     * @return The string
+     */
     public Optional<String> getProviderStr() {
         return providerStr;
     }
 
+    /**
+     * Set the provider by providing a string specifying a {@link DatastoreProvider}.
+     * @param providerStr A string specifying the provider
+     */
     public void setProviderStr(String providerStr) {
         this.providerStr = Optional.of(providerStr);
         this.providerClass = Optional.empty();

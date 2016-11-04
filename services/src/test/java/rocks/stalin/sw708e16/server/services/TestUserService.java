@@ -1,7 +1,9 @@
 package rocks.stalin.sw708e16.server.services;
 
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,6 +14,8 @@ import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 import rocks.stalin.sw708e16.test.given.GivenUser;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,43 +35,113 @@ public class TestUserService extends DatabaseTest {
     UserService userService;
 
     @Test
-    public void TestGetAll() throws Exception {
-        // Arrange
-        User superuser = new GivenUser().withName("superuser").withPassword("password").in(userDao);
-        User u1 = new GivenUser().withName("testuser").withPassword("password").in(userDao);
-        User u2 = new GivenUser().withName("anothertestuser").withPassword("password").in(userDao);
-
+    public void testGetAll_Empty() throws Exception {
         // Act
-        Collection<User> userlist = userService.getAllUsers();
+        Collection<User> allUsers = userService.getAllUsers();
 
         // Assert
-        Assert.assertTrue(userlist.contains(superuser));
-        Assert.assertTrue(userlist.contains(u1));
-        Assert.assertTrue(userlist.contains(u2));
+        Assert.assertTrue(allUsers.isEmpty());
     }
 
     @Test
-    public void TestInsertUser() throws Exception {
+    public void testGetAll() throws Exception {
         // Arrange
-        User superuser = new GivenUser().withName("superuser").withPassword("password").in(userDao);
-        User u1 = new User("testuser", "password");
+        User bill = new GivenUser().withName("bill").withPassword("password").in(userDao);
+        User john = new GivenUser().withName("john").withPassword("wordpass").in(userDao);
+        User lisa = new GivenUser().withName("lisa").withPassword("passpass").in(userDao);
 
         // Act
-        User userInserted = userService.insertUser(superuser, u1);
+        Collection<User> allUsers = userService.getAllUsers();
 
         // Assert
-        Assert.assertEquals(u1, userInserted);
-        Assert.assertEquals(userDao.byUsername(u1.getUsername()), userInserted);
+        Assert.assertTrue(allUsers.contains(bill));
+        Assert.assertTrue(allUsers.contains(john));
+        Assert.assertTrue(allUsers.contains(lisa));
+        Assert.assertTrue(allUsers.size() == 3);
     }
 
     @Test
-    public void TestGetById() throws Exception {
-        User u1 = new GivenUser().withName("u1").withPassword("password").in(userDao);
-        new GivenUser().withName("u2").withPassword("password").in(userDao);
+    public void testInsertUser() throws Exception {
+        // Arrange
+        User bent = new User("bent", "password");
 
-        User gottenUser = userService.getUserById(u1.getId());
+        // Act
+        User userInserted = userService.insertUser(bent);
 
-        Assert.assertEquals(u1, gottenUser);
+        // Assert
+        Assert.assertEquals(bent, userInserted);
+        Assert.assertEquals(userDao.byUsername(bent.getUsername()), userInserted);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void testInsertUser_NoUsername() throws Exception {
+        // Arrange
+        User lisa = new User("lisa", "passphrase");
+        lisa.setUsername(null); //@HACK: Setting the username to null shouldn't be supported
+
+        // Act
+        userService.insertUser(lisa);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void testInsertUser_NoPassword() throws Exception {
+        // Arrange
+        User lisa = new User("lisa", "passphrase");
+        lisa.setPassword(null); //@HACK: Setting the password to null shouldn't be supported
+
+        // Act
+        userService.insertUser(lisa);
+    }
+
+    @Test
+    public void testGetById() throws Exception {
+        User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("john").withPassword("password").in(userDao);
+
+        User gottenUser = userService.getUserById(jeff.getId());
+
+        Assert.assertEquals(jeff, gottenUser);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testGetById_UnknownId() throws Exception {
+        ObjectId unknownId = new ObjectId();
+
+        userService.getUserById(unknownId);
+    }
+
+    @Test
+    public void testModifyUser_SetUsername() throws Exception {
+        User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
+        User newUser = new User("john", "password");
+        newUser.setPassword(null); //@HACK: Setting the password to null should probably be an error
+
+        User modifiedUser = userService.modifyUser(jeff.getId(), newUser);
+
+        Assert.assertEquals(modifiedUser.getUsername(), newUser.getUsername());
+        Assert.assertEquals(modifiedUser.getPassword(), jeff.getPassword());
+        Assert.assertEquals(modifiedUser.getId(), jeff.getId());
+    }
+
+    @Test
+    public void testModifyUser_SetPassword() throws Exception {
+        User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
+        User newUser = new User("john", "password");
+        newUser.setUsername(null); //@HACK: Setting the password to null should probably be an error
+
+        User modifiedUser = userService.modifyUser(jeff.getId(), newUser);
+
+        Assert.assertEquals(modifiedUser.getUsername(), jeff.getUsername());
+        Assert.assertEquals(modifiedUser.getPassword(), newUser.getPassword());
+        Assert.assertEquals(modifiedUser.getId(), jeff.getId());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testModifyUser_UnknownId() throws Exception {
+        ObjectId id = new ObjectId();
+        User newUser = new User("john", "password");
+
+        userService.modifyUser(id, newUser);
     }
 
 }

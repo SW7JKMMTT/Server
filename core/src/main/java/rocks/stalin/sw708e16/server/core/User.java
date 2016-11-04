@@ -42,6 +42,11 @@ public class User {
     protected User() {
     }
 
+    /**
+     * A user in the system.
+     * @param username The username of the user
+     * @param password The plaintext password of the user
+     */
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -147,11 +152,11 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
-        User user = (User) o;
+        User user = (User) obj;
 
         return getId() != null ? getId().equals(user.getId()) : user.getId() == null;
 

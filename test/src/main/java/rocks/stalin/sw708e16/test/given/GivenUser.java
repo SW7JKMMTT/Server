@@ -17,6 +17,11 @@ public class GivenUser {
         return this;
     }
 
+    /**
+     * Create {@link User user} and insert into the DAO.
+     * @param userDao The {@link UserDao UserDao} to insert the object into
+     * @return The {@link User User} instance
+     */
     public User in(UserDao userDao) {
         User user = new User(name, password);
         userDao.add(user);

@@ -18,6 +18,11 @@ public class GivenAuthToken {
         return this;
     }
 
+    /**
+     * Create {@link AuthToken AuthToken} and insert into the DAO.
+     * @param authTokenDao The {@link AuthDao AuthDao} to insert the object into
+     * @return The {@link AuthToken AuthToken} instance
+     */
     public AuthToken in(AuthDao authTokenDao) {
         AuthToken token = new AuthToken(this.token, user);
         authTokenDao.add(token);

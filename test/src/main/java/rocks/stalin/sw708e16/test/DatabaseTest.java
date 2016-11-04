@@ -5,7 +5,7 @@ import org.junit.Before;
 
 public abstract class DatabaseTest {
     @Before
-    public void ClearDatabase() {
+    public void clearDatabase() {
         MongoClient client = new MongoClient("localhost", 1338);
         client.getDatabase("test").drop();
     }

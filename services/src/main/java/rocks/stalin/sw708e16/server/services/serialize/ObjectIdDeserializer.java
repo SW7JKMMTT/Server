@@ -11,9 +11,10 @@ import java.io.IOException;
 public class ObjectIdDeserializer extends JsonDeserializer<ObjectId> {
 
     @Override
-    public ObjectId deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        String s = p.readValueAs(String.class);
-        System.out.println(s);
-        return new ObjectId(s);
+    public ObjectId deserialize(JsonParser parser, DeserializationContext context)
+        throws IOException, JsonProcessingException
+    {
+        String value = parser.readValueAs(String.class);
+        return new ObjectId(value);
     }
 }

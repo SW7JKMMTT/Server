@@ -19,10 +19,13 @@ import java.lang.reflect.Type;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
-public class QBOJacksonJsonProvider implements ContextResolver<ObjectMapper> {
+public class ObjectMatterResolver implements ContextResolver<ObjectMapper> {
     private ObjectMapper mapper;
 
-    public QBOJacksonJsonProvider() {
+    /**
+     * Injects the {@link ObjectId} (de)serializer into the {@link ObjectMapper} used by jackson.
+     */
+    public ObjectMatterResolver() {
         mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("bsonSerializer", new Version(1, 0, 0, "final", null, null));
         module.addSerializer(ObjectId.class, new ObjectIdSerializer());

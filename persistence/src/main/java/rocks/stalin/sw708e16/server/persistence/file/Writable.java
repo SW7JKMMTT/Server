@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * For anything writable by a {@link FileDao filedao}
+ * For anything writable by a {@link FileDao}.
  */
 public interface Writable {
     OutputStream write() throws IOException;

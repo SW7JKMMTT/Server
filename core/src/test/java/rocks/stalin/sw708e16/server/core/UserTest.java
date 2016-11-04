@@ -8,22 +8,22 @@ public class UserTest {
 
     @Test
     public void testMerge() {
-        User u = new User("Jeff", "passw0rd");
-        User u2 = new User();
-        u2.setPassword("1337");
+        User jeff = new User("Jeff", "passw0rd");
+        User alternativeJeff = new User();
+        alternativeJeff.setPassword("1337");
 
-        u.merge(u2);
+        jeff.merge(alternativeJeff);
 
-        assertEquals(u.getPassword(), u2.getPassword());
-        assertEquals(u.getUsername(), "Jeff");
+        assertEquals(jeff.getPassword(), alternativeJeff.getPassword());
+        assertEquals(jeff.getUsername(), "Jeff");
     }
 
     @Test
     public void testHasIcon() {
-        User u = new User("Jeff", "passw0rd");
-        assertFalse(u.getHasIcon());
-        u.setIcon(new UserIcon());
+        User jeff = new User("Jeff", "passw0rd");
+        assertFalse(jeff.getHasIcon());
+        jeff.setIcon(new UserIcon());
 
-        assertTrue(u.getHasIcon());
+        assertTrue(jeff.getHasIcon());
     }
 }
