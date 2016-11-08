@@ -44,8 +44,13 @@ allprojects  {
 			junitXml.enabled = true
 			junitXml.destination = "$buildDir/reports/junit"
 		}
-		outputs.upToDateWhen {
-			false
+		ignoreFailures = true
+
+		File file = new File("exclusions.txt")
+		if(file.exists()) {
+			file.readLines().each {
+				exclude "${it}"
+			}
 		}
 	}
 }
