@@ -5,7 +5,7 @@ dependencies {
 }
 
 allprojects  {
-	apply plugin: 'checkstyle'
+    apply plugin: 'checkstyle'
     apply plugin: 'idea'
     apply plugin: 'maven'
     apply plugin: 'jetty'
@@ -14,40 +14,45 @@ allprojects  {
     group = 'rocks.stalin.sw708e16'
     version = '1.0.0'
 
-	checkstyle {
-		configFile = "${rootDir}/checkstyle.xml" as File
-		toolVersion = 6.17
-	}
+    checkstyle {
+        configFile = "${rootDir}/checkstyle.xml" as File
+        toolVersion = 6.17
+    }
 
-	task checkstyle (type: Checkstyle) {
+    task checkstyle (type: Checkstyle) {
 
-		description 'Run checkstyle'
-		group 'verification'
+        description 'Run checkstyle'
+        group 'verification'
 
-		source 'src/main/java'
-		include '**/*.java'
-		ignoreFailures = true
+        source 'src/main/java'
+        include '**/*.java'
+        ignoreFailures = true
 
-		def configProps = ['proj.module.dir': projectDir.absolutePath]
-		configProperties configProps
+        def configProps = ['proj.module.dir': projectDir.absolutePath]
+        configProperties configProps
 
-		// empty classpath
-		classpath = files()
+        // empty classpath
+        classpath = files()
 
-		reports {
-			xml.enabled = true
-		}
-	}
+        reports {
+            xml.enabled = true
+        }
+    }
 
-	task report(type: Test) {
-		reports {
-			junitXml.enabled = true
-			junitXml.destination = "$buildDir/reports/junit"
-		}
-		outputs.upToDateWhen {
-			false
-		}
-	}
+    task report(type: Test) {
+        reports {
+            junitXml.enabled = true
+            junitXml.destination = "$buildDir/reports/junit"
+        }
+        ignoreFailures = true
+
+        File file = new File("exclusions.txt")
+        if(file.exists()) {
+            file.readLines().each {
+                exclude "${it}"
+            }
+        }
+    }
 }
 
 subprojects {
