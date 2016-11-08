@@ -61,6 +61,12 @@ public class UserService {
     public User insertUser(User newUser) {
         if (newUser == null)
             throw new IllegalArgumentException("New user required");
+
+        if (newUser.getUsername() == null)
+            throw new BadRequestException("No username");
+        if (newUser.getPassword() == null)
+            throw new BadRequestException("No password");
+
         userDao.add(newUser);
         return newUser;
     }

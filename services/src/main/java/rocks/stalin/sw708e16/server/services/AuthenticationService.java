@@ -43,6 +43,8 @@ public class AuthenticationService {
     @Consumes("application/json")
     //TODO: Simplify and improve, maybe don't use a map?
     public AuthToken authenticate(Map<String, String> obj) {
+        if (!obj.containsKey("username") || !obj.containsKey("password"))
+            throw new BadRequestException("No username or password given. Did you misspell it?");
         User user = userDao.byUsernameAndPassword(obj.get("username"), obj.get("password"));
         if(user == null)
             throw new NotAuthorizedException("Wrong username or password");
