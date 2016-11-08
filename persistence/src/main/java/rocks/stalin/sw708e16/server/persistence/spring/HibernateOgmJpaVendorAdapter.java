@@ -5,6 +5,7 @@ import org.hibernate.ogm.datastore.spi.DatastoreProvider;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
+import rocks.stalin.sw708e16.server.persistence.spring.connection.ConnectionInformationProvider;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -47,6 +48,8 @@ public class HibernateOgmJpaVendorAdapter implements JpaVendorAdapter {
 
     private String username;
     private String password;
+
+    private ConnectionInformationProvider informationProvider;
 
     private boolean createDatabase;
 
@@ -103,16 +106,27 @@ public class HibernateOgmJpaVendorAdapter implements JpaVendorAdapter {
     public Map<String, Object> getJpaPropertyMap() {
         Map<String, Object> jpaProperties = new HashMap<>();
 
-        if(getUsername() != null)
+        if(getInformationProvider() != null) {
+            if (getInformationProvider().getUsername() != null)
+                jpaProperties.put(OgmProperties.USERNAME, getInformationProvider().getUsername());
+            if (getInformationProvider().getPassword() != null)
+                jpaProperties.put(OgmProperties.PASSWORD, getInformationProvider().getPassword());
+            if (getInformationProvider().getUrl() != null)
+                jpaProperties.put(OgmProperties.HOST, getInformationProvider().getUrl());
+            if (getInformationProvider().getPort() != 0)
+                jpaProperties.put(OgmProperties.PORT, getInformationProvider().getPort());
+        }
+
+        if (getUsername() != null)
             jpaProperties.put(OgmProperties.USERNAME, getUsername());
 
-        if(getPassword() != null)
+        if (getPassword() != null)
             jpaProperties.put(OgmProperties.PASSWORD, getPassword());
 
-        if(getHost() != null)
+        if (getHost() != null)
             jpaProperties.put(OgmProperties.HOST, getHost());
 
-        if(getPort() != 0)
+        if (getPort() != 0)
             jpaProperties.put(OgmProperties.PORT, getPort());
 
         jpaProperties.put(OgmProperties.DATABASE, getDatabase());
@@ -249,5 +263,13 @@ public class HibernateOgmJpaVendorAdapter implements JpaVendorAdapter {
 
     public void setDatabase(String database) {
         this.database = database;
+    }
+
+    public ConnectionInformationProvider getInformationProvider() {
+        return informationProvider;
+    }
+
+    public void setInformationProvider(ConnectionInformationProvider informationProvider) {
+        this.informationProvider = informationProvider;
     }
 }

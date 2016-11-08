@@ -19,13 +19,15 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="mongo" class="rocks.stalin.sw708e16.server.persistence.spring.EmbeddedMongoFactoryBean"
-              p:host="${mongo.db.host}"
-              p:port="${mongo.db.port}"/>
+        <bean id="mongo" class="rocks.stalin.sw708e16.server.persistence.spring.EmbeddedMongoFactoryBean"/>
+
+        <bean id="informationProvider"
+              class="rocks.stalin.sw708e16.server.persistence.spring.connection.EmbeddedConnectionInformationProviderBean">
+            <property name="process" ref="mongo" />
+        </bean>
 
         <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOgmJpaVendorAdapter" depends-on="mongo">
-            <property name="host" value="${mongo.db.host}" />
-            <property name="port" value="${mongo.db.port}" />
+            <property name="informationProvider" ref="informationProvider" />
             <property name="createDatabase" value="true" />
             <property name="providerStr" value="${mongo.db.driver}" />
             <property name="database" value="${mongo.db.database}" />

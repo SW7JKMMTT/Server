@@ -1,6 +1,7 @@
 package rocks.stalin.sw708e16.server.persistence.spring;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
@@ -17,26 +18,22 @@ import java.util.logging.Logger;
 
 import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
 
-public class EmbeddedMongoFactoryBean implements FactoryBean<MongodExecutable>, DisposableBean {
+public class EmbeddedMongoFactoryBean implements FactoryBean<MongodProcess>, DisposableBean {
     private Logger logger = Logger.getLogger("rocks.stalic.sw708e16.server.persistence.spring");
 
     private String version;
-    private String host;
-    private int port;
 
     private MongodExecutable executable;
 
     @Override
-    public MongodExecutable getObject() throws Exception {
+    public MongodProcess getObject() throws Exception {
         MongodStarter starter = MongodStarter.getDefaultInstance();
         IMongodConfig mongoConfig = new MongodConfigBuilder()
             .version(this.version == null ? PRODUCTION : parseVersion(this.version))
-            .net(new Net(port, Network.localhostIsIPv6()))
             .build();
 
         executable = starter.prepare(mongoConfig);
-        executable.start();
-        return executable;
+        return executable.start();
     }
 
     @Override
@@ -62,23 +59,6 @@ public class EmbeddedMongoFactoryBean implements FactoryBean<MongodExecutable>, 
     public void setVersion(String version) {
         this.version = version;
     }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
 
     private IFeatureAwareVersion parseVersion(String version) {
         String versionEnumName = version.toUpperCase().replaceAll("\\.", "_");
