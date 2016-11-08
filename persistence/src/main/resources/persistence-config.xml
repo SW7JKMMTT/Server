@@ -29,8 +29,8 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
         <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOgmJpaVendorAdapter" depends-on="mongo">
             <property name="informationProvider" ref="informationProvider" />
             <property name="createDatabase" value="true" />
-            <property name="providerStr" value="${mongo.db.driver}" />
-            <property name="database" value="${mongo.db.database}" />
+            <property name="providerStr" value="mongodb" />
+            <property name="database" value="test" />
         </bean>
     </beans>
 
