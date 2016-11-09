@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Path")
-public class Path {
+@Table(name = "Route")
+public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ObjectId id;
 
-    @OneToMany(mappedBy = "path", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "route", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy("timestamp")
     private List<Waypoint> points = new ArrayList<>();
 
@@ -25,6 +25,15 @@ public class Path {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Vehicle vehicle;
 
+    protected Route() {
+    }
+
+    public Route(List<Waypoint> points, Driver driver, Vehicle vehicle) {
+        this.points = points;
+        this.driver = driver;
+        this.vehicle = vehicle;
+    }
+
     public ObjectId getId() {
         return id;
     }
@@ -33,7 +42,7 @@ public class Path {
         points.add(point);
     }
 
-    public Iterable<Waypoint> getWaypoints() {
+    public List<Waypoint> getWaypoints() {
         return points;
     }
 

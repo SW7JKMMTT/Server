@@ -28,7 +28,7 @@ public class Waypoint {
     double longitude;
 
     @ManyToOne(optional = false)
-    private Path path;
+    private Route route;
 
     public ObjectId getId() {
         return id;

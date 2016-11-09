@@ -7,4 +7,11 @@ import javax.persistence.Embeddable;
 public class Vin {
     @Column(unique = true, nullable = false, length = 32)
     private String vin;
+
+    protected Vin() {
+    }
+
+    public Vin(String vin) {
+        this.vin = vin;
+    }
 }

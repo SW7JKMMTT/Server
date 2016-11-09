@@ -1,11 +1,11 @@
 package rocks.stalin.sw708e16.server.core;
 
 import org.bson.types.ObjectId;
-import rocks.stalin.sw708e16.server.core.spatial.Path;
+import rocks.stalin.sw708e16.server.core.spatial.Route;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 @Entity
 @Table(name = "Driver")
@@ -18,7 +18,14 @@ public class Driver {
     private User user;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
-    private List<Path> paths = new ArrayList<>();
+    private Collection<Route> routes = new ArrayList<>();
+
+    protected Driver() {
+    }
+
+    public Driver(User user) {
+        this.user = user;
+    }
 
     public ObjectId getId() {
         return id;
@@ -28,11 +35,13 @@ public class Driver {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void addPath(Route route) {
+        this.routes.add(route);
     }
 
-    public void addPath(Path path) {
-        paths.add(path);
+    public void addPaths(Collection<Route> routes) {
+        this.routes.addAll(routes);
     }
+
+
 }
