@@ -12,7 +12,10 @@ public class GivenWaypoint {
     private double longitude;
     private Route route;
 
-    public GivenWaypoint withTimeStamp(Date timestamp) {
+    public GivenWaypoint() {
+    }
+
+    public GivenWaypoint withTimestamp(Date timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -38,5 +41,4 @@ public class GivenWaypoint {
         route.addWaypoint(waypoint);
         return waypoint;
     }
-
 }

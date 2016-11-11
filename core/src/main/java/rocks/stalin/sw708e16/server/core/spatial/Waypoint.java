@@ -22,10 +22,10 @@ public class Waypoint {
     private Date timestamp;
 
     @Latitude
-    double latitude;
+    private double latitude;
 
     @Longitude
-    double longitude;
+    private double longitude;
 
     @ManyToOne(optional = false)
     private Route route;
