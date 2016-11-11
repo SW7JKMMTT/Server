@@ -1,11 +1,11 @@
-package rocks.stalin.sw708e16.server.persistence.spring;
+package rocks.stalin.sw708e16.server.spring;
 
 import org.hibernate.ogm.cfg.OgmProperties;
 import org.hibernate.ogm.datastore.spi.DatastoreProvider;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
-import rocks.stalin.sw708e16.server.persistence.spring.connection.ConnectionInformationProvider;
+import rocks.stalin.sw708e16.server.spring.connection.ConnectionInformationProvider;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

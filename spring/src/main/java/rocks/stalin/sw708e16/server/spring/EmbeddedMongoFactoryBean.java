@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.persistence.spring;
+package rocks.stalin.sw708e16.server.spring;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
 
 public class EmbeddedMongoFactoryBean implements FactoryBean<MongodProcess>, DisposableBean {
-    private Logger logger = Logger.getLogger("rocks.stalic.sw708e16.server.persistence.spring");
+    private Logger logger = Logger.getLogger("rocks.stalic.sw708e16.server.persistence.rocks.stalin.sw708e16.server.spring");
 
     private String version;
 

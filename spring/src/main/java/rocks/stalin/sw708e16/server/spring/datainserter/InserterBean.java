@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.persistence.spring.datainserter;
+package rocks.stalin.sw708e16.server.spring.datainserter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

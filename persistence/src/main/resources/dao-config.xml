@@ -15,7 +15,7 @@
 
     <import resource="classpath:persistence-config.xml"/>
 
-    <bean id="inserter" class="rocks.stalin.sw708e16.server.persistence.spring.datainserter.InserterBean"
+    <bean id="inserter" class="rocks.stalin.sw708e16.server.spring.datainserter.InserterBean"
           init-method="insert" depends-on="transactionManager">
     </bean>
 </beans>

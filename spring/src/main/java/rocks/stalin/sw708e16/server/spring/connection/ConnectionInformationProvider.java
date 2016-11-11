@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.persistence.spring.connection;
+package rocks.stalin.sw708e16.server.spring.connection;
 
 public interface ConnectionInformationProvider {
     String getUrl();

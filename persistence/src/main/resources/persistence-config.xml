@@ -19,18 +19,35 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="mongo" class="rocks.stalin.sw708e16.server.persistence.spring.EmbeddedMongoFactoryBean"/>
+        <bean id="mongo" class="rocks.stalin.sw708e16.server.spring.EmbeddedMongoFactoryBean"/>
 
         <bean id="informationProvider"
-              class="rocks.stalin.sw708e16.server.persistence.spring.connection.EmbeddedConnectionInformationProviderBean">
+              class="rocks.stalin.sw708e16.server.spring.connection.EmbeddedConnectionInformationProviderBean">
             <property name="process" ref="mongo" />
         </bean>
 
-        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOgmJpaVendorAdapter" depends-on="mongo">
+        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.spring.HibernateOgmJpaVendorAdapter" depends-on="mongo">
             <property name="informationProvider" ref="informationProvider" />
             <property name="createDatabase" value="true" />
             <property name="providerStr" value="mongodb" />
             <property name="database" value="test" />
+        </bean>
+
+        <bean id="entityManagerFactory"
+              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="vendorAdapter">
+            <property name="jpaVendorAdapter" ref="vendorAdapter" />
+            <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
+            <property name="packagesToScan">
+                <list>
+                    <value>rocks.stalin.sw708e16.server.core</value>
+                </list>
+            </property>
+            <property name="jpaProperties">
+                <props>
+                    <prop key="wildfly.jpa.hibernate.search.module">none</prop>
+                    <prop key="jboss.as.jpa.providerModule">application</prop>
+                </props>
+            </property>
         </bean>
     </beans>
 
@@ -48,7 +65,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOgmJpaVendorAdapter">
+        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.spring.HibernateOgmJpaVendorAdapter">
             <property name="host" value="${mongo.db.host}" />
             <property name="port" value="${mongo.db.port}" />
             <property name="createDatabase" value="true" />
@@ -71,28 +88,36 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.persistence.spring.HibernateOgmJpaVendorAdapter">
-            <property name="host" value="${mongo.db.host}" />
-            <property name="port" value="${mongo.db.port}" />
+        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.spring.HibernateOgmJpaVendorAdapter">
+            <property name="host" value="127.0.0.1" />
+            <property name="port" value="27017" />
             <property name="createDatabase" value="true" />
-            <property name="providerStr" value="${mongo.db.driver}" />
-            <property name="database" value="${mongo.db.database}" />
+            <property name="providerStr" value="mongodb" />
+            <property name="database" value="test" />
         </bean>
-    </beans>
-
-    <beans>
-        <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
         <bean id="entityManagerFactory"
               class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="vendorAdapter">
-            <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+            <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
             <property name="jpaVendorAdapter" ref="vendorAdapter" />
             <property name="packagesToScan">
                 <list>
                     <value>rocks.stalin.sw708e16.server.core</value>
                 </list>
             </property>
+            <property name="jpaProperties">
+                <props>
+                    <prop key="wildfly.jpa.hibernate.search.module">none</prop>
+                    <prop key="jboss.as.jpa.providerModule">application</prop>
+                    <prop key="hibernate.search.default.directory_provider">filesystem</prop>
+                    <prop key="hibernate.search.default.indexBase">/var/lucene/indexes</prop>
+                </props>
+            </property>
         </bean>
+    </beans>
+
+    <beans>
+        <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
         <!-- Spring transaction management -->
         <bean id="transactionManager"

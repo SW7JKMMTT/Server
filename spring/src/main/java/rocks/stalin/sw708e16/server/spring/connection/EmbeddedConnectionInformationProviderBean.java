@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.persistence.spring.connection;
+package rocks.stalin.sw708e16.server.spring.connection;
 
 import de.flapdoodle.embed.mongo.MongodProcess;
 

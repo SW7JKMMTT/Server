@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
-import rocks.stalin.sw708e16.server.persistence.spring.datainserter.DevelopmentData;
-import rocks.stalin.sw708e16.server.persistence.spring.datainserter.DevelopmentDataInserter;
+import rocks.stalin.sw708e16.server.spring.datainserter.DevelopmentData;
+import rocks.stalin.sw708e16.server.spring.datainserter.DevelopmentDataInserter;
 
 @Service
 @DevelopmentData

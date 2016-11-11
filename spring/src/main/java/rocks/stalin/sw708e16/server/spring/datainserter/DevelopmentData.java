@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.persistence.spring.datainserter;
+package rocks.stalin.sw708e16.server.spring.datainserter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

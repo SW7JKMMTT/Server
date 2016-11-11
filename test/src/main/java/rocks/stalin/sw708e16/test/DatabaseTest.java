@@ -4,7 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.connection.Connection;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import rocks.stalin.sw708e16.server.persistence.spring.connection.ConnectionInformationProvider;
+import rocks.stalin.sw708e16.server.spring.connection.ConnectionInformationProvider;
 
 public abstract class DatabaseTest {
     @Autowired
