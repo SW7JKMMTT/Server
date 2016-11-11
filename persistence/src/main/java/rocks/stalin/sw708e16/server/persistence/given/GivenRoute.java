@@ -21,12 +21,12 @@ public class GivenRoute {
     }
 
     public GivenRoute withWaypoint(Waypoint waypoint) {
-        waypoints.add(waypoints.size(), waypoint);
+        this.waypoints.add(waypoints.size(), waypoint);
         return this;
     }
 
     public GivenRoute withWaypoints(Collection<Waypoint> waypoints) {
-        waypoints.addAll(waypoints);
+        this.waypoints.addAll(waypoints);
         return this;
     }
 
