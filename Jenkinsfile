@@ -31,7 +31,25 @@ stage('Test') {
             }
         }
     }
-    parallel branches
+	parallel branches
+}
+
+stage('Enunciate') {
+    node {
+        deleteDir()
+        unstash "sources"
+
+        gradle "enunciate"
+
+        publishHTML([
+        allowMissing: false,
+        alwaysLinkToLastBuild: false,
+        keepAll: false,
+        reportDir: 'services/build/enunciate/docs',
+        reportFiles: 'index.html',
+        reportName: 'Enunciate'
+        ])
+    }
 }
 
 //Run gradle
