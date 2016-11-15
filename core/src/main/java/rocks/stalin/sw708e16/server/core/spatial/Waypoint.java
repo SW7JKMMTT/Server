@@ -3,6 +3,7 @@ package rocks.stalin.sw708e16.server.core.spatial;
 import org.bson.types.ObjectId;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.bridge.builtin.IntegerBridge;
+import rocks.stalin.sw708e16.server.persistence.ObjectIdBridge;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.Date;
 @Table(name = "Waypoint")
 public class Waypoint {
     @Id
-    @FieldBridge(impl = IntegerBridge.class)
+    @FieldBridge(impl = ObjectIdBridge.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     ObjectId id;
 
@@ -30,14 +31,14 @@ public class Waypoint {
     @ManyToOne(optional = false)
     private Route route;
 
+    protected Waypoint() {
+    }
+
     public Waypoint(Date timestamp, double latitude, double longitude, Route route) {
         this.timestamp = timestamp;
         this.latitude = latitude;
         this.longitude = longitude;
         this.route = route;
-    }
-
-    private Waypoint() {
     }
 
     public ObjectId getId() {

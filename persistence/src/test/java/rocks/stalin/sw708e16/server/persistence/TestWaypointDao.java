@@ -72,6 +72,7 @@ public class TestWaypointDao extends DatabaseTest {
             .withLongitude(1)
             .withTimestamp(new Date())
             .in(waypointDao);
+        ftem.flushToIndexes();
         List<Waypoint> ret = waypointDao.withinRadius(1, 1, 100);
         assertFalse(ret.isEmpty());
     }
