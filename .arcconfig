@@ -1,7 +1,7 @@
 {
-  "phabricator.uri" : "http://review.slashwin.dk",
+  "phabricator.uri" : "https://review.slashwin.dk",
   "unit.engine": "GradleTestEngine",
   "phutil_libraries": [
-	".arclib"
+    ".arclib"
   ]
 }
