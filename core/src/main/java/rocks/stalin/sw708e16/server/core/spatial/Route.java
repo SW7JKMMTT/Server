@@ -7,6 +7,8 @@ import rocks.stalin.sw708e16.server.core.Vehicle;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Route")
@@ -60,5 +62,19 @@ public class Route {
 
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
+    }
+
+    /**
+     * Gets the latest Waypoint in the Route.
+     * @return The latest Waypoint or null if non is present.
+     */
+    public List<Waypoint> getLastWaypoints(int count) {
+        List<Waypoint> waypoints = this.getWaypoints()
+                .stream()
+                .sorted((t1, t2) -> t2.getTimestamp().compareTo(t1.getTimestamp()))
+                .limit(count)
+                .collect(Collectors.toList());
+
+        return waypoints;
     }
 }
