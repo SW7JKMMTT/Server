@@ -7,9 +7,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
-import rocks.stalin.sw708e16.test.DatabaseTest;
 import rocks.stalin.sw708e16.server.persistence.given.GivenAuthToken;
 import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
+import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.annotation.Resource;
 import java.util.Collection;

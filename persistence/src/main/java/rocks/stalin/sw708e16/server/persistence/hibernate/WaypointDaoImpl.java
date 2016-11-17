@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Transactional
@@ -22,7 +21,9 @@ import java.util.List;
 public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDao {
 
     @Override
-    public List<Waypoint> withinRadius(double latitude, double longitude, double kilometers) throws InterruptedException {
+    public List<Waypoint> withinRadius(double latitude, double longitude, double kilometers)
+        throws InterruptedException
+    {
         FullTextEntityManager ftem = Search.getFullTextEntityManager(em);
         ftem.createIndexer().startAndWait();
         QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Waypoint.class).get();

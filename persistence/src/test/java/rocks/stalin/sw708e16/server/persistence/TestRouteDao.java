@@ -14,10 +14,10 @@ import rocks.stalin.sw708e16.server.core.Vehicle;
 import rocks.stalin.sw708e16.server.core.Vin;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
-import rocks.stalin.sw708e16.test.DatabaseTest;
 import rocks.stalin.sw708e16.server.persistence.given.GivenDriver;
 import rocks.stalin.sw708e16.server.persistence.given.GivenRoute;
 import rocks.stalin.sw708e16.server.persistence.given.GivenVehicle;
+import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import java.util.Collection;
 
