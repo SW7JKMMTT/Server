@@ -154,7 +154,6 @@ public class TestWaypointService extends DatabaseTest {
     public void addWaypoint_ValidData() throws Exception {
         // Arrange
         WaypointBuilder waypoint = new WaypointBuilder();
-        waypoint.setRoute(waypointService.getRoute());
         waypoint.setLatitude(1.1);
         waypoint.setLongitude(1.1);
         waypoint.setTimestamp(new Date(1L));
@@ -167,14 +166,12 @@ public class TestWaypointService extends DatabaseTest {
         Assert.assertEquals(found.getLatitude(), waypoint.getLatitude());
         Assert.assertEquals(found.getLongitude(), waypoint.getLongitude());
         Assert.assertEquals(found.getTimestamp(), waypoint.getTimestamp());
-        Assert.assertEquals(found.getRoute(), waypoint.getRoute());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addWaypoint_InvalidData() throws Exception {
         // Arrange
         WaypointBuilder waypoint = new WaypointBuilder();
-        waypoint.setRoute(waypointService.getRoute());
         waypoint.setLatitude(1.1);
         waypoint.setTimestamp(new Date(1L));
         // Missing parameter(s).

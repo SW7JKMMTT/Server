@@ -55,8 +55,7 @@ public class WaypointService {
             throw new IllegalArgumentException("Invalid waypointbuilder");
         }
 
-        waypointBuilder.setRoute(route);
-        Waypoint waypoint = waypointBuilder.build();
+        Waypoint waypoint = waypointBuilder.build(route);
         route.addWaypoint(waypoint);
 
         return waypoint;

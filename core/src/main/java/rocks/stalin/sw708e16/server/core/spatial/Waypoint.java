@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.core.spatial;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.bridge.builtin.IntegerBridge;
@@ -56,6 +57,7 @@ public class Waypoint {
         return longitude;
     }
 
+    @JsonIgnore
     public Route getRoute() {
         return route;
     }

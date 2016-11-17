@@ -8,7 +8,6 @@ import java.util.Date;
 public class WaypointBuilder {
     private Double latitude;
     private Double longitude;
-    private Route route;
     private Date timestamp;
 
     public WaypointBuilder() {
@@ -30,14 +29,6 @@ public class WaypointBuilder {
         this.longitude = longitude;
     }
 
-    public Route getRoute() {
-        return route;
-    }
-
-    public void setRoute(Route route) {
-        this.route = route;
-    }
-
     public Date getTimestamp() {
         return timestamp;
     }
@@ -51,7 +42,7 @@ public class WaypointBuilder {
      *
      * @return The Waypoint built.
      */
-    public Waypoint build() {
+    public Waypoint build(Route route) {
         if (timestamp == null || latitude == null || longitude == null || route == null) {
             throw new IllegalArgumentException("All arguments must be given to the waypointbuilder");
         }
