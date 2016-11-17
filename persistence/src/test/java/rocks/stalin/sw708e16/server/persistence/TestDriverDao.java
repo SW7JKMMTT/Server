@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
-import rocks.stalin.sw708e16.test.DatabaseTest;
 import rocks.stalin.sw708e16.server.persistence.given.GivenDriver;
+import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import java.util.Collection;
 

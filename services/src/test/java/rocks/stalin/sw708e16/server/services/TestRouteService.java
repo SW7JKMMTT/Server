@@ -17,12 +17,12 @@ import rocks.stalin.sw708e16.server.persistence.DriverDao;
 import rocks.stalin.sw708e16.server.persistence.RouteDao;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.server.persistence.VehicleDao;
-import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
-import rocks.stalin.sw708e16.server.services.builders.RouteBuilder;
-import rocks.stalin.sw708e16.test.DatabaseTest;
 import rocks.stalin.sw708e16.server.persistence.given.GivenDriver;
 import rocks.stalin.sw708e16.server.persistence.given.GivenRoute;
+import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 import rocks.stalin.sw708e16.server.persistence.given.GivenVehicle;
+import rocks.stalin.sw708e16.server.services.builders.RouteBuilder;
+import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
