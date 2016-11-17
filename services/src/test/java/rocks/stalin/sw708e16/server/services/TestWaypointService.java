@@ -82,7 +82,7 @@ public class TestWaypointService extends DatabaseTest {
                 .withRoute(waypointService.getRoute())
                 .withLatitude(1.0)
                 .withLatitude(1.1)
-                .withTimeStamp(new Date(1L))
+                .withTimestamp(new Date(1L))
                 .in(waypointDao);
 
         // Act
@@ -102,13 +102,13 @@ public class TestWaypointService extends DatabaseTest {
                 .withRoute(waypointService.getRoute())
                 .withLatitude(1.0)
                 .withLatitude(1.1)
-                .withTimeStamp(new Date(2L))
+                .withTimestamp(new Date(2L))
                 .in(waypointDao);
         new GivenWaypoint()
                 .withRoute(waypointService.getRoute())
                 .withLatitude(1.2)
                 .withLatitude(1.3)
-                .withTimeStamp(new Date(1L))
+                .withTimestamp(new Date(1L))
                 .in(waypointDao);
 
         // Act
@@ -128,13 +128,13 @@ public class TestWaypointService extends DatabaseTest {
                 .withRoute(waypointService.getRoute())
                 .withLatitude(1.0)
                 .withLatitude(1.1)
-                .withTimeStamp(new Date(2L))
+                .withTimestamp(new Date(2L))
                 .in(waypointDao);
         Waypoint wp2 = new GivenWaypoint()
                 .withRoute(waypointService.getRoute())
                 .withLatitude(1.2)
                 .withLatitude(1.3)
-                .withTimeStamp(new Date(1L))
+                .withTimestamp(new Date(1L))
                 .in(waypointDao);
 
         // Act
