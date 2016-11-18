@@ -13,13 +13,6 @@
     <!-- Import necessary DAO and DB transaction management classes -->
     <import resource="classpath:dao-config.xml"/>
 
-    <!-- Inject DAO classes in service -->
-    <bean id="userService"
-          class="rocks.stalin.sw708e16.server.services.UserService" />
-    <bean id="authService"
-          class="rocks.stalin.sw708e16.server.services.AuthenticationService"
-          name="WEW"/>
-
     <tx:annotation-driven />
     <context:annotation-config />
     <context:component-scan base-package="rocks.stalin.sw708e16.server" />

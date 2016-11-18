@@ -74,12 +74,12 @@ subprojects {
     }
 
     dependencies {
-        compile (group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version:'3.0.16.Final') {
+        compile (group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version:'3.0.19.Final') {
             exclude(module: 'commons-httpclient')
             exclude(module: 'servlet-api')
         }
-        compile group: 'org.jboss.resteasy', name: 'resteasy-spring', version:'3.0.16.Final'
-        compile group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: '3.0.16.Final'
+        compile group: 'org.jboss.resteasy', name: 'resteasy-spring', version:'3.0.19.Final'
+        compileOnly group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: '3.0.19.Final'
         compile group: 'org.springframework', name: 'spring-core', version:'4.2.5.RELEASE'
         compile group: 'org.springframework', name: 'spring-test', version:'4.2.5.RELEASE'
         compile group: 'org.springframework', name: 'spring-webmvc', version:'4.2.5.RELEASE'

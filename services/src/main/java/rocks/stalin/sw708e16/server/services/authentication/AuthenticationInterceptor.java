@@ -1,7 +1,12 @@
 package rocks.stalin.sw708e16.server.services.authentication;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.persistence.AuthDao;
@@ -21,16 +26,17 @@ import java.util.regex.Pattern;
 
 @Provider
 @Priority(Priorities.AUTHENTICATION)
+@Component
 public class AuthenticationInterceptor implements ContainerRequestFilter {
     private static Pattern authPattern = Pattern.compile("Sleepy token=(?<token>.*)");
 
     @Context
     private ResourceInfo resInfo;
 
-    @Resource
+    @Autowired
     private AuthDao authDao;
 
-    @Resource
+    @Autowired
     private PermissionDao permissionDao;
 
     @Override

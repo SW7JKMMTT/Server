@@ -14,7 +14,7 @@ description = 'TRUCKNUTS Rest: Service'
 dependencies {
     compile group: 'org.springframework', name: 'spring-orm', version:'4.2.5.RELEASE'
     compile group: 'org.springframework', name: 'spring-tx', version:'4.2.5.RELEASE'
-    compile group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: '3.0.16.Final'
+    compile group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: '3.0.19.Final'
     compile project(':core')
     compile project(':persistence')
     testCompile project(':test')

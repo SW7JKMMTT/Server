@@ -15,11 +15,7 @@ import javax.persistence.TypedQuery;
 @Transactional
 @Repository
 @Primary
-public class PermissionDaoImpl implements PermissionDao {
-
-    @PersistenceContext
-    private EntityManager em;
-
+public class PermissionDaoImpl extends BaseDaoImpl<Permission> implements PermissionDao {
     @Override
     public boolean userHasPermission(User user, PermissionType permission) {
         TypedQuery<Permission> query =
