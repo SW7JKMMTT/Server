@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.core.authentication;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.User;
 
@@ -36,6 +37,7 @@ public class Permission {
         return permission;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }

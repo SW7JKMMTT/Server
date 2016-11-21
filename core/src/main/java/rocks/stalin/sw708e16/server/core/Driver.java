@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
@@ -31,6 +32,7 @@ public class Driver {
         return id;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }

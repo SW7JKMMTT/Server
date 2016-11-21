@@ -44,7 +44,7 @@ public class UserService {
     @Path("/")
     @Produces("application/json")
     public Collection<User> getAllUsers() {
-        return userDao.getAll();
+        return userDao.getAll_ForDisplay();
     }
 
     /**

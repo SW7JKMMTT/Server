@@ -10,7 +10,7 @@ public interface UserDao extends BaseDao<User> {
 
     User byId(ObjectId id);
 
-    Collection<User> getAll();
+    Collection<User> getAll_ForDisplay();
 
     //For the login
     User byUsernameAndPassword(String username, String password);

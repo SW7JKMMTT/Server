@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
+import rocks.stalin.sw708e16.server.persistence.hibernate.magic.HibernateMagic;
 
 import javax.persistence.TypedQuery;
 import java.util.Collection;
@@ -38,9 +39,14 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public Collection<User> getAll() {
+    public Collection<User> getAll_ForDisplay() {
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
-        return query.getResultList();
+        Collection<User> users = query.getResultList();
+
+        // Init lazy list
+        users.forEach(user -> HibernateMagic.initialize(user, "permissions"));
+
+        return users;
     }
 
     @Override

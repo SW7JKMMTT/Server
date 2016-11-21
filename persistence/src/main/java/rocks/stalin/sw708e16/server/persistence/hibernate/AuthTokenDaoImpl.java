@@ -11,9 +11,6 @@ import rocks.stalin.sw708e16.server.persistence.hibernate.magic.HibernateMagic;
 import javax.persistence.TypedQuery;
 import java.util.Collection;
 
-/**
- * Created by delusional on 3/2/16.
- */
 @Transactional
 @Repository
 @Primary

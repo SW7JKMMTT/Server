@@ -34,6 +34,7 @@ public class ObjectMatterResolver implements ContextResolver<ObjectMapper> {
         module.addSerializer(ObjectId.class, new ObjectIdSerializer());
         module.addDeserializer(ObjectId.class, new ObjectIdDeserializer());
         mapper.registerModule(module);
+        mapper.registerModule(new Hibernate5Module());
     }
 
     @Override
