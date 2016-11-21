@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.core.authentication;
 
+import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.User;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private ObjectId id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -19,7 +20,15 @@ public class Permission {
     @Enumerated(value = EnumType.STRING)
     private PermissionType permission;
 
-    public long getId() {
+    protected Permission() {
+    }
+
+    public Permission(User user, PermissionType permission) {
+        this.user = user;
+        this.permission = permission;
+    }
+
+    public ObjectId getId() {
         return id;
     }
 

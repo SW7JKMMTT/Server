@@ -1,19 +1,28 @@
 package rocks.stalin.sw708e16.server.services.authentication;
 
+import org.hibernate.Hibernate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
+import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.persistence.PermissionDao;
 
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
+import java.util.Collection;
+import java.util.List;
 
+@Transactional
 public class GSecurityContext implements SecurityContext {
     private AuthToken token;
-    private PermissionDao permissionDao;
+    private User user;
 
     public GSecurityContext(AuthToken token, PermissionDao permissionDao) {
         this.token = token;
-        this.permissionDao = permissionDao;
+        this.user = token.getUser();
     }
 
     @Override
@@ -27,7 +36,7 @@ public class GSecurityContext implements SecurityContext {
         if(type == null)
             return false;
 
-        return permissionDao.userHasPermission(token.getUser(), type);
+        return user.hasPermission(type);
     }
 
     @Override

@@ -2,18 +2,13 @@ package rocks.stalin.sw708e16.server.services.authentication;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.persistence.AuthDao;
 import rocks.stalin.sw708e16.server.persistence.PermissionDao;
 
 import javax.annotation.Priority;
-import javax.annotation.Resource;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -54,7 +49,7 @@ public class AuthenticationInterceptor implements ContainerRequestFilter {
             return;
         }
 
-        AuthToken atoken = authDao.byTokenStr(tokenstr);
+        AuthToken atoken = authDao.byTokenStr_ForAuthorization(tokenstr);
         if(atoken == null) {
             return;
         }

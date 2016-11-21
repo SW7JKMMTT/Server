@@ -40,9 +40,9 @@ public class TestAuthDao extends DatabaseTest {
         User jeff = userDao.byUsername("Jeff");
         AuthToken token = new AuthToken("AABBCC", jeff);
 
-        assertNull(authDao.byTokenStr("AABBCC"));
+        assertNull(authDao.byTokenStr_ForAuthorization("AABBCC"));
         authDao.add(token);
-        assertNotNull(authDao.byTokenStr("AABBCC"));
+        assertNotNull(authDao.byTokenStr_ForAuthorization("AABBCC"));
     }
 
     @Test
@@ -50,10 +50,10 @@ public class TestAuthDao extends DatabaseTest {
         User jeff = new GivenUser().withName("Jeff").withPassword("1000").in(userDao);
         AuthToken token = new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
 
-        assertNotNull(authDao.byTokenStr("AABBCC"));
+        assertNotNull(authDao.byTokenStr_ForAuthorization("AABBCC"));
         jeff.revokeToken(token);
         authDao.remove(token);
-        assertNull(authDao.byTokenStr("AABBCC"));
+        assertNull(authDao.byTokenStr_ForAuthorization("AABBCC"));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class TestAuthDao extends DatabaseTest {
         User jeff = new GivenUser().withName("Jeff").withPassword("1000").in(userDao);
         new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
 
-        AuthToken token = authDao.byTokenStr("AABBCC");
+        AuthToken token = authDao.byTokenStr_ForAuthorization("AABBCC");
         assertNotNull(token);
     }
 
@@ -70,7 +70,7 @@ public class TestAuthDao extends DatabaseTest {
         User jeff = new GivenUser().withName("Jeff").withPassword("1000").in(userDao);
         new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
 
-        AuthToken token = authDao.byTokenStr("AABBCC");
+        AuthToken token = authDao.byTokenStr_ForAuthorization("AABBCC");
         assertNotNull(token);
         assertEquals(token.getUser().getUsername(), jeff.getUsername());
     }
@@ -83,8 +83,8 @@ public class TestAuthDao extends DatabaseTest {
 
         User databaseJeff = userDao.byUsername("Jeff");
 
-        AuthToken token1 = authDao.byTokenStr("FAKETOKEN");
-        AuthToken token2 = authDao.byTokenStr("MOBILETOKEN");
+        AuthToken token1 = authDao.byTokenStr_ForAuthorization("FAKETOKEN");
+        AuthToken token2 = authDao.byTokenStr_ForAuthorization("MOBILETOKEN");
 
         Collection<AuthToken> at = databaseJeff.getAuthTokens();
         assertEquals(at.size(), 2);

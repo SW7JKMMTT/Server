@@ -27,10 +27,10 @@ public class User {
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-    private Collection<AuthToken> authTokens;
+    private Collection<AuthToken> authTokens = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
-    private Collection<Permission> permissions;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private Collection<Permission> permissions = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserIcon icon;
@@ -143,12 +143,12 @@ public class User {
      *
      * @return A read only collection of user permissions
      */
-    public Collection<Permission> permissions() {
+    public Collection<Permission> getPermissions() {
         return Collections.unmodifiableCollection(this.permissions);
     }
 
     public boolean hasPermission(PermissionType permission) {
-        return permissions().stream().anyMatch((tperm) -> tperm.getPermission() == permission);
+        return getPermissions().stream().anyMatch((tperm) -> tperm.getPermission() == permission);
     }
 
     @Override
