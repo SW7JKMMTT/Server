@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.bson.types.ObjectId;
+import org.springframework.stereotype.Component;
 import rocks.stalin.sw708e16.server.services.serialize.ObjectIdSerializer;
 
 import javax.ws.rs.Produces;
@@ -20,6 +21,7 @@ import java.lang.reflect.Type;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
+@Component
 public class ObjectMatterResolver implements ContextResolver<ObjectMapper> {
     private ObjectMapper mapper;
 
@@ -32,7 +34,6 @@ public class ObjectMatterResolver implements ContextResolver<ObjectMapper> {
         module.addSerializer(ObjectId.class, new ObjectIdSerializer());
         module.addDeserializer(ObjectId.class, new ObjectIdDeserializer());
         mapper.registerModule(module);
-        mapper.registerModule(new Hibernate5Module());
     }
 
     @Override
