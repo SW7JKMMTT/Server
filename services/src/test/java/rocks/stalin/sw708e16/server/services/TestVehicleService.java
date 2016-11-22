@@ -12,6 +12,7 @@ import rocks.stalin.sw708e16.server.core.Vin;
 import rocks.stalin.sw708e16.server.persistence.VehicleDao;
 import rocks.stalin.sw708e16.server.persistence.given.GivenVehicle;
 import rocks.stalin.sw708e16.server.services.builders.VehicleBuilder;
+import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.annotation.Resource;
@@ -187,7 +188,7 @@ public class TestVehicleService extends DatabaseTest {
         // Assert
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ConflictException.class)
     public void testAddVehicle_SameVin() throws Exception {
         // Arrange
         Vehicle vehicle = new GivenVehicle()

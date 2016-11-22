@@ -75,6 +75,8 @@ public class RouteService {
      * Gets a single route by its id.
      * @param id id of the route to get.
      * @return the route with the given id.
+     *
+     * @HTTP 404 Route not found
      */
     @GET
     @Path("/{rid}/")
@@ -98,6 +100,8 @@ public class RouteService {
      * The waypoint service is served on the path.
      * @param id the id of the route to deliver a waypoint service for.
      * @return the waypoint service.
+     *
+     * @HTTP 404 Route not found
      */
     @Path("/{rid}/waypoint/")
     public WaypointService getWaypointService(@PathParam("rid") ObjectId id) {

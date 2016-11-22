@@ -89,6 +89,8 @@ public class UserService {
      *
      * @param id      The id of the {@link User user} to retrieve
      * @return The retrieved {@link User user}
+     *
+     * @HTTP 404 User not found
      */
     @GET
     @Path("/{uid}")
@@ -109,6 +111,8 @@ public class UserService {
      * @param id      The id of the user to modify
      * @param userBuilder The new {@link UserBuilder}
      * @return The modified {@link User user}
+     *
+     * @HTTP 404 User not found
      */
     @PUT
     @Path("/{uid}")
@@ -134,6 +138,8 @@ public class UserService {
      * @param id The id of the {@link User user}.
      * @return A {@link InputStream stream} of the png image.
      * @throws IOException If the image is unreadable on disk
+     *
+     * @HTTP 404 User not found or has no icon
      */
     @GET
     @Path("/{uid}/icon")
@@ -158,6 +164,8 @@ public class UserService {
      * @param authenticatedUser The {@link User Authenticated user} of the current request.
      * @return The {@link User user} that had its icon modified.
      * @throws IOException If the disk is unwritable.
+     *
+     * @HTTP 404 User not found
      */
     @PUT
     @Path("/{uid}/icon")

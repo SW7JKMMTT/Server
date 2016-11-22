@@ -1,5 +1,7 @@
 package rocks.stalin.sw708e16.server.services;
 
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,8 @@ public class AuthenticationService {
      *
      * @param obj The login credentials (username and password)
      * @return A new {@link AuthToken token} for the user
+     *
+     * @HTTP 401 Wrong username or password
      */
     @Path("/")
     @POST
@@ -47,7 +51,7 @@ public class AuthenticationService {
             throw new BadRequestException("No username or password given. Did you misspell it?");
         User user = userDao.byUsernameAndPassword(obj.get("username"), obj.get("password"));
         if(user == null)
-            throw new NotAuthorizedException("Wrong username or password");
+            throw new NotAuthorizedException("Wrong username or password", "Sleepy");
 
         AuthToken token = new AuthToken(user);
         authDao.add(token);
@@ -59,6 +63,8 @@ public class AuthenticationService {
      *
      * @param user The {@link User user} of the current request.
      * @return A collection of the {@link AuthToken tokens} of the user.
+     *
+     * @HTTP 401 User isn't authorized
      */
     @Path("/")
     @GET

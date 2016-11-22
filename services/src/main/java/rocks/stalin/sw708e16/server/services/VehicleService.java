@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Vehicle;
 import rocks.stalin.sw708e16.server.persistence.VehicleDao;
 import rocks.stalin.sw708e16.server.services.builders.VehicleBuilder;
+import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
 
 import javax.annotation.Resource;
 import javax.ws.rs.*;
@@ -35,6 +36,8 @@ public class VehicleService {
      *
      * @param id The {@link ObjectId} to find the {@link Vehicle} for.
      * @return The {@link Vehicle} found.
+     *
+     * @HTTP 404 Vehicle not found
      */
     @Path("/{vid}")
     @GET
@@ -56,6 +59,8 @@ public class VehicleService {
      *
      * @param vehicleBuilder A {@link VehicleBuilder} to construct a {@link Vehicle} from.
      * @return The {@link Vehicle} constructed.
+     *
+     * @HTTP 409 A vehicle with that Vin already exists.
      */
     @Path("/")
     @POST
@@ -68,7 +73,7 @@ public class VehicleService {
 
         // Test to see if Vin is already in database.
         if (vehicleBuilder.getVin() != null && vehicleDao.byVin(vehicleBuilder.getVin()) != null) {
-            throw new IllegalArgumentException("A vehicle with that Vin already exists.");
+            throw new ConflictException("A vehicle with that Vin already exists.");
         }
 
         Vehicle vehicle = vehicleBuilder.build();
