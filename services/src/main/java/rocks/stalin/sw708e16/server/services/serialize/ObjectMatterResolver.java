@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
-import rocks.stalin.sw708e16.server.services.serialize.ObjectIdSerializer;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
