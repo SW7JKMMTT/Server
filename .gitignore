@@ -41,4 +41,7 @@ fabric.properties
 
 segments_1
 write.lock
-
+*.sfe
+*.sfs
+*.si
+persistence/rocks.stalin.sw708e16.server.core.spatial.Waypoint/

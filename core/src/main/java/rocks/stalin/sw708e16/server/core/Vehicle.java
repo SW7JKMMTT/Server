@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
@@ -48,18 +49,35 @@ public class Vehicle {
         return make;
     }
 
+    public void setMake(String make) {
+        this.make = make;
+    }
+
     public String getModel() {
         return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public int getVintage() {
         return vintage;
     }
 
+    public void setVintage(int vintage) {
+        this.vintage = vintage;
+    }
+
     public Vin getVin() {
         return vin;
     }
 
+    public void setVin(Vin vin) {
+        this.vin = vin;
+    }
+
+    @JsonIgnore
     public Collection<Route> getRoutes() {
         return routes;
     }

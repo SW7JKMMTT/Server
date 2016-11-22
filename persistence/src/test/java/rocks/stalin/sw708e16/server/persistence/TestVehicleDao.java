@@ -81,5 +81,32 @@ public class TestVehicleDao extends DatabaseTest {
         // Assert
         Assert.assertNull(notfound);
     }
+    @Test
+    public void testByVin_Found() throws Exception {
+        // Arrange
+        Vehicle vehicle = new GivenVehicle()
+                .withMake("AAU")
+                .withModel("H.O.T.")
+                .withVintage(1969)
+                .withVin(new Vin("ABC123"))
+                .in(vehicleDao);
 
+        // Act
+        Vehicle found = vehicleDao.byVin("ABC123");
+
+        // Assert
+        Assert.assertNotNull(found);
+        Assert.assertEquals(vehicle, found);
+    }
+
+    @Test
+    public void testByVin_NotFound() throws Exception {
+        // Arrange
+
+        // Act
+        Vehicle notfound = vehicleDao.byId(new ObjectId());
+
+        // Assert
+        Assert.assertNull(notfound);
+    }
 }
