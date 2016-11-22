@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.services.exceptions;
+package rocks.stalin.sw708e16.server.services.exceptions.mappers;
 
 import org.springframework.stereotype.Component;
 
@@ -16,10 +16,10 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
     private HttpHeaders headers;
 
     @Override
-    public Response toResponse(Exception cee) {
+    public Response toResponse(Exception except) {
         return Response
             .status(Response.Status.INTERNAL_SERVER_ERROR)
-            .entity(new JsonError(cee.getMessage()))
+            .entity(new JsonError(except.getMessage()))
             .build();
     }
 
