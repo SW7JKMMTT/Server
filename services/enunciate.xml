@@ -13,6 +13,12 @@
         <jaxrs groupBy="path">
             <application path="/api"/>
         </jaxrs>
+
+        <jackson>
+            <mixin target="org.bson.types.ObjectId"
+                   source="rocks.stalin.sw708e16.server.services.serialize.ObjectIdMixIn" />
+        </jackson>
+
         <jackson1 disabled="true" />
 		<swagger host="172.25.11.114:8080/services-1.0.0" />
     </modules>

@@ -31,8 +31,7 @@ public class ObjectMatterResolver implements ContextResolver<ObjectMapper> {
     public ObjectMatterResolver() {
         mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule("bsonSerializer", new Version(1, 0, 0, "final", null, null));
-        module.addSerializer(ObjectId.class, new ObjectIdSerializer());
-        module.addDeserializer(ObjectId.class, new ObjectIdDeserializer());
+        module.setMixInAnnotation(ObjectId.class, ObjectIdMixIn.class);
         mapper.registerModule(module);
         mapper.registerModule(new Hibernate5Module());
     }
