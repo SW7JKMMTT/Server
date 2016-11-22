@@ -20,6 +20,6 @@
         </jackson>
 
         <jackson1 disabled="true" />
-		<swagger host="172.25.11.114:8080/services-1.0.0" />
+        <swagger host="172.25.11.114:8080/services-1.0.0" />
     </modules>
 </enunciate>

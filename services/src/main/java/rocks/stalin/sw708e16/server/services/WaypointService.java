@@ -51,7 +51,8 @@ public class WaypointService {
     public Waypoint addWaypoint(WaypointBuilder waypointBuilder) {
         if (waypointBuilder.getLatitude() == null ||
                 waypointBuilder.getLongitude() == null ||
-                waypointBuilder.getTimestamp() == null) {
+                waypointBuilder.getTimestamp() == null)
+        {
             throw new IllegalArgumentException("Invalid waypointbuilder");
         }
 
