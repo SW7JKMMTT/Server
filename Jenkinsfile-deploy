@@ -3,7 +3,7 @@
 node("deployable") {
     stage("Copy Artifact") {
         step ([$class: 'CopyArtifact',
-                projectName: 'Server-arc',
+                projectName: 'Server',
                 filter: 'services/build/libs/services-1.0.0.war']);
     }
 
