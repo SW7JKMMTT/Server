@@ -7,11 +7,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.UserIcon;
+import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.persistence.AuthDao;
+import rocks.stalin.sw708e16.server.persistence.PermissionDao;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.server.persistence.file.MemoryBackedRoFile;
 import rocks.stalin.sw708e16.server.persistence.file.dao.FileDao;
+import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
+import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -35,6 +39,9 @@ public class UserService {
     @Autowired
     private AuthDao authDao;
 
+    @Autowired
+    private PermissionDao permissionDao;
+
     /**
      * Get all the {@link User users} in the department. Anyone can list the users.
      *
@@ -48,9 +55,9 @@ public class UserService {
     }
 
     /**
-     * Add a new {@link User user} to the department. Only guardians can add users.
+     * Add a new {@link User user} to the department.
      *
-     * @param newUser     The new {@link User user}to insert
+     * @param userBuilder The new {@link UserBuilder} to insert
      * @return The {@link User user} that was inserted
      */
     @POST
@@ -58,17 +65,23 @@ public class UserService {
     @Produces("application/json")
     @Consumes("application/json")
     @RolesAllowed({PermissionType.Constants.SUPERUSER})
-    public User insertUser(User newUser) {
-        if (newUser == null)
+    public User insertUser(UserBuilder userBuilder) {
+        if (userBuilder == null)
             throw new IllegalArgumentException("New user required");
 
-        if (newUser.getUsername() == null)
-            throw new BadRequestException("No username");
-        if (newUser.getPassword() == null)
-            throw new BadRequestException("No password");
+        if (userBuilder.getUsername() == null)
+            throw new IllegalArgumentException("No username");
+        if (userBuilder.getPassword() == null)
+            throw new IllegalArgumentException("No password");
 
-        userDao.add(newUser);
-        return newUser;
+        User user = userBuilder.buildWithoutPermissions();
+        userDao.add(user);
+        for (PermissionBuilder permissionBuilder : userBuilder.getPermissionBuilders()) {
+            Permission permission = permissionBuilder.build(user);
+            user.addPermission(permission);
+            permissionDao.add(permission);
+        }
+        return user;
     }
 
     /**
@@ -94,7 +107,7 @@ public class UserService {
      * Modify a user.
      *
      * @param id      The id of the user to modify
-     * @param newUser The new {@link User user}
+     * @param userBuilder The new {@link UserBuilder}
      * @return The modified {@link User user}
      */
     @PUT
@@ -102,11 +115,16 @@ public class UserService {
     @Produces("application/json")
     @Consumes("application/json")
     @RolesAllowed({PermissionType.Constants.SUPERUSER})
-    public User modifyUser(@PathParam("uid") ObjectId id, User newUser) {
+    public User modifyUser(@PathParam("uid") ObjectId id, UserBuilder userBuilder) {
         User user = userDao.byId(id);
         if (user == null)
             throw new NotFoundException();
-        user.merge(newUser);
+
+        if (userBuilder == null)
+            throw new IllegalArgumentException("The Userbuilder given was null.");
+
+        userBuilder.merge(user);
+
         return user;
     }
 

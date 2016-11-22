@@ -9,11 +9,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
+import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
+import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
+import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 
@@ -57,36 +59,45 @@ public class TestUserService extends DatabaseTest {
     }
 
     @Test
-    public void testInsertUser() throws Exception {
+    public void testInsertUser_AllValid() throws Exception {
         // Arrange
-        User bent = new User("bent", "password");
+        UserBuilder userBuilder = new UserBuilder("bent", "password");
+        userBuilder.addPermission(PermissionType.SuperUser);
+        userBuilder.addPermission(PermissionType.User);
 
         // Act
-        User userInserted = userService.insertUser(bent);
+        User userInserted = userService.insertUser(userBuilder);
 
         // Assert
-        Assert.assertEquals(bent, userInserted);
-        Assert.assertEquals(userDao.byUsername(bent.getUsername()), userInserted);
+        Assert.assertNotNull(userInserted);
+        Assert.assertEquals(userBuilder.getUsername(), userInserted.getUsername());
+        Assert.assertEquals(userBuilder.getPassword(), userInserted.getPassword());
+        // Loop in test ok or not?
+        for (PermissionBuilder permissionBuilder : userBuilder.getPermissionBuilders()) {
+            Assert.assertTrue(userInserted.hasPermission(permissionBuilder.getPermission()));
+        }
     }
 
-    @Test(expected = BadRequestException.class)
-    public void testInsertUser_NoUsername() throws Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void testInsertUser_InvalidUsername() throws Exception {
         // Arrange
-        User lisa = new User("lisa", "passphrase");
-        lisa.setUsername(null); //@HACK: Setting the username to null shouldn't be supported
+        UserBuilder userBuilder = new UserBuilder(null, "password");
 
         // Act
-        userService.insertUser(lisa);
+        userService.insertUser(userBuilder);
+
+        // Assert
     }
 
-    @Test(expected = BadRequestException.class)
-    public void testInsertUser_NoPassword() throws Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void testInsertUser_InvalidPassword() throws Exception {
         // Arrange
-        User lisa = new User("lisa", "passphrase");
-        lisa.setPassword(null); //@HACK: Setting the password to null shouldn't be supported
+        UserBuilder userBuilder = new UserBuilder("Lisa", null);
 
         // Act
-        userService.insertUser(lisa);
+        userService.insertUser(userBuilder);
+
+        // Assert
     }
 
     @Test
@@ -109,12 +120,12 @@ public class TestUserService extends DatabaseTest {
     @Test
     public void testModifyUser_SetUsername() throws Exception {
         User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
-        User newUser = new User("john", "password");
-        newUser.setPassword(null); //@HACK: Setting the password to null should probably be an error
+        UserBuilder userBuilder = new UserBuilder();
+        userBuilder.setUsername("john");
 
-        User modifiedUser = userService.modifyUser(jeff.getId(), newUser);
+        User modifiedUser = userService.modifyUser(jeff.getId(), userBuilder);
 
-        Assert.assertEquals(modifiedUser.getUsername(), newUser.getUsername());
+        Assert.assertEquals(modifiedUser.getUsername(), userBuilder.getUsername());
         Assert.assertEquals(modifiedUser.getPassword(), jeff.getPassword());
         Assert.assertEquals(modifiedUser.getId(), jeff.getId());
     }
@@ -122,22 +133,22 @@ public class TestUserService extends DatabaseTest {
     @Test
     public void testModifyUser_SetPassword() throws Exception {
         User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
-        User newUser = new User("john", "password");
-        newUser.setUsername(null); //@HACK: Setting the password to null should probably be an error
+        UserBuilder userBuilder = new UserBuilder();
+        userBuilder.setPassword("paswurd");
 
-        User modifiedUser = userService.modifyUser(jeff.getId(), newUser);
+        User modifiedUser = userService.modifyUser(jeff.getId(), userBuilder);
 
         Assert.assertEquals(modifiedUser.getUsername(), jeff.getUsername());
-        Assert.assertEquals(modifiedUser.getPassword(), newUser.getPassword());
+        Assert.assertEquals(modifiedUser.getPassword(), userBuilder.getPassword());
         Assert.assertEquals(modifiedUser.getId(), jeff.getId());
     }
 
     @Test(expected = NotFoundException.class)
     public void testModifyUser_UnknownId() throws Exception {
         ObjectId id = new ObjectId();
-        User newUser = new User("john", "password");
+        UserBuilder userBuilder = new UserBuilder();
 
-        userService.modifyUser(id, newUser);
+        userService.modifyUser(id, userBuilder);
     }
 
 }

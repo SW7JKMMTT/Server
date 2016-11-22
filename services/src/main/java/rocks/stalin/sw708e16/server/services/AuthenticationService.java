@@ -31,7 +31,7 @@ public class AuthenticationService {
     /**
      * Authenticate as a user, retrieving an authentication token that can be used in future
      * requests. Authentication tokens should be provided in the "Authorization" HTTP header
-     * in the format "Sleep token='token'". You can only authenticate in the department you
+     * in the format "Sleepy token='token'". You can only authenticate in the department you
      * are associated with.
      *
      * @param obj The login credentials (username and password)
