@@ -1,7 +1,7 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import junit.framework.Assert;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +81,5 @@ public class TestVehicleDao extends DatabaseTest {
         // Assert
         Assert.assertNull(notfound);
     }
-    
+
 }

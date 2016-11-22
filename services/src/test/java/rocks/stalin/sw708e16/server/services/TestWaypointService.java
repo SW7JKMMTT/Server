@@ -1,6 +1,6 @@
 package rocks.stalin.sw708e16.server.services;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,7 +149,6 @@ public class TestWaypointService extends DatabaseTest {
     }
 
 
-
     @Test
     public void addWaypoint_ValidData() throws Exception {
         // Arrange
@@ -163,8 +162,8 @@ public class TestWaypointService extends DatabaseTest {
 
         // Assert
         Assert.assertNotNull(found);
-        Assert.assertEquals(found.getLatitude(), waypoint.getLatitude());
-        Assert.assertEquals(found.getLongitude(), waypoint.getLongitude());
+        Assert.assertEquals(found.getLatitude(), waypoint.getLatitude(), 0.001);
+        Assert.assertEquals(found.getLongitude(), waypoint.getLongitude(), 0.001);
         Assert.assertEquals(found.getTimestamp(), waypoint.getTimestamp());
     }
 

@@ -1,7 +1,7 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import junit.framework.Assert;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,9 @@ import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.Vehicle;
 import rocks.stalin.sw708e16.server.core.Vin;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
-import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 import rocks.stalin.sw708e16.server.persistence.given.GivenDriver;
 import rocks.stalin.sw708e16.server.persistence.given.GivenRoute;
+import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 import rocks.stalin.sw708e16.server.persistence.given.GivenVehicle;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 

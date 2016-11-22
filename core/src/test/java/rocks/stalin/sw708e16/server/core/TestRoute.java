@@ -1,6 +1,6 @@
 package rocks.stalin.sw708e16.server.core;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;

@@ -1,7 +1,7 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import junit.framework.Assert;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +10,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.User;
-import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 import rocks.stalin.sw708e16.server.persistence.given.GivenDriver;
+import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import java.util.Collection;
