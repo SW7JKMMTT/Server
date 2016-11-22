@@ -6,9 +6,10 @@ node {
     }
 
     stage('Build') {
-        gradle "clean classes"
+        gradle "clean ear"
 
         stash name: "sources"
+        archiveArtifacts artifacts: 'services/build/libs/services-1.0.0.war', fingerprint: true, onlyIfSuccessful: true
     }
 }
 
@@ -31,7 +32,7 @@ stage('Test') {
             }
         }
     }
-	parallel branches
+    parallel branches
 }
 
 stage('Enunciate') {

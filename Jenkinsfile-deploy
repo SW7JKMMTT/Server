@@ -1,0 +1,34 @@
+#!groovy
+
+node("deployable") {
+    stage("Copy Artifact") {
+        step ([$class: 'CopyArtifact',
+                projectName: 'Server-arc',
+                filter: 'services/build/libs/services-1.0.0.war']);
+    }
+
+    stage("Undeploy") {
+        try{
+            jboss("undeploy services-1.0.0.war")
+        }catch(err) {
+            echo "I guess it wasn't deployed? Let's just pretend that didn't happen"
+        }
+    }
+
+    stage("Deploy") {
+        jboss("deploy services/build/libs/services-1.0.0.war")
+    }
+}
+
+
+void jboss(def args) {
+    if (isUnix()) {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'wildfly',
+                usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            //available as an env variable, but will be masked if you try to print it out any which way
+            sh "/opt/wildfly/bin/jboss-cli.sh --connect --controller=172.25.11.114:9990 --user=$USERNAME --password=$PASSWORD \"${args}\""
+        }
+    } else {
+        error("We only have unix support")
+    }
+}
