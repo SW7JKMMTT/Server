@@ -14,6 +14,7 @@ import rocks.stalin.sw708e16.server.persistence.PermissionDao;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.server.persistence.file.MemoryBackedRoFile;
 import rocks.stalin.sw708e16.server.persistence.file.dao.FileDao;
+import rocks.stalin.sw708e16.server.persistence.file.dao.UserIconFileDao;
 import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
 import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
 
@@ -34,7 +35,7 @@ public class UserService {
 
     @Autowired
     @Qualifier("userIcon")
-    private FileDao<UserIcon> userIconDao;
+    private UserIconFileDao userIconDao;
 
     @Autowired
     private AuthDao authDao;

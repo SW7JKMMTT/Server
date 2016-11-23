@@ -4,13 +4,18 @@ import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Vehicle;
+import rocks.stalin.sw708e16.server.core.VehicleIcon;
 import rocks.stalin.sw708e16.server.core.Vin;
 import rocks.stalin.sw708e16.server.persistence.VehicleDao;
+import rocks.stalin.sw708e16.server.persistence.file.dao.VehicleIconFileDao;
 import rocks.stalin.sw708e16.server.persistence.given.GivenVehicle;
+import rocks.stalin.sw708e16.server.persistence.given.GivenVehicleIcon;
 import rocks.stalin.sw708e16.server.services.builders.VehicleBuilder;
 import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
 import rocks.stalin.sw708e16.test.DatabaseTest;
@@ -29,6 +34,10 @@ public class TestVehicleService extends DatabaseTest {
 
     @Resource
     private VehicleDao vehicleDao;
+
+    @Autowired
+    @Qualifier("vehicleIcon")
+    private VehicleIconFileDao vehicleIconFileDao;
 
     @Test
     public void testGetAllVehicles_WithNone() throws Exception {
@@ -206,5 +215,41 @@ public class TestVehicleService extends DatabaseTest {
 
         // Assert
     }
+
+    @Test(expected = NotFoundException.class)
+    public void testGetVehicleIcon_IconDoesNotExist() throws Exception {
+        // Arrange
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("AAU")
+            .withModel("H.O.T.")
+            .withVintage(1969)
+            .withVin(new Vin("ABC123"))
+            .in(vehicleDao);
+
+        // Act
+        vehicleService.getVehicleIcon(vehicle.getId());
+
+        // Assert
+    }
+
+    @Test
+    public void testGetVehicleIcon_IconDoesExist() throws Exception {
+        // Arrange
+        VehicleIcon vehicleIcon = new GivenVehicleIcon().withFilepath("kappa321").in(vehicleIconFileDao);
+
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("AAU")
+            .withModel("H.O.T.")
+            .withVintage(1969)
+            .withVin(new Vin("ABC123"))
+            .withVehicleIcon(vehicleIcon)
+            .in(vehicleDao);
+
+        // Act
+        vehicleService.getVehicleIcon(vehicle.getId());
+
+        // Assert
+    }
+
 
 }
