@@ -13,7 +13,7 @@ public class TestRoute {
     @Test
     public void testGetLatestWaypoint_NonPresent() {
         // Arrange
-        User user = new User("Jens", "Jensen");
+        User user = new User("Jens", "hunter2", "Jens", "Lam");
         Driver driver = new Driver(user);
         Vehicle vehicle = new Vehicle("Volvo", "V80", 2016, new Vin("ABC123"));
         Route route = new Route(new ArrayList<>(), driver, vehicle);
@@ -29,7 +29,7 @@ public class TestRoute {
     @Test
     public void testGetLatestWaypoint_OnlyOne() {
         // Arrange
-        User user = new User("Jens", "Jensen");
+        User user = new User("Jens", "hunter2", "Jens", "Lam");
         Driver driver = new Driver(user);
         Vehicle vehicle = new Vehicle("Volvo", "V80", 2016, new Vin("ABC123"));
         Route route = new Route(new ArrayList<>(), driver, vehicle);
@@ -48,7 +48,7 @@ public class TestRoute {
     @Test
     public void testGetLatestWaypoint_TwoInsertedInOrder() {
         // Arrange
-        User user = new User("Jens", "Jensen");
+        User user = new User("Jens", "hunter2", "Jens", "Lam");
         Driver driver = new Driver(user);
         Vehicle vehicle = new Vehicle("Volvo", "V80", 2016, new Vin("ABC123"));
         Route route = new Route(new ArrayList<>(), driver, vehicle);
@@ -69,7 +69,7 @@ public class TestRoute {
     @Test
     public void testGetLatestWaypoint_TwoInsertedNotInOrder() {
         // Arrange
-        User user = new User("Jens", "Jensen");
+        User user = new User("Jens", "hunter2", "Jens", "Lam");
         Driver driver = new Driver(user);
         Vehicle vehicle = new Vehicle("Volvo", "V80", 2016, new Vin("ABC123"));
         Route route = new Route(new ArrayList<>(), driver, vehicle);
@@ -90,7 +90,7 @@ public class TestRoute {
     @Test
     public void testGetLatestWaypoint_ThreeInOrder() {
         // Arrange
-        User user = new User("Jens", "Jensen");
+        User user = new User("Jens", "hunter2", "Jens", "Lam");
         Driver driver = new Driver(user);
         Vehicle vehicle = new Vehicle("Volvo", "V80", 2016, new Vin("ABC123"));
         Route route = new Route(new ArrayList<>(), driver, vehicle);
@@ -113,7 +113,7 @@ public class TestRoute {
     @Test
     public void testGetLatestWaypoint_ThreeOutOfOrderGetTwo() {
         // Arrange
-        User user = new User("Jens", "Jensen");
+        User user = new User("Jens", "hunter2", "Jens", "Lam");
         Driver driver = new Driver(user);
         Vehicle vehicle = new Vehicle("Volvo", "V80", 2016, new Vin("ABC123"));
         Route route = new Route(new ArrayList<>(), driver, vehicle);

@@ -36,7 +36,7 @@ public class TestAuthDao extends DatabaseTest {
 
     @Test
     public void testAdd() throws Exception {
-        userDao.add(new User("Jeff", "password"));
+        userDao.add(new User("Jeff", "password", "Jeff", "Lam"));
         User jeff = userDao.byUsername("Jeff");
         AuthToken token = new AuthToken("AABBCC", jeff);
 
@@ -47,7 +47,7 @@ public class TestAuthDao extends DatabaseTest {
 
     @Test
     public void testRemove() throws Exception {
-        User jeff = new GivenUser().withName("Jeff").withPassword("1000").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("1000").in(userDao);
         AuthToken token = new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
 
         assertNotNull(authDao.byTokenStr_ForAuthorization("AABBCC"));
@@ -58,7 +58,7 @@ public class TestAuthDao extends DatabaseTest {
 
     @Test
     public void testByTokenStr() throws Exception {
-        User jeff = new GivenUser().withName("Jeff").withPassword("1000").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("1000").in(userDao);
         new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
 
         AuthToken token = authDao.byTokenStr_ForAuthorization("AABBCC");
@@ -67,7 +67,7 @@ public class TestAuthDao extends DatabaseTest {
 
     @Test
     public void testByTokenStrRightData() throws Exception {
-        User jeff = new GivenUser().withName("Jeff").withPassword("1000").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("1000").in(userDao);
         new GivenAuthToken().forUser(jeff).withToken("AABBCC").in(authDao);
 
         AuthToken token = authDao.byTokenStr_ForAuthorization("AABBCC");
@@ -77,7 +77,7 @@ public class TestAuthDao extends DatabaseTest {
 
     @Test
     public void testByUser() throws Exception {
-        User jeff = new GivenUser().withName("Jeff").withPassword("1000").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("1000").in(userDao);
         new GivenAuthToken().forUser(jeff).withToken("FAKETOKEN").in(authDao);
         new GivenAuthToken().forUser(jeff).withToken("MOBILETOKEN").in(authDao);
 

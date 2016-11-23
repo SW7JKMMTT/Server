@@ -50,7 +50,7 @@ public class TestWaypointService extends DatabaseTest {
      */
     @Before
     public void SetupWaypointService() {
-        User user = new GivenUser().withName("Anders").withPassword("hunter2").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Anders").withPassword("hunter2").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
                 .withMake("Ford")

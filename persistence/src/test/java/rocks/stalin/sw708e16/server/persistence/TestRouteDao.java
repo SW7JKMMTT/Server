@@ -55,7 +55,7 @@ public class TestRouteDao extends DatabaseTest {
     @Test
     public void testGetAll() throws Exception {
         // Arrange
-        User user = new GivenUser().withName("Test").withPassword("lul").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
                 .withMake("Ford")
@@ -77,7 +77,7 @@ public class TestRouteDao extends DatabaseTest {
     @Test
     public void testById_Exists() throws Exception {
         // Arrange
-        User user = new GivenUser().withName("Test").withPassword("lul").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
                 .withMake("Ford")

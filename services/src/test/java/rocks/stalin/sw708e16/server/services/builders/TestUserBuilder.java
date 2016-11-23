@@ -10,7 +10,7 @@ public class TestUserBuilder {
     @Test
     public void testMerge_NoNewInfo() throws Exception {
         // Arrange
-        User user = new UserBuilder("Lasse", "hunter2").buildWithoutPermissions();
+        User user = new UserBuilder("Lasse", "hunter2", "Lasse", "Lam").buildWithoutPermissions();
         user.addPermission(new Permission(user, PermissionType.SuperUser));
         UserBuilder userBuilder = new UserBuilder();
 
@@ -25,7 +25,7 @@ public class TestUserBuilder {
     @Test
     public void testMerge_NewUsername() throws Exception {
         // Arrange
-        User user = new UserBuilder("Lasse", "hunter2").buildWithoutPermissions();
+        User user = new UserBuilder("Lasse", "hunter2", "Lasse", "Lam").buildWithoutPermissions();
         user.addPermission(new Permission(user, PermissionType.SuperUser));
         UserBuilder userBuilder = new UserBuilder();
         userBuilder.setUsername("Maria");
@@ -42,7 +42,7 @@ public class TestUserBuilder {
     @Test
     public void testMerge_NullFields() throws Exception {
         // Arrange
-        User user = new UserBuilder("Lasse", "hunter2").buildWithoutPermissions();
+        User user = new UserBuilder("Lasse", "hunter2", "Lasse", "Lam").buildWithoutPermissions();
         user.addPermission(new Permission(user, PermissionType.SuperUser));
         UserBuilder userBuilder = new UserBuilder();
         userBuilder.setUsername(null);
@@ -59,7 +59,7 @@ public class TestUserBuilder {
     @Test
     public void testMerge_NewPermissions() throws Exception {
         // Arrange
-        User user = new UserBuilder("Lasse", "hunter2").buildWithoutPermissions();
+        User user = new UserBuilder("Lasse", "hunter2", "Lasse", "Lam").buildWithoutPermissions();
         user.addPermission(new Permission(user, PermissionType.SuperUser));
         UserBuilder userBuilder = new UserBuilder();
         userBuilder.addPermission(PermissionType.User);
@@ -76,7 +76,7 @@ public class TestUserBuilder {
     @Test(expected = IllegalArgumentException.class)
     public void testMerge_Null() throws Exception {
         // Arrange
-        UserBuilder userBuilder = new UserBuilder("Lasse", "hunter2");
+        UserBuilder userBuilder = new UserBuilder("Lasse", "hunter2", "Lasse", "Lam");
         userBuilder.addPermission(PermissionType.User);
 
         // Act

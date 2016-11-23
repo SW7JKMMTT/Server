@@ -41,7 +41,7 @@ public class TestDriverDao extends DatabaseTest {
     @Test
     public void testGetAll() throws Exception {
         // Arrange
-        User user = new GivenUser().withName("Test").withPassword("lul").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
 
         // Act
@@ -56,7 +56,7 @@ public class TestDriverDao extends DatabaseTest {
     @Test
     public void testById_Found() throws Exception {
         // Arrange
-        User user = new GivenUser().withName("Test").withPassword("lul").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
 
         // Act

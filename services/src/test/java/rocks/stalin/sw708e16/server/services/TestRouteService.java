@@ -62,7 +62,7 @@ public class TestRouteService extends DatabaseTest {
     @Test
     public void testGetAllPaths() throws Exception {
         // Arrange
-        User user = new GivenUser().withName("Test").withPassword("lul").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
                 .withMake("Ford")
@@ -96,7 +96,7 @@ public class TestRouteService extends DatabaseTest {
     @Test
     public void testGetById() throws Exception {
         // Arrange
-        User user = new GivenUser().withName("Test").withPassword("lul").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
                 .withMake("Ford")
@@ -123,7 +123,7 @@ public class TestRouteService extends DatabaseTest {
                 .withVintage(1999)
                 .withVin(new Vin("d"))
                 .in(vehicleDao);
-        User testUser = new GivenUser().withName("Jesper").withPassword("Jensen").in(userDao);
+        User testUser = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jesper").withPassword("Jensen").in(userDao);
         RouteBuilder routeBuilder = new RouteBuilder();
         routeBuilder.setVehicleid(vehicle.getId());
 
@@ -141,7 +141,7 @@ public class TestRouteService extends DatabaseTest {
     @Test(expected = BadRequestException.class)
     public void testCreateRoute_InvalidRouteBuilder() throws Exception {
         // Arrange
-        User testUser = new GivenUser().withName("Jesper").withPassword("Jensen").in(userDao);
+        User testUser = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jesper").withPassword("Jensen").in(userDao);
         RouteBuilder routeBuilder = new RouteBuilder();
 
         // Act
@@ -154,7 +154,7 @@ public class TestRouteService extends DatabaseTest {
     @Test(expected = BadRequestException.class)
     public void testCreateRoute_RouteBuilderMissingData() throws Exception {
         // Arrange
-        User testUser = new GivenUser().withName("Jesper").withPassword("Jensen").in(userDao);
+        User testUser = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jesper").withPassword("Jensen").in(userDao);
 
         // Act
         routeService.createRoute(testUser, null);
@@ -172,7 +172,7 @@ public class TestRouteService extends DatabaseTest {
                 .withVintage(1999)
                 .withVin(new Vin("d"))
                 .in(vehicleDao);
-        User testUser = new GivenUser().withName("Jesper").withPassword("Jensen").in(userDao);
+        User testUser = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jesper").withPassword("Jensen").in(userDao);
         Driver driver = new GivenDriver().withUser(testUser).in(driverDao);
         testUser.setDriver(driver);
         RouteBuilder routeBuilder = new RouteBuilder();

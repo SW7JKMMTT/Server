@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
-import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.persistence.AuthDao;
 import rocks.stalin.sw708e16.server.persistence.PermissionDao;
@@ -29,7 +28,11 @@ public class Data extends DevelopmentDataInserter {
 
     @Override
     public void insert() {
-        User jeff = new GivenUser().withName("Jeff").withPassword("fuck").in(userDao);
+        User jeff = new GivenUser()
+                .withName("Jeff", "Jeffsen")
+                .withUsername("Jeff")
+                .withPassword("fuck")
+                .in(userDao);
         AuthToken jeffToken = new GivenAuthToken().forUser(jeff).withToken("testtoken").in(authDao);
         new GivenPermission().forUser(jeff).ofType(PermissionType.SuperUser).in(permissionDao);
     }

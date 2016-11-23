@@ -40,7 +40,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test
     public void testAuthenticate_Correct() throws Exception {
         //Arrange
-        User jeff = new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("username", "Jeff");
         requestMap.put("password", "password");
@@ -56,7 +56,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticate_WrongUsername() throws Exception {
         //Arrange
-        new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("username", "john");
         requestMap.put("password", "password");
@@ -68,7 +68,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticate_WrongPassword() throws Exception {
         //Arrange
-        new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("username", "Jeff");
         requestMap.put("password", "passwrong");
@@ -80,7 +80,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test(expected = BadRequestException.class)
     public void testAuthenticate_UsernameSpelledWrong() throws Exception {
         //Arrange
-        new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("usename", "Jeff"); //@ATTENTION: Spelled wrong
         requestMap.put("password", "password");
@@ -92,7 +92,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test(expected = BadRequestException.class)
     public void testAuthenticate_PasswordSpelledWrong() throws Exception {
         //Arrange
-        new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("username", "Jeff");
         requestMap.put("pasword", "password"); //@ATTENTION: Spelled wrong
@@ -104,7 +104,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test(expected = BadRequestException.class)
     public void testAuthenticate_MissingUsername() throws Exception {
         //Arrange
-        new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("password", "password");
 
@@ -115,7 +115,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test(expected = BadRequestException.class)
     public void testAuthenticate_MissingPassword() throws Exception {
         //Arrange
-        new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("username", "Jeff");
 
@@ -126,7 +126,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test
     public void testListTokens_ReturnsMine() throws Exception {
         //Arrange
-        User jeff = new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         AuthToken jeffToken1 = new GivenAuthToken().withToken("bomb").forUser(jeff).in(authDao);
         AuthToken jeffToken2 = new GivenAuthToken().withToken("bomb2").forUser(jeff).in(authDao);
 
@@ -142,10 +142,10 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test
     public void testListTokens_ReturnsOnlyMine() throws Exception {
         //Arrange
-        User jeff = new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
         AuthToken jeffToken1 = new GivenAuthToken().withToken("bomb").forUser(jeff).in(authDao);
         AuthToken jeffToken2 = new GivenAuthToken().withToken("bomb2").forUser(jeff).in(authDao);
-        User carl = new GivenUser().withName("Carl").withPassword("password").in(userDao);
+        User carl = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Carl").withPassword("password").in(userDao);
         AuthToken carlToken1 = new GivenAuthToken().withToken("bomb").forUser(carl).in(authDao);
 
         // Act
@@ -162,7 +162,7 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test
     public void testListTokens_NoTokens() throws Exception {
         //Arrange
-        User jeff = new GivenUser().withName("Jeff").withPassword("password").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
 
         // Act
         Collection<AuthToken> authTokens = authService.listTokens(jeff);

@@ -13,14 +13,18 @@ import java.util.Collection;
 public class UserBuilder {
     private String username;
     private String password;
+    private String givenname;
+    private String surname;
     private Collection<PermissionBuilder> permissionBuilders = new ArrayList<>();
 
     public UserBuilder() {
     }
 
-    public UserBuilder(String username, String password) {
+    public UserBuilder(String username, String password, String givenname, String surname) {
         this.username = username;
         this.password = password;
+        this.givenname = givenname;
+        this.surname = surname;
     }
 
     /**
@@ -45,6 +49,22 @@ public class UserBuilder {
         this.password = password;
     }
 
+    public String getGivenname() {
+        return givenname;
+    }
+
+    public void setGivenname(String givenname) {
+        this.givenname = givenname;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
     /**
      * An optional collection of {@link PermissionBuilder PermissionBuilders}.
      */
@@ -63,11 +83,11 @@ public class UserBuilder {
      * @return The {@link User} constructed.
      */
     public User buildWithoutPermissions() {
-        if (username == null || password == null) {
-            throw new IllegalArgumentException("User specified without Username and/or Password.");
+        if (username == null || password == null || givenname == null || surname == null) {
+            throw new IllegalArgumentException("User specified without Username and/or Password and/or givenname and/or surname.");
         }
 
-        return new User(username, password);
+        return new User(username, password, givenname, surname);
     }
 
     /**
@@ -85,6 +105,12 @@ public class UserBuilder {
 
         if (this.password != null)
             user.setPassword(this.password);
+
+        if (this.givenname != null)
+            user.setGivenname(this.givenname);
+
+        if (this.surname != null)
+            user.setSurname(this.surname);
 
         for (PermissionBuilder permissionBuilder : permissionBuilders) {
             if (!user.hasPermission(permissionBuilder.getPermission()))

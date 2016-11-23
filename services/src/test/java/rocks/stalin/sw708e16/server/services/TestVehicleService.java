@@ -1,7 +1,7 @@
 package rocks.stalin.sw708e16.server.services;
 
-import junit.framework.Assert;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,8 +19,6 @@ import javax.annotation.Resource;
 import javax.ws.rs.NotFoundException;
 
 import java.util.Collection;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-config.xml"})

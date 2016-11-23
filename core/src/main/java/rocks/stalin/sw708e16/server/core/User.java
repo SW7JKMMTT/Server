@@ -26,6 +26,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String givenname;
+
+    @Column(nullable = false)
+    private String surname;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<AuthToken> authTokens = new ArrayList<>();
 
@@ -46,12 +52,14 @@ public class User {
      * A user in the system.
      * @param username The username of the user
      * @param password The plaintext password of the user
+     * @param givenname The given name of the user
+     * @param surname The sur/family name of the user
      */
-    public User(String username, String password) {
+    public User(String username, String password, String givenname, String surname) {
         this.username = username;
         this.password = password;
-        this.permissions = new ArrayList<>();
-        this.authTokens = new ArrayList<>();
+        this.givenname = givenname;
+        this.surname = surname;
     }
 
     public ObjectId getId() {
@@ -108,16 +116,20 @@ public class User {
         this.driver = driver;
     }
 
-    /**
-     * Merge two user objects.
-     *
-     * @param newUser the user to merge into this one
-     */
-    public void merge(User newUser) {
-        if(newUser.getUsername() != null)
-            setUsername((newUser.getUsername()));
-        if(newUser.getPassword() != null)
-            setPassword((newUser.getPassword()));
+    public String getGivenname() {
+        return givenname;
+    }
+
+    public void setGivenname(String givenname) {
+        this.givenname = givenname;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     /**

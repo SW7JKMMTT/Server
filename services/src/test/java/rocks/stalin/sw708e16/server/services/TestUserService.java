@@ -44,9 +44,9 @@ public class TestUserService extends DatabaseTest {
     @Test
     public void testGetAll() throws Exception {
         // Arrange
-        User bill = new GivenUser().withName("bill").withPassword("password").in(userDao);
-        User john = new GivenUser().withName("john").withPassword("wordpass").in(userDao);
-        User lisa = new GivenUser().withName("lisa").withPassword("passpass").in(userDao);
+        User bill = new GivenUser().withName("bill", "Jeffsen").withUsername("bill").withPassword("password").in(userDao);
+        User john = new GivenUser().withName("john", "Jeffsen").withUsername("john").withPassword("wordpass").in(userDao);
+        User lisa = new GivenUser().withName("lisa", "Jeffsen").withUsername("lisa").withPassword("passpass").in(userDao);
 
         // Act
         Collection<User> allUsers = userService.getAllUsers();
@@ -61,7 +61,7 @@ public class TestUserService extends DatabaseTest {
     @Test
     public void testInsertUser_AllValid() throws Exception {
         // Arrange
-        UserBuilder userBuilder = new UserBuilder("bent", "password");
+        UserBuilder userBuilder = new UserBuilder("bent", "password", "bent", "Lam");
         userBuilder.addPermission(PermissionType.SuperUser);
         userBuilder.addPermission(PermissionType.User);
 
@@ -81,7 +81,7 @@ public class TestUserService extends DatabaseTest {
     @Test(expected = IllegalArgumentException.class)
     public void testInsertUser_InvalidUsername() throws Exception {
         // Arrange
-        UserBuilder userBuilder = new UserBuilder(null, "password");
+        UserBuilder userBuilder = new UserBuilder(null, "password", "Lasse", "Ligemeget");
 
         // Act
         userService.insertUser(userBuilder);
@@ -92,7 +92,29 @@ public class TestUserService extends DatabaseTest {
     @Test(expected = IllegalArgumentException.class)
     public void testInsertUser_InvalidPassword() throws Exception {
         // Arrange
-        UserBuilder userBuilder = new UserBuilder("Lisa", null);
+        UserBuilder userBuilder = new UserBuilder("Lisa", null, "Lisa", "Lam");
+
+        // Act
+        userService.insertUser(userBuilder);
+
+        // Assert
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInsertUser_InvalidGivenname() throws Exception {
+        // Arrange
+        UserBuilder userBuilder = new UserBuilder("Lisa", "hunter2", null, "Lam");
+
+        // Act
+        userService.insertUser(userBuilder);
+
+        // Assert
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInsertUser_InvalidSurname() throws Exception {
+        // Arrange
+        UserBuilder userBuilder = new UserBuilder("Lisa", "hunter2", "Lisa", null);
 
         // Act
         userService.insertUser(userBuilder);
@@ -102,8 +124,8 @@ public class TestUserService extends DatabaseTest {
 
     @Test
     public void testGetById() throws Exception {
-        User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
-        new GivenUser().withName("john").withPassword("password").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("jeff").withPassword("password").in(userDao);
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("john").withPassword("password").in(userDao);
 
         User gottenUser = userService.getUserById(jeff.getId());
 
@@ -119,7 +141,7 @@ public class TestUserService extends DatabaseTest {
 
     @Test
     public void testModifyUser_SetUsername() throws Exception {
-        User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("jeff").withPassword("password").in(userDao);
         UserBuilder userBuilder = new UserBuilder();
         userBuilder.setUsername("john");
 
@@ -132,7 +154,7 @@ public class TestUserService extends DatabaseTest {
 
     @Test
     public void testModifyUser_SetPassword() throws Exception {
-        User jeff = new GivenUser().withName("jeff").withPassword("password").in(userDao);
+        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("jeff").withPassword("password").in(userDao);
         UserBuilder userBuilder = new UserBuilder();
         userBuilder.setPassword("paswurd");
 

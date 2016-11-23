@@ -73,6 +73,10 @@ public class UserService {
             throw new IllegalArgumentException("No username");
         if (userBuilder.getPassword() == null)
             throw new IllegalArgumentException("No password");
+        if (userBuilder.getGivenname() == null)
+            throw new IllegalArgumentException("No givenname");
+        if (userBuilder.getSurname() == null)
+            throw new IllegalArgumentException("No surname");
 
         User user = userBuilder.buildWithoutPermissions();
         userDao.add(user);

@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import org.hamcrest.Matcher;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.junit.Assert;
@@ -22,13 +21,11 @@ import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:dao-config.xml"})
@@ -64,7 +61,7 @@ public class TestWaypointDao extends DatabaseTest {
 
     @Test
     public void testWithinRadius_WithTwo_FindTwo() throws Exception {
-        User user = new GivenUser().withName("Jeff").withPassword("pass").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
             .withMake("Ford")
@@ -97,7 +94,7 @@ public class TestWaypointDao extends DatabaseTest {
 
     @Test
     public void testWithinRadius_WithTwo_FindOne() throws Exception {
-        User user = new GivenUser().withName("Jeff").withPassword("pass").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
             .withMake("Ford")
@@ -129,7 +126,7 @@ public class TestWaypointDao extends DatabaseTest {
 
     @Test
     public void testWithinRadius_WithTwo_FindNone() throws Exception {
-        User user = new GivenUser().withName("Jeff").withPassword("pass").in(userDao);
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
         Vehicle vehicle = new GivenVehicle()
             .withMake("Ford")
