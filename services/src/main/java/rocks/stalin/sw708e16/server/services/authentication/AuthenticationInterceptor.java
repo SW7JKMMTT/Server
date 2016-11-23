@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.services.authentication;
 
+import org.hibernate.Hibernate;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -55,6 +56,7 @@ public class AuthenticationInterceptor implements ContainerRequestFilter {
         }
         //TODO: Extract the construction
         containerRequestContext.setSecurityContext(new GSecurityContext(atoken, permissionDao));
+
         //Push the context, this allow the use of @Context in the method params for Users
         ResteasyProviderFactory.pushContext(User.class, atoken.getUser());
     }

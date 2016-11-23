@@ -34,6 +34,7 @@ public class Data extends DevelopmentDataInserter {
                 .withPassword("fuck")
                 .in(userDao);
         AuthToken jeffToken = new GivenAuthToken().forUser(jeff).withToken("testtoken").in(authDao);
+        new GivenPermission().forUser(jeff).ofType(PermissionType.User).in(permissionDao);
         new GivenPermission().forUser(jeff).ofType(PermissionType.SuperUser).in(permissionDao);
     }
 }

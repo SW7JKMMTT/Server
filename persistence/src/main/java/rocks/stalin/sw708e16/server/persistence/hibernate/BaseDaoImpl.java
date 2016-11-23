@@ -18,8 +18,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
     }
 
     @Override
-    public void update(T obj) {
-        em.merge(obj);
+    public T update(T obj) {
+        return em.merge(obj);
     }
 
     @Override

@@ -17,6 +17,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception except) {
+        except.printStackTrace();
         return Response
             .status(Response.Status.INTERNAL_SERVER_ERROR)
             .entity(new JsonError(except.getMessage()))
