@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.services;
 
+import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.annotation.Resource;
 import javax.ws.rs.NotFoundException;
-
+import java.io.InputStream;
 import java.util.Collection;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -235,7 +236,7 @@ public class TestVehicleService extends DatabaseTest {
     @Test
     public void testGetVehicleIcon_IconDoesExist() throws Exception {
         // Arrange
-        VehicleIcon vehicleIcon = new GivenVehicleIcon().withFilepath("kappa321").in(vehicleIconFileDao);
+        VehicleIcon vehicleIcon = new GivenVehicleIcon().withContent("testGetVehicleIcon_IconDoesExist").in(vehicleIconFileDao);
 
         Vehicle vehicle = new GivenVehicle()
             .withMake("AAU")
@@ -246,9 +247,81 @@ public class TestVehicleService extends DatabaseTest {
             .in(vehicleDao);
 
         // Act
-        vehicleService.getVehicleIcon(vehicle.getId());
+        InputStream inputStream = vehicleService.getVehicleIcon(vehicle.getId());
 
         // Assert
+        Assert.assertNotNull(inputStream);
+        Assert.assertEquals("testGetVehicleIcon_IconDoesExist", IOUtils.toString(inputStream, "UTF-8"));
+
+        // Clean-up ???
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testGetVehicleIcon_VehicleNotFound() throws Exception {
+        // Arrange
+
+        // Act
+        vehicleService.getVehicleIcon(new ObjectId());
+
+        // Assert
+
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testSetOrUpdateVehicleIcon_VehicleNotFound() throws Exception {
+        // Arrange
+
+        // Act
+        vehicleService.setOrUpdateVehicleIcon(new ObjectId(), null);
+
+        // Assert
+
+    }
+
+    @Test
+    public void testSetOrUpdateVehicleIcon_IconDoesNotAlreadyExist() throws Exception {
+        // Arrange
+        InputStream is = IOUtils.toInputStream("testSetOrUpdateVehicleIcon_IconDoesNotAlreadyExist");
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("AAU")
+            .withModel("H.O.T.")
+            .withVintage(1969)
+            .withVin(new Vin("ABC123"))
+            .in(vehicleDao);
+
+        // Act
+        Vehicle found = vehicleService.setOrUpdateVehicleIcon(vehicle.getId(), is);
+
+        // Assert
+        Assert.assertNotNull(found);
+        Assert.assertEquals(vehicle, found);
+        Assert.assertNotNull(found.getVehicleIcon());
+
+    }
+
+    @Test
+    public void testSetOrUpdateVehicleIcon_IconDoesAlreadyExist() throws Exception {
+        // Arrange
+        InputStream is = IOUtils.toInputStream("testSetOrUpdateVehicleIcon_IconDoesNotAlreadyExist");
+        VehicleIcon vehicleIcon = new GivenVehicleIcon().withContent("doesntmatter").in(vehicleIconFileDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("AAU")
+            .withModel("H.O.T.")
+            .withVintage(1969)
+            .withVin(new Vin("ABC123"))
+            .withVehicleIcon(vehicleIcon)
+            .in(vehicleDao);
+
+        // Act
+        Vehicle found = vehicleService.setOrUpdateVehicleIcon(vehicle.getId(), is);
+
+        // Assert
+        String filecontents = IOUtils.toString(vehicleIconFileDao.fromHandle(found.getVehicleIcon()).read());
+        Assert.assertNotNull(found);
+        Assert.assertEquals(vehicle, found);
+        Assert.assertNotNull(found.getVehicleIcon());
+        Assert.assertNotEquals("doesntmatter", filecontents);
+        Assert.assertEquals("testSetOrUpdateVehicleIcon_IconDoesNotAlreadyExist" , filecontents);
     }
 
 
