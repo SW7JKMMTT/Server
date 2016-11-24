@@ -64,7 +64,6 @@ public class TestUserService extends DatabaseTest {
         // Arrange
         UserBuilder userBuilder = new UserBuilder("bent", "password", "bent", "Lam");
         userBuilder.addPermission(PermissionType.SuperUser);
-        userBuilder.addPermission(PermissionType.User);
 
         // Act
         User userInserted = userService.insertUser(userBuilder);
@@ -77,6 +76,22 @@ public class TestUserService extends DatabaseTest {
         for (PermissionBuilder permissionBuilder : userBuilder.getPermissions()) {
             Assert.assertTrue(userInserted.hasPermission(permissionBuilder.getPermission()));
         }
+        Assert.assertTrue(userInserted.hasPermission(PermissionType.User));
+    }
+
+    @Test
+    public void testInserUser_HasImplicitUserPermission() throws Exception {
+        // Arrange
+        UserBuilder userBuilder = new UserBuilder("bent", "password", "bent", "Lam");
+
+        // Act
+        User userInserted = userService.insertUser(userBuilder);
+
+        // Assert
+        Assert.assertNotNull(userInserted);
+        Assert.assertEquals(userBuilder.getUsername(), userInserted.getUsername());
+        Assert.assertEquals(userBuilder.getPassword(), userInserted.getPassword());
+        Assert.assertTrue(userInserted.hasPermission(PermissionType.User));
     }
 
     @Test(expected = ConflictException.class)
