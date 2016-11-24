@@ -2,12 +2,12 @@ package rocks.stalin.sw708e16.server.core.spatial;
 
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.Driver;
+import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.Vehicle;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Entity
@@ -27,13 +27,19 @@ public class Route {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Vehicle vehicle;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private RouteState routeState;
+
     protected Route() {
+        routeState = RouteState.CREATED;
     }
 
     public Route(List<Waypoint> points, Driver driver, Vehicle vehicle) {
         this.points = points;
         this.driver = driver;
         this.vehicle = vehicle;
+        this.routeState = this.points.isEmpty() ? RouteState.CREATED : RouteState.ACTIVE;
     }
 
     public ObjectId getId() {
@@ -42,6 +48,7 @@ public class Route {
 
     public void addWaypoint(Waypoint point) {
         points.add(point);
+        this.routeState = RouteState.ACTIVE;
     }
 
     public List<Waypoint> getWaypoints() {
@@ -62,6 +69,14 @@ public class Route {
 
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
+    }
+
+    public RouteState getRouteState() {
+        return routeState;
+    }
+
+    public void setRouteState(RouteState routeState) {
+        this.routeState = routeState;
     }
 
     /**

@@ -8,25 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import rocks.stalin.sw708e16.server.core.Driver;
-import rocks.stalin.sw708e16.server.core.User;
-import rocks.stalin.sw708e16.server.core.Vehicle;
-import rocks.stalin.sw708e16.server.core.Vin;
+import rocks.stalin.sw708e16.server.core.*;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
-import rocks.stalin.sw708e16.server.persistence.DriverDao;
-import rocks.stalin.sw708e16.server.persistence.RouteDao;
-import rocks.stalin.sw708e16.server.persistence.UserDao;
-import rocks.stalin.sw708e16.server.persistence.VehicleDao;
-import rocks.stalin.sw708e16.server.persistence.given.GivenDriver;
-import rocks.stalin.sw708e16.server.persistence.given.GivenRoute;
-import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
-import rocks.stalin.sw708e16.server.persistence.given.GivenVehicle;
+import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
+import rocks.stalin.sw708e16.server.persistence.*;
+import rocks.stalin.sw708e16.server.persistence.given.*;
 import rocks.stalin.sw708e16.server.services.builders.RouteBuilder;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
+import java.util.Date;
+
+import static org.hamcrest.core.IsCollectionContaining.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-config.xml"})
@@ -47,12 +42,15 @@ public class TestRouteService extends DatabaseTest {
     @Autowired
     private RouteService routeService;
 
+    @Autowired
+    private WaypointDao waypointDao;
+
     @Test
-    public void testGetAllPaths_Empty() throws Exception {
+    public void testGetAllPaths_EmptyWithoutState() throws Exception {
         // Arrange
 
         // Act
-        Collection<Route> allRoutes = routeService.getAllRoutes();
+        Collection<Route> allRoutes = routeService.getAllRoutes(null);
 
         // Assert
         Assert.assertNotNull(allRoutes);
@@ -60,7 +58,7 @@ public class TestRouteService extends DatabaseTest {
     }
 
     @Test
-    public void testGetAllPaths() throws Exception {
+    public void testGetAllPaths_WithoutState() throws Exception {
         // Arrange
         User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
         Driver driver = new GivenDriver().withUser(user).in(driverDao);
@@ -73,13 +71,69 @@ public class TestRouteService extends DatabaseTest {
         Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
 
         // Act
-        Collection<Route> allRoutes = routeService.getAllRoutes();
+        Collection<Route> allRoutes = routeService.getAllRoutes(null);
 
         // Assert
         Assert.assertNotNull(allRoutes);
         Assert.assertTrue(allRoutes.size() == 1);
         Assert.assertTrue(allRoutes.contains(route));
     }
+
+    @Test
+    public void testGetAllPaths_WithStateFindActive() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Lort")
+            .withVintage(1999)
+            .withVin(new Vin("d"))
+            .in(vehicleDao);
+        Route r1 = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Route r2 = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
+        r1.addWaypoint(w1);
+        Waypoint w2 = new GivenWaypoint().withTimestamp(new Date(2L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
+        r1.addWaypoint(w2);
+
+        // Act
+        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE);
+
+        // Assert
+        Assert.assertNotNull(found);
+        Assert.assertEquals(1, found.size());
+        Assert.assertThat(found, hasItem(r1));
+    }
+
+    @Test
+    public void testGetAllPaths_WithStateFindCreated() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Lort")
+            .withVintage(1999)
+            .withVin(new Vin("d"))
+            .in(vehicleDao);
+        Route r1 = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Route r2 = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
+        r1.addWaypoint(w1);
+        Waypoint w2 = new GivenWaypoint().withTimestamp(new Date(2L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
+        r1.addWaypoint(w2);
+
+        // Act
+        Collection<Route> found = routeService.getAllRoutes(RouteState.CREATED);
+
+        // Assert
+        Assert.assertNotNull(found);
+        Assert.assertEquals(1, found.size());
+        Assert.assertThat(found, hasItem(r2));
+    }
+
+
 
     @Test(expected = NotFoundException.class)
     public void testGetById_NotExists() throws Exception {

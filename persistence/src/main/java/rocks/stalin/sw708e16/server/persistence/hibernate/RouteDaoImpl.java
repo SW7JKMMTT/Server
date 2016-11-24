@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.persistence.RouteDao;
 
@@ -30,5 +31,16 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
                 Route.class);
         query.setParameter("id", id);
         return getFirst(query);
+    }
+
+    @Override
+    public Collection<Route> getAll(RouteState routeState) {
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT p " +
+                    "FROM Route p " +
+                    "WHERE p.routeState = :state",
+                Route.class);
+        query.setParameter("state", routeState);
+        return query.getResultList();
     }
 }

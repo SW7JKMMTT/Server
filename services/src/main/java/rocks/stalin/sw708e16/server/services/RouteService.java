@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Driver;
+import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
@@ -40,8 +41,11 @@ public class RouteService {
     @GET
     @Path("/")
     @Produces("application/json")
-    public Collection<Route> getAllRoutes() {
-        return routeDao.getAll();
+    public Collection<Route> getAllRoutes(@QueryParam("state") RouteState routeState) {
+        if (routeState == null)
+            return routeDao.getAll();
+
+        return routeDao.getAll(routeState);
     }
 
     /**
