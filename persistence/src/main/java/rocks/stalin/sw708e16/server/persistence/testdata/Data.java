@@ -37,21 +37,21 @@ public class Data extends DevelopmentDataInserter {
 
     @Override
     public void insert() {
-        User jeff = new GivenUser()
-                .withName("Jeff", "Jeffsen")
-                .withUsername("Jeff")
-                .withPassword("fuck")
-                .in(userDao);
-        AuthToken jeffToken = new GivenAuthToken().forUser(jeff).withToken("testtoken").in(authDao);
-        new GivenPermission().forUser(jeff).ofType(PermissionType.User).in(permissionDao);
-        new GivenPermission().forUser(jeff).ofType(PermissionType.SuperUser).in(permissionDao);
-        Vehicle vehicle = new GivenVehicle()
-            .withMake("AAU")
-            .withModel("H.O.T.")
-            .withVintage(1969)
-            .withVin(new Vin("ABC123"))
-            .in(vehicleDao);
-        Driver driver = new GivenDriver().withUser(jeff).in(driverDao);
-        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+//        User jeff = new GivenUser()
+//                .withName("Jeff", "Jeffsen")
+//                .withUsername("Jeff")
+//                .withPassword("fuck")
+//                .in(userDao);
+//        AuthToken jeffToken = new GivenAuthToken().forUser(jeff).withToken("testtoken").in(authDao);
+//        new GivenPermission().forUser(jeff).ofType(PermissionType.User).in(permissionDao);
+//        new GivenPermission().forUser(jeff).ofType(PermissionType.SuperUser).in(permissionDao);
+//        Vehicle vehicle = new GivenVehicle()
+//            .withMake("AAU")
+//            .withModel("H.O.T.")
+//            .withVintage(1969)
+//            .withVin(new Vin("ABC123"))
+//            .in(vehicleDao);
+//        Driver driver = new GivenDriver().withUser(jeff).in(driverDao);
+//        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
     }
 }

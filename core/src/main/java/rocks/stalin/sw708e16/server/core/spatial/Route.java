@@ -17,7 +17,7 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ObjectId id;
 
-    @OneToMany(mappedBy = "route", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "route", fetch = FetchType.EAGER)
     @OrderBy("timestamp")
     private List<Waypoint> points = new ArrayList<>();
 
@@ -48,7 +48,6 @@ public class Route {
 
     public void addWaypoint(Waypoint point) {
         points.add(point);
-        this.routeState = RouteState.ACTIVE;
     }
 
     public List<Waypoint> getWaypoints() {

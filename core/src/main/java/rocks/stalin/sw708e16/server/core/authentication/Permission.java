@@ -47,6 +47,10 @@ public class Permission {
         return permission.hashCode();
     }
 
+    public void setPermission(PermissionType permission) {
+        this.permission = permission;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(this == obj) return true;

@@ -16,6 +16,8 @@ import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
 import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 
@@ -57,7 +59,8 @@ public class TestUserService extends DatabaseTest {
         Assert.assertTrue(allUsers.contains(lisa));
         Assert.assertTrue(allUsers.size() == 3);
     }
-
+    @PersistenceContext
+    EntityManager em;
     @Test
     public void testInsertUser_AllValid() throws Exception {
         // Arrange
@@ -68,6 +71,9 @@ public class TestUserService extends DatabaseTest {
         // Act
         User userInserted = userService.insertUser(userBuilder);
 
+        em.flush();
+        userInserted.getPermissions().forEach((x) -> x.setPermission(PermissionType.User));
+        em.flush();
         // Assert
         Assert.assertNotNull(userInserted);
         Assert.assertEquals(userBuilder.getUsername(), userInserted.getUsername());
