@@ -80,6 +80,8 @@ public class UserService {
 
         User user = userBuilder.buildWithoutPermissions();
         userDao.add(user);
+        // Ensure all users have the "User" permission.
+        userBuilder.addPermission(PermissionType.User);
         for (PermissionBuilder permissionBuilder : userBuilder.getPermissionBuilders()) {
             Permission permission = permissionBuilder.build(user);
             user.addPermission(permission);
