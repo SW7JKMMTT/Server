@@ -1,9 +1,11 @@
 package rocks.stalin.sw708e16.server.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
+import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 import rocks.stalin.sw708e16.server.services.builders.WaypointBuilder;
 
 import javax.ws.rs.*;
@@ -14,6 +16,9 @@ import java.util.Optional;
 @Component
 public class WaypointService {
     private Route route;
+
+    @Autowired
+    private WaypointDao waypointDao;
 
     Route getRoute() {
         return route;
@@ -58,7 +63,7 @@ public class WaypointService {
 
         Waypoint waypoint = waypointBuilder.build(route);
         route.addWaypoint(waypoint);
-
+        waypointDao.add(waypoint);
         return waypoint;
     }
 }
