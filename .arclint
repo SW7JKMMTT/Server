@@ -6,10 +6,16 @@
         "android": {
             "type": "android",
             "include": "(\\.java$|\\.xml$|\\.png$|\\.jpg$)",
-			"findbugs": false,
-			"checkstyle": true,
-			"pmd": false,
-			"modules": ["services", "core", "persistence"]
+            "findbugs": false,
+            "checkstyle": true,
+            "pmd": false,
+            "modules": [
+                "services",
+                "core",
+                "persistence",
+                "spring",
+                "test"
+            ]
         },
         "text": {
             "type": "text",

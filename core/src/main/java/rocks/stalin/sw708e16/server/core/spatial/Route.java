@@ -77,4 +77,20 @@ public class Route {
 
         return waypoints;
     }
+
+    //TODO: Only supports persisted objects
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Route route = (Route) obj;
+
+        return id != null ? id.equals(route.id) : route.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

@@ -84,7 +84,9 @@ public class UserBuilder {
      */
     public User buildWithoutPermissions() {
         if (username == null || password == null || givenname == null || surname == null) {
-            throw new IllegalArgumentException("User specified without Username and/or Password and/or givenname and/or surname.");
+            throw new IllegalArgumentException(
+                "User specified without Username and/or Password and/or givenname and/or surname."
+            );
         }
 
         return new User(username, password, givenname, surname);

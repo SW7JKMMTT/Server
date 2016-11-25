@@ -1,6 +1,9 @@
 package rocks.stalin.sw708e16.server.services;
 
+import org.springframework.aop.target.CommonsPool2TargetSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
@@ -9,11 +12,14 @@ import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 import rocks.stalin.sw708e16.server.services.builders.WaypointBuilder;
 
 import javax.ws.rs.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Transactional
 @Component
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class WaypointService {
     private Route route;
 
@@ -64,6 +70,7 @@ public class WaypointService {
         Waypoint waypoint = waypointBuilder.build(route);
         route.addWaypoint(waypoint);
         waypointDao.add(waypoint);
+
         return waypoint;
     }
 }

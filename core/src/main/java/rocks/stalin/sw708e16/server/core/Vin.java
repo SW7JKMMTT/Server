@@ -25,11 +25,11 @@ public class Vin {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
-        Vin vin1 = (Vin) o;
+        Vin vin1 = (Vin) obj;
 
         return vin.equals(vin1.vin);
     }

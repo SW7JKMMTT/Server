@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
 
 public class EmbeddedMongoFactoryBean implements FactoryBean<MongodProcess>, DisposableBean {
-    private Logger logger = Logger.getLogger("rocks.stalic.sw708e16.server.persistence.rocks.stalin.sw708e16.server.spring");
+    private Logger logger = Logger
+        .getLogger("rocks.stalic.sw708e16.server.persistence.rocks.stalin.sw708e16.server.spring");
 
     private String version;
 
@@ -49,7 +50,7 @@ public class EmbeddedMongoFactoryBean implements FactoryBean<MongodProcess>, Dis
 
     @Override
     public boolean isSingleton() {
-        return false;
+        return true;
     }
 
     public String getVersion() {

@@ -27,7 +27,7 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-*/
+ */
 
 /**
  * Uses Android Lint to detect various errors in Java code. To use this linter,
@@ -85,18 +85,18 @@ final class ArcanistAndroidLinter extends ArcanistLinter
     public function setLinterConfigurationValue($key, $value)
     {
         switch ($key) {
-            case 'modules':
-                $this->gradleModules = $value;
-                return;
-            case 'findbugs':
-                $this->findBugsEnabled = $value;
-                return;
-            case 'checkstyle':
-                $this->checkStyleEnabled = $value;
-                return;
-            case 'pmd':
-                $this->pmdEnabled = $value;
-                return;
+        case 'modules':
+            $this->gradleModules = $value;
+            return;
+        case 'findbugs':
+            $this->findBugsEnabled = $value;
+            return;
+        case 'checkstyle':
+            $this->checkStyleEnabled = $value;
+            return;
+        case 'pmd':
+            $this->pmdEnabled = $value;
+            return;
         }
         parent::setLinterConfigurationValue($key, $value);
     }
@@ -128,7 +128,6 @@ final class ArcanistAndroidLinter extends ArcanistLinter
 
     public function lintPath($path)
     {
-
         $lint_xml_files = $this->runGradle($path);
 
         $lint_files       = $lint_xml_files[0];
@@ -175,21 +174,21 @@ final class ArcanistAndroidLinter extends ArcanistLinter
     {
         $root = $this->getEngine()->getWorkingCopy()->getProjectRoot();
 
-		//Is there a gradle wrapper in one of the dirs
+        //Is there a gradle wrapper in one of the dirs
         $gradle_bin = join('/', array(
             rtrim($path, '/'),
             "gradlew"
         ));
 
-		//Is there a gradle wrapper in the project root
+        //Is there a gradle wrapper in the project root
         if (!file_exists($gradle_bin)) {
-			$gradle_bin = join('/', array(
-				rtrim($root, '/'),
-				"gradlew"
-			));
+            $gradle_bin = join('/', array(
+                rtrim($root, '/'),
+                "gradlew"
+            ));
         }
 
-		//Lets use the global one
+        //Lets use the global one
         if (!file_exists($gradle_bin)) {
             $gradle_bin = $this->getGradlePath();
         }
@@ -201,7 +200,7 @@ final class ArcanistAndroidLinter extends ArcanistLinter
         $findbugs_paths   = array();
         $checkStyle_paths = array();
         $pmd_paths        = array();
-		$shouldLint       = False;
+        $shouldLint       = False;
 
         foreach ($this->gradleModules as $module) {
             /* $lint_command .= ':' . $module . ':lint '; */
@@ -209,63 +208,63 @@ final class ArcanistAndroidLinter extends ArcanistLinter
                 $findbugs_output_path = $root . '/' . str_replace(':', '/', $module);
                 $findbugs_output_path .= '/build/reports/findbugs/findbugs.xml';
                 $findbugs_paths[] = $findbugs_output_path;
-				if (file_exists($findbugs_output_path)) {
-					$findbugs_accessed_time = fileatime($findbugs_path);
-					$path_modified_time   = Filesystem::getModifiedTime($path);
+                if (file_exists($findbugs_output_path)) {
+                    $findbugs_accessed_time = fileatime($findbugs_path);
+                    $path_modified_time   = Filesystem::getModifiedTime($path);
 
-					if ($path_modified_time > $findbugs_accessed_time) {
-						unlink($findBugs_output_path);
-						$shouldLint = True;
-						$lint_command .= ':' . $module . ':findbugs ';
-					}
-				} else {
-					$shouldLint = True;
-					$lint_command .= ':' . $module . ':findbugs ';
-				}
+                    if ($path_modified_time > $findbugs_accessed_time) {
+                        unlink($findBugs_output_path);
+                        $shouldLint = True;
+                        $lint_command .= ':' . $module . ':findbugs ';
+                    }
+                } else {
+                    $shouldLint = True;
+                    $lint_command .= ':' . $module . ':findbugs ';
+                }
             }
             if ($this->checkStyleEnabled) {
                 $checkStyle_output_path = $root . '/' . str_replace(':', '/', $module);
                 $checkStyle_output_path .= '/build/reports/checkstyle/checkstyle.xml';
                 $checkStyle_paths[] = $checkStyle_output_path;
-				if (file_exists($checkStyle_output_path)) {
-					$checkStyle_accessed_time = fileatime($checkStyle_output_path);
-					$path_modified_time   = Filesystem::getModifiedTime($path);
+                if (file_exists($checkStyle_output_path)) {
+                    $checkStyle_accessed_time = fileatime($checkStyle_output_path);
+                    $path_modified_time   = Filesystem::getModifiedTime($path);
 
-					if ($path_modified_time > $checkStyle_accessed_time) {
-						unlink($checkStyle_output_path);
-						$shouldLint = True;
-						$lint_command .= ':' . $module . ':checkstyle ';
-					}
-				} else {
-					$shouldLint = True;
-					$lint_command .= ':' . $module . ':checkstyle ';
-				}
+                    if ($path_modified_time > $checkStyle_accessed_time) {
+                        unlink($checkStyle_output_path);
+                        $shouldLint = True;
+                        $lint_command .= ':' . $module . ':checkstyle ';
+                    }
+                } else {
+                    $shouldLint = True;
+                    $lint_command .= ':' . $module . ':checkstyle ';
+                }
             }
             if ($this->pmdEnabled) {
                 $pmd_output_path = $root . '/' . str_replace(':', '/', $module);
                 $pmd_output_path .= '/build/reports/pmd/pmd.xml';
                 $pmd_paths[] = $pmd_output_path;
-				if (file_exists($pmd_output_path)) {
-					$pmd_accessed_time = fileatime($pmd_output_path);
-					$path_modified_time   = Filesystem::getModifiedTime($path);
+                if (file_exists($pmd_output_path)) {
+                    $pmd_accessed_time = fileatime($pmd_output_path);
+                    $path_modified_time   = Filesystem::getModifiedTime($path);
 
-					if ($path_modified_time > $pmd_accessed_time) {
-						unlink($pmd_output_path);
-						$shouldLint = True;
-						$lint_command .= ':' . $module . ':pmd ';
-					}
-				} else {
-					$shouldLint = True;
-					$lint_command .= ':' . $module . ':pmd ';
-				}
+                    if ($path_modified_time > $pmd_accessed_time) {
+                        unlink($pmd_output_path);
+                        $shouldLint = True;
+                        $lint_command .= ':' . $module . ':pmd ';
+                    }
+                } else {
+                    $shouldLint = True;
+                    $lint_command .= ':' . $module . ':pmd ';
+                }
             }
         }
-		if ($shouldLint) {
-			$final_lint_command = $gradle_bin . ' ' . $lint_command;
-			echo "Linting Project...\n";
-			echo "Executing: $final_lint_command \n";
-			exec_manual($final_lint_command);
-		}
+        if ($shouldLint) {
+            $final_lint_command = $gradle_bin . ' ' . $lint_command;
+            echo "Linting Project...\n";
+            echo "Executing: $final_lint_command \n";
+            exec_manual($final_lint_command);
+        }
 
         chdir($cwd);
 

@@ -14,8 +14,6 @@ import rocks.stalin.sw708e16.server.persistence.VehicleDao;
 import rocks.stalin.sw708e16.server.services.builders.RouteBuilder;
 
 import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import java.util.Collection;
