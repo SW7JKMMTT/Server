@@ -14,6 +14,7 @@ import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
 import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
+import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.ws.rs.NotFoundException;
@@ -73,10 +74,36 @@ public class TestUserService extends DatabaseTest {
         Assert.assertEquals(userBuilder.getUsername(), userInserted.getUsername());
         Assert.assertEquals(userBuilder.getPassword(), userInserted.getPassword());
         // Loop in test ok or not?
-        for (PermissionBuilder permissionBuilder : userBuilder.getPermissionBuilders()) {
+        for (PermissionBuilder permissionBuilder : userBuilder.getPermissions()) {
             Assert.assertTrue(userInserted.hasPermission(permissionBuilder.getPermission()));
         }
     }
+
+    @Test(expected = ConflictException.class)
+    public void testInsertUser_DuplicateDiffirent() throws Exception {
+        // Arrange
+        UserBuilder ub1 = new UserBuilder("bent", "password", "bent", "Lam");
+        UserBuilder ub2 = new UserBuilder("bent", "paswurnd", "Bente", "Lamme");
+
+        // Act
+        userService.insertUser(ub1);
+        userService.insertUser(ub2);
+
+        // Assert
+    }
+    @Test(expected = ConflictException.class)
+    public void testInsertUser_DuplicateSame() throws Exception {
+        // Arrange
+        UserBuilder ub1 = new UserBuilder("bent", "password", "bent", "Lam");
+
+        // Act
+        userService.insertUser(ub1);
+        userService.insertUser(ub1);
+
+        // Assert
+    }
+
+
 
     @Test(expected = IllegalArgumentException.class)
     public void testInsertUser_InvalidUsername() throws Exception {

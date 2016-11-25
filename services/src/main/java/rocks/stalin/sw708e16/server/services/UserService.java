@@ -16,6 +16,7 @@ import rocks.stalin.sw708e16.server.persistence.file.MemoryBackedRoFile;
 import rocks.stalin.sw708e16.server.persistence.file.dao.FileDao;
 import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
 import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
+import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -55,7 +56,7 @@ public class UserService {
     }
 
     /**
-     * Add a new {@link User user} to the department.
+     * Add a new {@link User user}.
      *
      * @param userBuilder The new {@link UserBuilder} to insert
      * @return The {@link User user} that was inserted
@@ -79,10 +80,14 @@ public class UserService {
             throw new IllegalArgumentException("No surname");
 
         User user = userBuilder.buildWithoutPermissions();
+        if (userDao.byUsername(user.getUsername()) != null)
+            throw new ConflictException("A user with that username already exists.");
+
         userDao.add(user);
         // Ensure all users have the "User" permission.
         userBuilder.addPermission(PermissionType.User);
-        for (PermissionBuilder permissionBuilder : userBuilder.getPermissionBuilders()) {
+
+        for (PermissionBuilder permissionBuilder : userBuilder.getPermissions()) {
             Permission permission = permissionBuilder.build(user);
             user.addPermission(permission);
             permissionDao.add(permission);
@@ -103,7 +108,7 @@ public class UserService {
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.SUPERUSER})
     public User getUserById(@PathParam("uid") ObjectId id) {
-        User user = userDao.byId(id);
+        User user = userDao.byId_ForDisplay(id);
 
         if (user == null)
             throw new NotFoundException();
@@ -126,7 +131,7 @@ public class UserService {
     @Consumes("application/json")
     @RolesAllowed({PermissionType.Constants.SUPERUSER})
     public User modifyUser(@PathParam("uid") ObjectId id, UserBuilder userBuilder) {
-        User user = userDao.byId(id);
+        User user = userDao.byId_ForDisplay(id);
         if (user == null)
             throw new NotFoundException();
 

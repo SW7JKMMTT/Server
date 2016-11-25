@@ -1,5 +1,7 @@
 package rocks.stalin.sw708e16.server.services.builders;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
@@ -10,10 +12,12 @@ public class PermissionBuilder {
     public PermissionBuilder() {
     }
 
-    public PermissionBuilder(PermissionType permission) {
-        this.permission = permission;
+    @JsonCreator
+    public PermissionBuilder(String permission) {
+        this.setPermission(permission);
     }
 
+    @JsonValue
     public PermissionType getPermission() {
         return permission;
     }

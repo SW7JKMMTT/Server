@@ -105,7 +105,7 @@ public class User {
         this.icon = icon;
     }
 
-    @JsonGetter
+    @JsonGetter(value = "hasIcon")
     public boolean getHasIcon() {
         return icon != null;
     }

@@ -15,7 +15,7 @@ public class UserBuilder {
     private String password;
     private String givenname;
     private String surname;
-    private Collection<PermissionBuilder> permissionBuilders = new ArrayList<>();
+    private Collection<PermissionBuilder> permissions = new ArrayList<>();
 
     public UserBuilder() {
     }
@@ -68,13 +68,13 @@ public class UserBuilder {
     /**
      * An optional collection of {@link PermissionBuilder PermissionBuilders}.
      */
-    public Collection<PermissionBuilder> getPermissionBuilders() {
-        return this.permissionBuilders;
+    public Collection<PermissionBuilder> getPermissions() {
+        return this.permissions;
     }
 
     public void addPermission(PermissionType permission) {
-        if (permission != null && !permissionBuilders.stream().anyMatch((perm) -> perm.getPermission().equals(permission)))
-            this.permissionBuilders.add(new PermissionBuilder(permission));
+        if (permission != null && !permissions.stream().anyMatch((perm) -> perm.getPermission().equals(permission)))
+            this.permissions.add(new PermissionBuilder(permission.toString()));
     }
 
     /**
@@ -112,7 +112,7 @@ public class UserBuilder {
         if (this.surname != null)
             user.setSurname(this.surname);
 
-        for (PermissionBuilder permissionBuilder : permissionBuilders) {
+        for (PermissionBuilder permissionBuilder : permissions) {
             if (!user.hasPermission(permissionBuilder.getPermission()))
                 user.addPermission(new Permission(user, permissionBuilder.getPermission()));
         }

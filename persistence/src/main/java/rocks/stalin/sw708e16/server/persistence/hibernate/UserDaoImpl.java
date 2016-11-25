@@ -39,6 +39,18 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
+    public User byId_ForDisplay(ObjectId id) {
+        User user = byId(id);
+
+        if (user != null) {
+            // Init the lazy list.
+            HibernateMagic.initialize(user, "permissions");
+        }
+
+        return user;
+    }
+
+    @Override
     public Collection<User> getAll_ForDisplay() {
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
         Collection<User> users = query.getResultList();
