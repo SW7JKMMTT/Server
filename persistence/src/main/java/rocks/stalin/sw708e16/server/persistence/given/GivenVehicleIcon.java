@@ -2,7 +2,7 @@ package rocks.stalin.sw708e16.server.persistence.given;
 
 import rocks.stalin.sw708e16.server.core.VehicleIcon;
 import rocks.stalin.sw708e16.server.persistence.VehicleIconFactory;
-import rocks.stalin.sw708e16.server.persistence.file.Mock.MockReadable;
+import rocks.stalin.sw708e16.server.persistence.file.mock.MockReadable;
 import rocks.stalin.sw708e16.server.persistence.file.dao.VehicleIconFileDao;
 
 import java.io.IOException;

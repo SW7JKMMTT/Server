@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.persistence.file.Mock;
+package rocks.stalin.sw708e16.server.persistence.file.mock;
 
 import org.apache.commons.io.IOUtils;
 import rocks.stalin.sw708e16.server.persistence.file.Readable;
