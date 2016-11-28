@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.core;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
@@ -30,6 +31,9 @@ public class Vehicle {
 
     @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
     private Collection<Route> routes = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private VehicleIcon vehicleIcon;
 
     protected Vehicle() {
     }
@@ -75,6 +79,15 @@ public class Vehicle {
 
     public void setVin(Vin vin) {
         this.vin = vin;
+    }
+
+    public VehicleIcon getVehicleIcon() {
+        return vehicleIcon;
+    }
+
+    @JsonIgnore
+    public void setVehicleIcon(VehicleIcon vehicleIcon) {
+        this.vehicleIcon = vehicleIcon;
     }
 
     @JsonIgnore

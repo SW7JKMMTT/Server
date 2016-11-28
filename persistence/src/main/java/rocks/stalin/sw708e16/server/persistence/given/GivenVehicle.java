@@ -1,6 +1,7 @@
 package rocks.stalin.sw708e16.server.persistence.given;
 
 import rocks.stalin.sw708e16.server.core.Vehicle;
+import rocks.stalin.sw708e16.server.core.VehicleIcon;
 import rocks.stalin.sw708e16.server.core.Vin;
 import rocks.stalin.sw708e16.server.persistence.VehicleDao;
 
@@ -9,6 +10,7 @@ public class GivenVehicle {
     private String model;
     private int vintage;
     private Vin vin;
+    private VehicleIcon vehicleIcon;
 
     public GivenVehicle withMake(String make) {
         this.make = make;
@@ -30,8 +32,14 @@ public class GivenVehicle {
         return this;
     }
 
+    public GivenVehicle withVehicleIcon(VehicleIcon vehicleIcon) {
+        this.vehicleIcon = vehicleIcon;
+        return this;
+    }
+
     public Vehicle in(VehicleDao vehicleDao) {
         Vehicle vehicle = new Vehicle(make, model,vintage, vin);
+        vehicle.setVehicleIcon(vehicleIcon);
         vehicleDao.add(vehicle);
         return vehicle;
     }

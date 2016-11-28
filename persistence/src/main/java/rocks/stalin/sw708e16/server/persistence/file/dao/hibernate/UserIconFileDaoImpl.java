@@ -1,4 +1,4 @@
-package rocks.stalin.sw708e16.server.persistence.file.dao;
+package rocks.stalin.sw708e16.server.persistence.file.dao.hibernate;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.UserIcon;
 import rocks.stalin.sw708e16.server.persistence.UserIconFactory;
 import rocks.stalin.sw708e16.server.persistence.file.Readable;
+import rocks.stalin.sw708e16.server.persistence.file.dao.UserIconFileDao;
 
 import java.io.IOException;
 
 @Transactional
 @Repository
 @Primary
-@Qualifier("userIcon")
-public class UserIconFileDaoImpl extends FileDaoImpl<UserIcon> {
+public class UserIconFileDaoImpl extends FileDaoImpl<UserIcon> implements UserIconFileDao {
 
     private UserIconFactory factory;
 

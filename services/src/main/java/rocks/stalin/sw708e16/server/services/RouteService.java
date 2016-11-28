@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Driver;
+import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
@@ -38,8 +39,11 @@ public class RouteService {
     @GET
     @Path("/")
     @Produces("application/json")
-    public Collection<Route> getAllRoutes() {
-        return routeDao.getAll();
+    public Collection<Route> getAllRoutes(@QueryParam("state") RouteState routeState) {
+        if (routeState == null)
+            return routeDao.getAll();
+
+        return routeDao.getByState(routeState);
     }
 
     /**
@@ -60,15 +64,50 @@ public class RouteService {
         if(routeBuilder.getVehicleid() == null)
             throw new BadRequestException("No Vehicle Id Given");
 
-        if(auser.getDriver() == null) {
-            Driver newDriver = new Driver(auser);
-            auser.setDriver(newDriver);
-            driverDao.add(newDriver);
+
+        // Not driverid was given assuming that current user should be used.
+        if (routeBuilder.getDriverid() == null) {
+            // If user doesn't already have a driver, make one for it.
+            if(auser.getDriver() == null) {
+                Driver newDriver = new Driver(auser);
+                auser.setDriver(newDriver);
+                driverDao.add(newDriver);
+            }
+
+            routeBuilder.setDriverid(auser.getDriver().getId());
         }
 
-        Route route = routeBuilder.build(vehicleDao, auser.getDriver());
+        Route route = routeBuilder.build(vehicleDao, driverDao);
         routeDao.add(route);
         return route;
+    }
+
+    /**
+     * Marks a {@link Route} as {@link RouteState} Complete.
+     *
+     * @param id {@link Route} to finish.
+     * @return The {@link Route} after it is finished.
+     *
+     * @HTTP 404 Route not found.
+     */
+    @PUT
+    @Path("/{rid}/")
+    @Produces("application/json")
+    public Route modifyRoute(@PathParam("rid") ObjectId id, RouteBuilder routeBuilder) {
+        if (id == null)
+            throw new IllegalArgumentException("No Id was given.");
+
+        if (routeBuilder == null)
+            throw new IllegalArgumentException("The changes given in the RouteBuilder was null.");
+
+        Route found = routeDao.byId(id);
+
+        if (found == null)
+            throw new IllegalArgumentException("Route with given id was not found.");
+
+        found = routeBuilder.merge(vehicleDao, driverDao, found);
+
+        return found;
     }
 
     /**
@@ -80,7 +119,7 @@ public class RouteService {
      */
     @GET
     @Path("/{rid}/")
-    @Produces
+    @Produces("application/json")
     public Route getRouteById(@PathParam("rid") ObjectId id) {
         Route found = routeDao.byId(id);
 

@@ -123,9 +123,15 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
         <bean id="transactionManager"
               class="org.springframework.orm.jpa.JpaTransactionManager"/>
 
-        <bean id="userIconFileDaoImpl" class="rocks.stalin.sw708e16.server.persistence.file.dao.UserIconFileDaoImpl">
+        <bean id="userIconFileDaoImpl" class="rocks.stalin.sw708e16.server.persistence.file.dao.hibernate.UserIconFileDaoImpl">
             <property name="storagePath" value="${usericons.location}" />
         </bean>
+
+        <bean id="vehicleIconFileDaoImpl" class="rocks.stalin.sw708e16.server.persistence.file.dao.hibernate.VehicleIconFileDaoImpl">
+            <property name="storagePath" value="${vehicleicons.location}" />
+        </bean>
+
+
 
         <tx:annotation-driven transaction-manager="transactionManager"/>
     </beans>
