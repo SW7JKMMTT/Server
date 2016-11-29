@@ -21,7 +21,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 import java.util.Date;
 
-import static org.hamcrest.core.IsCollectionContaining.*;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-config.xml"})
@@ -50,7 +50,7 @@ public class TestRouteService extends DatabaseTest {
         // Arrange
 
         // Act
-        Collection<Route> allRoutes = routeService.getAllRoutes(null);
+        Collection<Route> allRoutes = routeService.getAllRoutes(null, null);
 
         // Assert
         Assert.assertNotNull(allRoutes);
@@ -71,7 +71,7 @@ public class TestRouteService extends DatabaseTest {
         Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
 
         // Act
-        Collection<Route> allRoutes = routeService.getAllRoutes(null);
+        Collection<Route> allRoutes = routeService.getAllRoutes(null, null);
 
         // Assert
         Assert.assertNotNull(allRoutes);
@@ -95,7 +95,7 @@ public class TestRouteService extends DatabaseTest {
         new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
 
         // Act
-        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE);
+        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE, null);
 
         // Assert
         Assert.assertNotNull(found);
@@ -119,7 +119,7 @@ public class TestRouteService extends DatabaseTest {
         new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
 
         // Act
-        Collection<Route> found = routeService.getAllRoutes(RouteState.CREATED);
+        Collection<Route> found = routeService.getAllRoutes(RouteState.CREATED, null);
 
         // Assert
         Assert.assertNotNull(found);
@@ -406,5 +406,63 @@ public class TestRouteService extends DatabaseTest {
         Assert.assertEquals(newVehicle, found.getVehicle());
         Assert.assertEquals(newDriver, found.getDriver());
         Assert.assertEquals(RouteState.COMPLETE, found.getRouteState());
+    }
+
+    @Test
+    public void testGetAllPaths_WithStateAndDriver() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Lort")
+            .withVintage(1999)
+            .withVin(new Vin("d"))
+            .in(vehicleDao);
+        Route r1 = new GivenRoute().withDriver(driver).withVehicle(vehicle).withRouteState(RouteState.ACTIVE).in(routeDao);
+        new GivenRoute().withDriver(driver).withVehicle(vehicle).withRouteState(RouteState.CREATED).in(routeDao);
+
+        // Act
+        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE, driver.getId());
+
+        // Assert
+        Assert.assertNotNull(found);
+        Assert.assertThat(found, hasSize(1));
+        Assert.assertThat(found, hasItem(r1));
+    }
+
+    @Test
+    public void testGetAllPaths_WithDriver() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Test").withPassword("lul").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Lort")
+            .withVintage(1999)
+            .withVin(new Vin("d"))
+            .in(vehicleDao);
+        Route r1 = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Route r2 = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
+
+        // Act
+        Collection<Route> found = routeService.getAllRoutes(null, driver.getId());
+
+        // Assert
+        Assert.assertThat(found, notNullValue());
+        Assert.assertThat(found, hasSize(2));
+        Assert.assertThat(found, hasItem(r1));
+        Assert.assertThat(found, hasItem(r2));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetAllPaths_WithNoDriver() throws Exception {
+        // Arrange
+
+        // Act
+        Collection<Route> found = routeService.getAllRoutes(null, new ObjectId());
+
+        // Assert
     }
 }

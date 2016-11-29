@@ -2,9 +2,11 @@ package rocks.stalin.sw708e16.server.persistence.hibernate;
 
 
 import org.bson.types.ObjectId;
+import org.hibernate.Hibernate;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.persistence.RouteDao;
@@ -19,7 +21,7 @@ import java.util.Collection;
 public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     @Override
     public Collection<Route> getAll_ForDisplay() {
-        TypedQuery<Route> query = em.createQuery("SELECT p FROM Route p", Route.class);
+        TypedQuery<Route> query = em.createQuery("SELECT r FROM Route r", Route.class);
         return initialize_ForDisplay(query.getResultList());
     }
 
@@ -48,19 +50,37 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     @Override
     public Collection<Route> getByState_ForDisplay(RouteState routeState) {
         TypedQuery<Route> query = em.createQuery(
-            "SELECT p " +
-                    "FROM Route p " +
-                    "WHERE p.routeState = :state",
+            "SELECT r " +
+                    "FROM Route r " +
+                    "WHERE r.routeState = :state",
                 Route.class);
         query.setParameter("state", routeState);
         return initialize_ForDisplay(query.getResultList());
     }
 
+    @Override
+    public Collection<Route> getByDriver_ForDisplay(Driver driver) {
+        return initialize_ForDisplay(driver.getRoutes());
+    }
+
+    @Override
+    public Collection<Route> getByDriverAndState_ForDisplay(RouteState routeState, Driver driver) {
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT r " +
+                "FROM Route r " +
+                "WHERE r.driver = :driver " +
+                "AND r.routeState = :state",
+            Route.class);
+        query.setParameter("driver", driver);
+        query.setParameter("state", routeState);
+        return initialize_ForDisplay(query.getResultList());
+    }
+
     /**
-     * Uses {@link HibernateMagic} to initilize the lazy fields in each element in the {@link Route routes}.
+     * Initializes the lazy fields in each element in the {@link Route routes}.
      *
-     * @param routes {@link Route routes} to initilize.
-     * @return The {@link Route routes} with initilized fields.
+     * @param routes {@link Route routes} to initialize.
+     * @return The {@link Route routes} with initialized fields.
      */
     private Collection<Route> initialize_ForDisplay(Collection<Route> routes) {
         for (Route route : routes) {
@@ -70,12 +90,17 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         return routes;
     }
 
+    /**
+     * Initializes the lazy fields in the {@link Route}.
+     * @param route {@link Route} to initialize.
+     * @return The {@link Route} with initialized fields.
+     */
     private Route initialize_ForDisplay(Route route) {
         if (route == null)
             return route;
 
-        HibernateMagic.initialize(route, "driver");
-        HibernateMagic.initialize(route, "vehicle");
+        Hibernate.initialize(route.getDriver());
+        Hibernate.initialize(route.getVehicle());
         return route;
     }
 }

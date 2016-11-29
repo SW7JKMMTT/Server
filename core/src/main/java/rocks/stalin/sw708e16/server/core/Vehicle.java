@@ -95,7 +95,7 @@ public class Vehicle {
         return routes;
     }
 
-    public void addPath(Route route) {
+    public void addRoute(Route route) {
         this.routes.add(route);
     }
 }

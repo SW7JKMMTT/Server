@@ -1,5 +1,8 @@
 package rocks.stalin.sw708e16.server.core.spatial;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
@@ -21,6 +24,8 @@ public class Route {
     @OrderBy("timestamp")
     private List<Waypoint> points = new ArrayList<>();
 
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Driver driver;
 

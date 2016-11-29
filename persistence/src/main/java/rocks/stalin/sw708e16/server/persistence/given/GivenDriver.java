@@ -36,7 +36,7 @@ public final class GivenDriver {
 
     public Driver in(DriverDao driverDao) {
         Driver driver = new Driver(user);
-        driver.addPaths(routes);
+        driver.addRoutes(routes);
         driverDao.add(driver);
         return driver;
     }

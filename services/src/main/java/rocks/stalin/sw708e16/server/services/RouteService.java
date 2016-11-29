@@ -33,17 +33,34 @@ public class RouteService {
     private VehicleDao vehicleDao;
 
     /**
-     * Gets all routes.
-     * @return all routes
+     * Gets {@link Route routes}, depending on query parameters.
+     *
+     * @param routeState The state of the routes to return (Optional).
+     * @param driverId The id of the driver to get routes for.
+     * @return A list of all the {@link Route routes} which satisfies the parameters.
      */
     @GET
     @Path("/")
     @Produces("application/json")
-    public Collection<Route> getAllRoutes(@QueryParam("state") RouteState routeState) {
-        if (routeState == null)
-            return routeDao.getAll_ForDisplay();
+    public Collection<Route> getAllRoutes(@QueryParam("state") RouteState routeState, @QueryParam("driver") ObjectId driverId) {
+        // If driverId is given, then find the driver or return an appropriate error.
+        if (driverId != null) {
+            Driver driver = driverDao.byId(driverId);
+            if (driver == null)
+                throw new IllegalArgumentException("DriverId was given, but driver wasn't found.");
 
-        return routeDao.getByState_ForDisplay(routeState);
+            // if routeState is set, and driver is valid, get by other. Only by driver routeState is not set.
+            if (routeState != null) {
+                return routeDao.getByDriverAndState_ForDisplay(routeState, driver);
+            } else {
+                return routeDao.getByDriver_ForDisplay(driver);
+            }
+        }
+
+        if (routeState != null)
+            return routeDao.getByState_ForDisplay(routeState);
+
+        return routeDao.getAll_ForDisplay();
     }
 
     /**
@@ -130,7 +147,6 @@ public class RouteService {
     }
 
     // TODO: Delete???
-    // TODO: PUT???
 
     @Autowired
     private WaypointService waypointService;

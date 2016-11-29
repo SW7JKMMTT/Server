@@ -1,12 +1,14 @@
 package rocks.stalin.sw708e16.server.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "Driver")
@@ -32,16 +34,21 @@ public class Driver {
         return id;
     }
 
-    @JsonIgnore
+    @JsonValue
     public User getUser() {
         return user;
     }
 
-    public void addPath(Route route) {
+    public void addRoute(Route route) {
         this.routes.add(route);
     }
 
-    public void addPaths(Collection<Route> routes) {
+    @JsonIgnore
+    public Collection<Route> getRoutes() {
+        return Collections.unmodifiableCollection(routes);
+    }
+
+    public void addRoutes(Collection<Route> routes) {
         this.routes.addAll(routes);
     }
 

@@ -1,6 +1,7 @@
 package rocks.stalin.sw708e16.server.persistence.given;
 
 import rocks.stalin.sw708e16.server.core.Driver;
+import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.Vehicle;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
@@ -14,6 +15,7 @@ public class GivenRoute {
     private List<Waypoint> waypoints = new ArrayList<Waypoint>();
     private Driver driver;
     private Vehicle vehicle;
+    private RouteState routeState;
 
     public GivenRoute withDriver(Driver driver) {
         this.driver = driver;
@@ -35,9 +37,18 @@ public class GivenRoute {
         return this;
     }
 
+    public GivenRoute withRouteState(RouteState routeState) {
+        this.routeState = routeState;
+        return this;
+    }
+
     public Route in(RouteDao routeDao) {
         Route route = new Route(waypoints, driver, vehicle);
+        if (routeState != null)
+            route.setRouteState(routeState);
         routeDao.add(route);
+        driver.addRoute(route);
+        vehicle.addRoute(route);
         return route;
     }
 }
