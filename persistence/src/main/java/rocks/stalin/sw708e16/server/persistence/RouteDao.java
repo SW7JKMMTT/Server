@@ -9,9 +9,11 @@ import java.util.Collection;
 public interface RouteDao extends BaseDao<Route> {
     // TODO: Spatial searches.
 
-    Collection<Route> getAll();
+    Collection<Route> getAll_ForDisplay();
 
-    Collection<Route> getByState(RouteState routeState);
+    Route byId_ForDisplay(ObjectId id);
+
+    Collection<Route> getByState_ForDisplay(RouteState routeState);
 
     Route byId(ObjectId id);
 }

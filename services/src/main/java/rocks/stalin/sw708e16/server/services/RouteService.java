@@ -41,9 +41,9 @@ public class RouteService {
     @Produces("application/json")
     public Collection<Route> getAllRoutes(@QueryParam("state") RouteState routeState) {
         if (routeState == null)
-            return routeDao.getAll();
+            return routeDao.getAll_ForDisplay();
 
-        return routeDao.getByState(routeState);
+        return routeDao.getByState_ForDisplay(routeState);
     }
 
     /**
@@ -100,7 +100,7 @@ public class RouteService {
         if (routeBuilder == null)
             throw new IllegalArgumentException("The changes given in the RouteBuilder was null.");
 
-        Route found = routeDao.byId(id);
+        Route found = routeDao.byId_ForDisplay(id);
 
         if (found == null)
             throw new IllegalArgumentException("Route with given id was not found.");
@@ -121,7 +121,7 @@ public class RouteService {
     @Path("/{rid}/")
     @Produces("application/json")
     public Route getRouteById(@PathParam("rid") ObjectId id) {
-        Route found = routeDao.byId(id);
+        Route found = routeDao.byId_ForDisplay(id);
 
         if(found == null)
             throw new NotFoundException("Route not found with given id");

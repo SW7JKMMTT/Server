@@ -45,7 +45,7 @@ public class TestRouteDao extends DatabaseTest {
         // Arrange
 
         // Act
-        Collection<Route> allRoutes = routeDao.getAll();
+        Collection<Route> allRoutes = routeDao.getAll_ForDisplay();
 
         // Assert
         Assert.assertNotNull(allRoutes);
@@ -66,7 +66,7 @@ public class TestRouteDao extends DatabaseTest {
         Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
 
         // Act
-        Collection<Route> allRoutes = routeDao.getAll();
+        Collection<Route> allRoutes = routeDao.getAll_ForDisplay();
 
         // Assert
         Assert.assertNotNull(allRoutes);
