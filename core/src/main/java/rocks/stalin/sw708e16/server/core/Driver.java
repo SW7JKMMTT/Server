@@ -34,7 +34,7 @@ public class Driver {
         return id;
     }
 
-    @JsonValue
+    @JsonIgnore
     public User getUser() {
         return user;
     }
