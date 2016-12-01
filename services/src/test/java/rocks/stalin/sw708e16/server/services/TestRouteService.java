@@ -21,6 +21,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 import java.util.Date;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -50,7 +51,7 @@ public class TestRouteService extends DatabaseTest {
         // Arrange
 
         // Act
-        Collection<Route> allRoutes = routeService.getAllRoutes(null, null);
+        Collection<Route> allRoutes = routeService.getAllRoutes(null, null, null, null,null);
 
         // Assert
         Assert.assertNotNull(allRoutes);
@@ -71,7 +72,7 @@ public class TestRouteService extends DatabaseTest {
         Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
 
         // Act
-        Collection<Route> allRoutes = routeService.getAllRoutes(null, null);
+        Collection<Route> allRoutes = routeService.getAllRoutes(null, null, null, null,null);
 
         // Assert
         Assert.assertNotNull(allRoutes);
@@ -95,12 +96,12 @@ public class TestRouteService extends DatabaseTest {
         new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
 
         // Act
-        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE, null);
+        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE, null, null, null,null);
 
         // Assert
         Assert.assertNotNull(found);
         Assert.assertEquals(1, found.size());
-        Assert.assertThat(found, hasItem(r1));
+        assertThat(found, hasItem(r1));
     }
 
     @Test
@@ -119,12 +120,12 @@ public class TestRouteService extends DatabaseTest {
         new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
 
         // Act
-        Collection<Route> found = routeService.getAllRoutes(RouteState.CREATED, null);
+        Collection<Route> found = routeService.getAllRoutes(RouteState.CREATED, null, null, null,null);
 
         // Assert
         Assert.assertNotNull(found);
         Assert.assertEquals(1, found.size());
-        Assert.assertThat(found, hasItem(r2));
+        assertThat(found, hasItem(r2));
     }
 
 
@@ -423,12 +424,12 @@ public class TestRouteService extends DatabaseTest {
         new GivenRoute().withDriver(driver).withVehicle(vehicle).withRouteState(RouteState.CREATED).in(routeDao);
 
         // Act
-        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE, driver.getId());
+        Collection<Route> found = routeService.getAllRoutes(RouteState.ACTIVE, driver.getId(), null, null,null);
 
         // Assert
         Assert.assertNotNull(found);
-        Assert.assertThat(found, hasSize(1));
-        Assert.assertThat(found, hasItem(r1));
+        assertThat(found, hasSize(1));
+        assertThat(found, hasItem(r1));
     }
 
     @Test
@@ -447,21 +448,21 @@ public class TestRouteService extends DatabaseTest {
         new GivenWaypoint().withTimestamp(new Date(1L)).withLatitude(12.34).withLongitude(34.56).withRoute(r1).in(waypointDao);
 
         // Act
-        Collection<Route> found = routeService.getAllRoutes(null, driver.getId());
+        Collection<Route> found = routeService.getAllRoutes(null, driver.getId(), null, null,null);
 
         // Assert
-        Assert.assertThat(found, notNullValue());
-        Assert.assertThat(found, hasSize(2));
-        Assert.assertThat(found, hasItem(r1));
-        Assert.assertThat(found, hasItem(r2));
+        assertThat(found, notNullValue());
+        assertThat(found, hasSize(2));
+        assertThat(found, hasItem(r1));
+        assertThat(found, hasItem(r2));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NotFoundException.class)
     public void testGetAllPaths_WithNoDriver() throws Exception {
         // Arrange
 
         // Act
-        Collection<Route> found = routeService.getAllRoutes(null, new ObjectId());
+        routeService.getAllRoutes(null, new ObjectId(), null, null,null);
 
         // Assert
     }

@@ -9,11 +9,19 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
+import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
+import rocks.stalin.sw708e16.server.persistence.Coordinate;
 import rocks.stalin.sw708e16.server.persistence.RouteDao;
+import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 import rocks.stalin.sw708e16.server.persistence.hibernate.magic.HibernateMagic;
 
 import javax.persistence.TypedQuery;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Transactional
 @Repository
@@ -74,6 +82,52 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         query.setParameter("driver", driver);
         query.setParameter("state", routeState);
         return initialize_ForDisplay(query.getResultList());
+    }
+
+    @Override
+    public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius) {
+        // I'm doing this in the most naive version ever, can get improved later if needed.
+        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+
+        LinkedHashMap<Route, Boolean> routesMap = new LinkedHashMap<>();
+        for (Waypoint waypoint : waypoints) {
+            Route route = waypoint.getRoute();
+            if (!routesMap.containsKey(route)) {
+                Hibernate.initialize(route.getVehicle());
+                Hibernate.initialize(route.getDriver());
+                routesMap.put(route, true);
+            }
+        }
+
+        return routesMap.keySet();
+    }
+
+    @Override
+    public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, Driver driver) {
+        Collection<Route> routes = withinRadius_ForDisplay(waypointDao, coordinate, radius);
+        return routes
+            .stream()
+            .filter(route -> route.getDriver().equals(driver))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, RouteState routeState) {
+        Collection<Route> routes = withinRadius_ForDisplay(waypointDao, coordinate, radius);
+        return routes
+            .stream()
+            .filter(route -> route.getRouteState().equals(routeState))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, Driver driver, RouteState routeState) {
+        Collection<Route> routes = withinRadius_ForDisplay(waypointDao, coordinate, radius);
+        return routes
+            .stream()
+            .filter(route -> route.getDriver().equals(driver))
+            .filter(route -> route.getRouteState().equals(routeState))
+            .collect(Collectors.toList());
     }
 
     /**

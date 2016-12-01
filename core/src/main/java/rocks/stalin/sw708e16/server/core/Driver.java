@@ -52,5 +52,21 @@ public class Driver {
         this.routes.addAll(routes);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Driver driver = (Driver) o;
+
+        if (!id.equals(driver.id)) return false;
+        return user.equals(driver.user);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + user.hashCode();
+        return result;
+    }
 }

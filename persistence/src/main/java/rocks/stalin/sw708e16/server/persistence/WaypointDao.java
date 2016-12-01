@@ -6,5 +6,5 @@ import java.util.Collection;
 import java.util.List;
 
 public interface WaypointDao extends BaseDao<Waypoint> {
-    List<Waypoint> withinRadius(double latitude, double longitude, double kilometers) throws InterruptedException;
+    List<Waypoint> withinRadius(Coordinate coordinate, double kilometers);
 }

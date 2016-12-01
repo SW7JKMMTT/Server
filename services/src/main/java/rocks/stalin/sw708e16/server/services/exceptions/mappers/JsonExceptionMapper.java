@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -18,11 +19,15 @@ public class JsonExceptionMapper implements ExceptionMapper<WebApplicationExcept
 
     @Override
     public Response toResponse(WebApplicationException except) {
-        return Response
-            .status(except.getResponse().getStatus())
-            .entity(new JsonError(except.getMessage()))
-            .type(headers.getMediaType())
-            .build();
+        if (headers.getMediaType().equals(MediaType.APPLICATION_JSON_TYPE)) {
+            return Response
+                .status(except.getResponse().getStatus())
+                .entity(new JsonError(except.getMessage()))
+                .type(headers.getMediaType())
+                .build();
+        }
+
+        throw except;
     }
 
     private class JsonError {

@@ -21,4 +21,12 @@ public interface RouteDao extends BaseDao<Route> {
     Collection<Route> getByDriver_ForDisplay(Driver driver);
 
     Collection<Route> getByDriverAndState_ForDisplay(RouteState routeState, Driver driver);
+
+    Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius);
+
+    Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, Driver driver);
+
+    Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, RouteState routeState);
+
+    Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, Driver driver, RouteState routeState);
 }

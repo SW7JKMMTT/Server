@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
+import rocks.stalin.sw708e16.server.persistence.Coordinate;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 
 import java.util.List;
@@ -22,16 +23,16 @@ import java.util.List;
 public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDao {
 
     @Override
-    public List<Waypoint> withinRadius(double latitude, double longitude, double kilometers) {
-        if(latitude > GeometricConstants.LATITUDE_DEGREE_MAX || latitude < GeometricConstants.LATITUDE_DEGREE_MIN)
+    public List<Waypoint> withinRadius(Coordinate coordinate, double kilometers) {
+        if(coordinate.getLatitude() > GeometricConstants.LATITUDE_DEGREE_MAX || coordinate.getLatitude() < GeometricConstants.LATITUDE_DEGREE_MIN)
             throw new IllegalArgumentException("Illegal latitude");
-        if(longitude > GeometricConstants.LONGITUDE_DEGREE_MAX || longitude < GeometricConstants.LONGITUDE_DEGREE_MIN)
+        if(coordinate.getLongitude() > GeometricConstants.LONGITUDE_DEGREE_MAX || coordinate.getLongitude() < GeometricConstants.LONGITUDE_DEGREE_MIN)
             throw new IllegalArgumentException("Illegal longitude");
 
         FullTextEntityManager ftem = Search.getFullTextEntityManager(em);
         QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Waypoint.class).get();
-        Coordinates coordinate = Point.fromDegrees(latitude, longitude);
-        Query query = qb.spatial().within(kilometers, Unit.KM).ofCoordinates(coordinate).createQuery();
+        Coordinates cord = Point.fromDegrees(coordinate.getLatitude(), coordinate.getLongitude());
+        Query query = qb.spatial().within(kilometers, Unit.KM).ofCoordinates(cord).createQuery();
         return (List<Waypoint>) ftem.createFullTextQuery(query, Waypoint.class).getResultList();
     }
 }

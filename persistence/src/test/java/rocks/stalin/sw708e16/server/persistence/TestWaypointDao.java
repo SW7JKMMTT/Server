@@ -85,7 +85,7 @@ public class TestWaypointDao extends DatabaseTest {
 
         flushIndex();
 
-        List<Waypoint> ret = waypointDao.withinRadius(1, 1, 100);
+        List<Waypoint> ret = waypointDao.withinRadius(new Coordinate(1.0, 1.0), 100);
 
         Assert.assertThat(ret, hasSize(2));
         Assert.assertThat(ret, hasItem(way));
@@ -118,7 +118,7 @@ public class TestWaypointDao extends DatabaseTest {
 
         flushIndex();
 
-        List<Waypoint> ret = waypointDao.withinRadius(1, 1, 40);
+        List<Waypoint> ret = waypointDao.withinRadius(new Coordinate(1.0, 1.0), 40);
 
         Assert.assertThat(ret, hasSize(1));
         Assert.assertThat(ret, hasItem(way));
@@ -150,25 +150,25 @@ public class TestWaypointDao extends DatabaseTest {
 
         flushIndex();
 
-        List<Waypoint> ret = waypointDao.withinRadius(0, 0, 100);
+        List<Waypoint> ret = waypointDao.withinRadius(new Coordinate(0.0, 0.0) , 100);
 
         Assert.assertThat(ret, hasSize(0));
     }
 
     @Test
     public void testWithinRadius_WithNone_FindNone() throws Exception {
-        List<Waypoint> ret = waypointDao.withinRadius(0, 0, 100);
+        List<Waypoint> ret = waypointDao.withinRadius(new Coordinate(0.0, 0.0), 100);
 
         Assert.assertThat(ret, hasSize(0));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWithinRadius_InvalidLatitude() throws Exception {
-        waypointDao.withinRadius(100, 10, 100);
+        waypointDao.withinRadius(new Coordinate(100.0, 1.0), 100);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testWithinRadius_InvalidLongitude() throws Exception {
-        waypointDao.withinRadius(10, 190, 100);
+        waypointDao.withinRadius(new Coordinate(10.0, 190.0), 100);
     }
 }

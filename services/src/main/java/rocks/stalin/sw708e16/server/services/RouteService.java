@@ -1,6 +1,7 @@
 package rocks.stalin.sw708e16.server.services;
 
 import org.bson.types.ObjectId;
+import org.hibernate.search.spatial.impl.GeometricConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,10 +10,10 @@ import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
-import rocks.stalin.sw708e16.server.persistence.DriverDao;
-import rocks.stalin.sw708e16.server.persistence.RouteDao;
-import rocks.stalin.sw708e16.server.persistence.VehicleDao;
+import rocks.stalin.sw708e16.server.persistence.*;
 import rocks.stalin.sw708e16.server.services.builders.RouteBuilder;
+import rocks.stalin.sw708e16.server.services.exceptions.DriverNotFoundException;
+import rocks.stalin.sw708e16.server.services.exceptions.OffThePlanetException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -32,35 +33,114 @@ public class RouteService {
     @Autowired
     private VehicleDao vehicleDao;
 
+    @Autowired
+    private WaypointDao waypointDao;
+
     /**
-     * Gets {@link Route routes}, depending on query parameters.
+     * Gets {@link Route routes}, depending on query parameters of which all given are considered.
+     * A spatial query is done by giving latitude, longitude and radius.
      *
-     * @param routeState The state of the routes to return (Optional).
-     * @param driverId The id of the driver to get routes for.
+     * @param routeState The state of the routes to return (Optional otherwise all).
+     * @param driverId The id of the driver to get routes for (Optional otherwise all).
+     * @param latitude A latitude to query for.
+     * @param longitude A longitude to query for.
+     * @param radius A radius from the latitude and longitude to query for.
      * @return A list of all the {@link Route routes} which satisfies the parameters.
+     *
+     * @HTTP 400 One or more query params was given, but their combination was invalid, or, one or more was bad.
+     * @HTTP 404 The driver given was not found.
      */
     @GET
     @Path("/")
     @Produces("application/json")
-    public Collection<Route> getAllRoutes(@QueryParam("state") RouteState routeState, @QueryParam("driver") ObjectId driverId) {
-        // If driverId is given, then find the driver or return an appropriate error.
-        if (driverId != null) {
-            Driver driver = driverDao.byId(driverId);
-            if (driver == null)
-                throw new IllegalArgumentException("DriverId was given, but driver wasn't found.");
-
-            // if routeState is set, and driver is valid, get by other. Only by driver routeState is not set.
-            if (routeState != null) {
-                return routeDao.getByDriverAndState_ForDisplay(routeState, driver);
-            } else {
-                return routeDao.getByDriver_ForDisplay(driver);
+    public Collection<Route> getAllRoutes(
+            @QueryParam("state") RouteState routeState,
+            @QueryParam("driver") ObjectId driverId,
+            @QueryParam("latitude") Double latitude,
+            @QueryParam("longitude") Double longitude,
+            @QueryParam("radius") Double radius)
+    {
+        // Spatial queries:
+        if (latitude != null || longitude != null || radius != null) {
+            try {
+                return spatialQuery(new Coordinate(latitude, longitude), radius, driverId, routeState);
+            } catch (IllegalArgumentException | OffThePlanetException exception) {
+                throw new BadRequestException(exception.getMessage(), exception);
+            } catch (DriverNotFoundException exception) {
+                throw new NotFoundException(exception.getMessage(), exception);
             }
         }
 
+        // It's set, let's filter by it!
+        if (driverId != null) {
+            Driver driver = driverDao.byId(driverId);
+            if (driver == null)
+                throw new NotFoundException("DriverId was given, but driver wasn't found.");
+
+            // It's also set, let's include that in the filter!
+            if (routeState != null)
+                return routeDao.getByDriverAndState_ForDisplay(routeState, driver);
+
+            return routeDao.getByDriver_ForDisplay(driver);
+        }
+
+        // Only this is set, only include it in filter!
         if (routeState != null)
             return routeDao.getByState_ForDisplay(routeState);
 
+        // No queryparams are set, get'em all!
         return routeDao.getAll_ForDisplay();
+    }
+
+    /**
+     * Does spatial queries, and handles errors.
+     *
+     * @param routeState The state of the routes to return (Optional otherwise all).
+     * @param driverId The id of the driver to get routes for (Optional otherwise all).
+     * @param coordinate The coordinate of the center of the query.
+     * @param radius A radius from the latitude and longitude to query for.
+     * @return The result of the spatial query.
+     */
+    private Collection<Route> spatialQuery(Coordinate coordinate, Double radius, ObjectId driverId, RouteState routeState)
+        throws OffThePlanetException, DriverNotFoundException
+    {
+        if (coordinate.getLatitude() == null)
+            throw new IllegalArgumentException("latitude not set, but other spatial parameters are.");
+
+        if (coordinate.getLongitude() == null)
+            throw new IllegalArgumentException("longitude not set, but other spatial parameters are.");
+
+        if (radius == null)
+            throw new IllegalArgumentException("radius not set, but other spatial parameters are.");
+
+        if (coordinate.getLatitude() > GeometricConstants.LATITUDE_DEGREE_MAX || coordinate.getLatitude() < GeometricConstants.LATITUDE_DEGREE_MIN) {
+            throw new OffThePlanetException(OffThePlanetException.Component.LATITUDE, coordinate.getLatitude());
+        }
+
+        if (coordinate.getLongitude() > GeometricConstants.LONGITUDE_DEGREE_MAX || coordinate.getLongitude() < GeometricConstants.LONGITUDE_DEGREE_MIN) {
+            throw new OffThePlanetException(OffThePlanetException.Component.LONGITUDE, coordinate.getLongitude());
+        }
+
+        if (radius < 0)
+            throw new IllegalArgumentException("radius must be positive was: " + radius);
+
+        // If this is set, the retrieve the object and use it.
+        if (driverId != null) {
+            Driver driver = driverDao.byId(driverId);
+            if (driver == null)
+                throw new DriverNotFoundException();
+
+            // If this is set use both to filter.
+            if (routeState != null)
+                return routeDao.withinRadius_ForDisplay(waypointDao, coordinate, radius, driver, routeState);
+
+            return routeDao.withinRadius_ForDisplay(waypointDao, coordinate, radius, driver);
+        }
+
+        if (routeState != null)
+            return routeDao.withinRadius_ForDisplay(waypointDao, coordinate, radius, routeState);
+
+        return routeDao.withinRadius_ForDisplay(waypointDao, coordinate, radius);
     }
 
     /**
