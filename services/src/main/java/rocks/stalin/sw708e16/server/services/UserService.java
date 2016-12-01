@@ -172,7 +172,6 @@ public class UserService {
      *
      * @param id    The id of the {@link User user}.
      * @param is    The new user icon in a png format.
-     * @param authenticatedUser The {@link User Authenticated user} of the current request.
      * @return The {@link User user} that had its icon modified.
      * @throws IOException If the disk is unwritable.
      *
@@ -183,10 +182,10 @@ public class UserService {
     @Consumes("image/png")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public User setUserIcon(@PathParam("uid") ObjectId id, InputStream is, @Context User authenticatedUser)
+    public User setUserIcon(@PathParam("uid") ObjectId id, InputStream is)
             throws IOException
     {
-        User user = userDao.byId(id);
+        User user = userDao.byId_ForDisplay(id);
         if (user == null)
             throw new NotFoundException("User not found");
 
