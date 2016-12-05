@@ -2,18 +2,15 @@ package rocks.stalin.sw708e16.server.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.UserIcon;
 import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
-import rocks.stalin.sw708e16.server.persistence.AuthDao;
 import rocks.stalin.sw708e16.server.persistence.PermissionDao;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 import rocks.stalin.sw708e16.server.persistence.file.MemoryBackedRoFile;
-import rocks.stalin.sw708e16.server.persistence.file.dao.FileDao;
 import rocks.stalin.sw708e16.server.persistence.file.dao.UserIconFileDao;
 import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
 import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
@@ -21,7 +18,6 @@ import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -30,15 +26,11 @@ import java.util.Collection;
 @Component
 @Path("/user")
 public class UserService {
-
     @Autowired
     private UserDao userDao;
 
     @Autowired
     private UserIconFileDao userIconDao;
-
-    @Autowired
-    private AuthDao authDao;
 
     @Autowired
     private PermissionDao permissionDao;
@@ -51,6 +43,7 @@ public class UserService {
     @GET
     @Path("/")
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Collection<User> getAllUsers() {
         return userDao.getAll_ForDisplay();
     }
@@ -106,7 +99,7 @@ public class UserService {
     @GET
     @Path("/{uid}")
     @Produces("application/json")
-    @RolesAllowed({PermissionType.Constants.SUPERUSER})
+    @RolesAllowed({PermissionType.Constants.USER})
     public User getUserById(@PathParam("uid") ObjectId id) {
         User user = userDao.byId_ForDisplay(id);
 
@@ -155,6 +148,7 @@ public class UserService {
     @GET
     @Path("/{uid}/icon")
     @Produces("image/png")
+    @RolesAllowed({PermissionType.Constants.USER})
     public InputStream getUserIcon(@PathParam("uid") ObjectId id) throws IOException {
         User user = userDao.byId(id);
         if (user == null)

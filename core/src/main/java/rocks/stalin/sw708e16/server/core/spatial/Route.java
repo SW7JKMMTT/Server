@@ -2,6 +2,7 @@ package rocks.stalin.sw708e16.server.core.spatial;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.Driver;
@@ -56,6 +57,7 @@ public class Route {
         this.routeState = RouteState.ACTIVE;
     }
 
+    @JsonIgnore
     public List<Waypoint> getWaypoints() {
         return points;
     }

@@ -36,6 +36,9 @@ public class RouteService {
     @Autowired
     private WaypointDao waypointDao;
 
+    @Autowired
+    private WaypointService waypointService;
+
     /**
      * Gets {@link Route routes}, depending on query parameters of which all given are considered.
      * A spatial query is done by giving latitude, longitude and radius.
@@ -44,7 +47,7 @@ public class RouteService {
      * @param driverId The id of the driver to get routes for (Optional otherwise all).
      * @param latitude A latitude to query for.
      * @param longitude A longitude to query for.
-     * @param radius A radius from the latitude and longitude to query for.
+     * @param radius A radius (in km) from the latitude and longitude to query for.
      * @return A list of all the {@link Route routes} which satisfies the parameters.
      *
      * @HTTP 400 One or more query params was given, but their combination was invalid, or, one or more was bad.
@@ -53,6 +56,7 @@ public class RouteService {
     @GET
     @Path("/")
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Collection<Route> getAllRoutes(
             @QueryParam("state") RouteState routeState,
             @QueryParam("driver") ObjectId driverId,
@@ -190,6 +194,7 @@ public class RouteService {
     @PUT
     @Path("/{rid}/")
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Route modifyRoute(@PathParam("rid") ObjectId id, RouteBuilder routeBuilder) {
         if (id == null)
             throw new IllegalArgumentException("No Id was given.");
@@ -207,6 +212,8 @@ public class RouteService {
         return found;
     }
 
+    // TODO: Delete???
+
     /**
      * Gets a single route by its id.
      * @param id id of the route to get.
@@ -217,6 +224,7 @@ public class RouteService {
     @GET
     @Path("/{rid}/")
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Route getRouteById(@PathParam("rid") ObjectId id) {
         Route found = routeDao.byId_ForDisplay(id);
 
@@ -226,11 +234,6 @@ public class RouteService {
         return found;
     }
 
-    // TODO: Delete???
-
-    @Autowired
-    private WaypointService waypointService;
-
     /**
      * The waypoint service is served on the path.
      * @param id the id of the route to deliver a waypoint service for.
@@ -239,6 +242,7 @@ public class RouteService {
      * @HTTP 404 Route not found
      */
     @Path("/{rid}/waypoint/")
+    @RolesAllowed({PermissionType.Constants.USER})
     public WaypointService getWaypointService(@PathParam("rid") ObjectId id) {
         Route found = routeDao.byId(id);
 

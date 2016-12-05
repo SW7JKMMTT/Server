@@ -1,21 +1,19 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.springframework.aop.target.CommonsPool2TargetSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 import rocks.stalin.sw708e16.server.services.builders.WaypointBuilder;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
 
 @Transactional
 @Component
@@ -35,13 +33,15 @@ public class WaypointService {
     }
 
     /**
-     * Gets all Waypoints for a given route.
+     * Gets all Waypoints for a given route, or a specified number of waypoints.
      *
+     * @param maxCount The maximum number of waypoints to return, ordered by timestamp descending (newest first).
      * @return All waypoints in the route.
      */
     @GET
     @Path("/")
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Collection<Waypoint> getWaypoints(@DefaultValue("0") @QueryParam("count") int maxCount) {
         if (maxCount == 0)
             return route.getWaypoints();
@@ -59,6 +59,7 @@ public class WaypointService {
     @Path("/")
     @Consumes("application/json")
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Waypoint addWaypoint(WaypointBuilder waypointBuilder) {
         if (waypointBuilder.getLatitude() == null ||
                 waypointBuilder.getLongitude() == null ||

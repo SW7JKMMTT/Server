@@ -1,12 +1,8 @@
 package rocks.stalin.sw708e16.server.services;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
@@ -14,11 +10,8 @@ import rocks.stalin.sw708e16.server.persistence.AuthDao;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
 
 import javax.annotation.security.PermitAll;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 import java.util.Collection;
 import java.util.Map;
 
@@ -26,7 +19,6 @@ import java.util.Map;
 @Path("/auth")
 @Transactional
 public class AuthenticationService {
-
     @Autowired
     private UserDao userDao;
 

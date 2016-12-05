@@ -2,19 +2,19 @@ package rocks.stalin.sw708e16.server.services;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.Vehicle;
 import rocks.stalin.sw708e16.server.core.VehicleIcon;
+import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.persistence.VehicleDao;
 import rocks.stalin.sw708e16.server.persistence.file.MemoryBackedRoFile;
-import rocks.stalin.sw708e16.server.persistence.file.dao.FileDao;
 import rocks.stalin.sw708e16.server.persistence.file.dao.VehicleIconFileDao;
 import rocks.stalin.sw708e16.server.services.builders.VehicleBuilder;
 import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +38,7 @@ public class VehicleService {
     @Path("/")
     @GET
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Collection<Vehicle> getAllVehicles() {
         return vehicleDao.getAll();
     }
@@ -53,6 +54,7 @@ public class VehicleService {
     @Path("/{vid}")
     @GET
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Vehicle getVehicle(@PathParam("vid") ObjectId id) {
         if (id == null)
             throw new IllegalArgumentException("Given id was null.");
@@ -77,6 +79,7 @@ public class VehicleService {
     @POST
     @Produces("application/json")
     @Consumes("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
     public Vehicle addVehicle(VehicleBuilder vehicleBuilder) {
         if (vehicleBuilder == null) {
             throw new IllegalArgumentException("No Vehicle given.");
@@ -107,6 +110,7 @@ public class VehicleService {
     @GET
     @Path("/{vid}/icon")
     @Produces("image/png")
+    @RolesAllowed({PermissionType.Constants.USER})
     public InputStream getVehicleIcon(@PathParam("vid") ObjectId id) throws IOException {
         Vehicle vehicle = vehicleDao.byId(id);
         if (vehicle == null)
@@ -133,6 +137,7 @@ public class VehicleService {
     @Path("/{vid}/icon")
     @Consumes("image/png")
     @Produces("application/json")
+    @RolesAllowed({PermissionType.Constants.SUPERUSER})
     public Vehicle setOrUpdateVehicleIcon(@PathParam("vid") ObjectId id, InputStream is) throws IOException {
         Vehicle vehicle = vehicleDao.byId(id);
         if (vehicle == null)
