@@ -8,8 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
-import javax.annotation.Resource;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:dao-config.xml"})
 @Transactional

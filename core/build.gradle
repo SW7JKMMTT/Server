@@ -1,9 +1,7 @@
 description = 'TRUCKNUTS Rest: Core'
 dependencies {
     compile group: 'javax.transaction', name: 'jta', version:'1.1'
-    compile group: 'commons-dbcp', name: 'commons-dbcp', version:'1.4'
 
-    compile group: 'org.hibernate.ogm', name: 'hibernate-ogm-core', version: '5.0.3.Final'
-    compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.5.3.Final'
+    compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.7.0.Alpha1'
     compile group: 'org.mongodb', name: 'bson', version:'3.3.0'
 }

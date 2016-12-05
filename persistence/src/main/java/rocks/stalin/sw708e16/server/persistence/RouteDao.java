@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
@@ -12,11 +11,11 @@ public interface RouteDao extends BaseDao<Route> {
 
     Collection<Route> getAll_ForDisplay();
 
-    Route byId_ForDisplay(ObjectId id);
+    Route byId_ForDisplay(long id);
 
     Collection<Route> getByState_ForDisplay(RouteState routeState);
 
-    Route byId(ObjectId id);
+    Route byId(long id);
 
     Collection<Route> getByDriver_ForDisplay(Driver driver);
 

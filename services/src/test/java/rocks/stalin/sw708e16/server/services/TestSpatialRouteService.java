@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -286,7 +285,7 @@ public class TestSpatialRouteService extends SpatialDatabaseTest {
         // Arrange
 
         // Act
-        routeService.getAllRoutes(null, new ObjectId(), 56.0, -2.0, 100.0);
+        routeService.getAllRoutes(null, new Long(-1), 56.0, -2.0, 100.0);
 
         // Assert
     }

@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services.builders;
 
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.Vehicle;
@@ -12,26 +11,26 @@ import rocks.stalin.sw708e16.server.persistence.VehicleDao;
 import java.util.ArrayList;
 
 public class RouteBuilder {
-    private ObjectId vehicleid;
-    private ObjectId driverid;
+    private Long vehicleid;
+    private Long driverid;
     private RouteState routeState;
 
     public RouteBuilder() {
     }
 
-    public void setVehicleid(ObjectId vehicleid) {
+    public void setVehicleid(long vehicleid) {
         this.vehicleid = vehicleid;
     }
 
-    public ObjectId getVehicleid() {
+    public Long getVehicleid() {
         return vehicleid;
     }
 
-    public ObjectId getDriverid() {
+    public Long getDriverid() {
         return driverid;
     }
 
-    public void setDriverid(ObjectId driverid) {
+    public void setDriverid(long driverid) {
         this.driverid = driverid;
     }
 

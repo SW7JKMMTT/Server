@@ -10,11 +10,11 @@ dependencies {
     testCompile project(':test')
     testCompile project(":persistence")
 
-    compile group: 'org.apache.commons', name: 'commons-dbcp2', version:'2.1.1'
+    compile group:  'org.flywaydb', name: 'flyway-core', version: '4.0.3'
 
-    compile group: 'org.hibernate.ogm', name: 'hibernate-ogm-core', version:'5.0.3.Final'
-    compile group: 'org.hibernate.ogm', name: 'hibernate-ogm-mongodb', version:'5.0.3.Final'
-    compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.5.3.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version:'5.2.5.Final'
+    compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.7.0.Alpha1'
 
-    compile group: 'org.springframework', name: 'spring-orm', version:'4.2.5.RELEASE'
+    compile group: 'com.h2database', name: 'h2', version:'1.4.191'
+    compile group: 'org.postgresql', name: 'postgresql', version: '9.4.1212.jre7'
 }

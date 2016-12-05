@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
@@ -15,11 +14,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "User")
+@Table(name = "myUser")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -64,11 +63,11 @@ public class User {
         this.surname = surname;
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -165,6 +164,14 @@ public class User {
         return getPermissions().stream().anyMatch((tperm) -> tperm.getPermission() == permission);
     }
 
+    public void addToken(AuthToken token) {
+        authTokens.add(token);
+    }
+
+    public void revokeToken(AuthToken token) {
+        authTokens.remove(token);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -172,20 +179,11 @@ public class User {
 
         User user = (User) obj;
 
-        return getId() != null ? getId().equals(user.getId()) : user.getId() == null;
-
+        return id == user.id;
     }
 
     @Override
     public int hashCode() {
-        return getId() != null ? getId().hashCode() : 0;
-    }
-
-    public void addToken(AuthToken token) {
-        authTokens.add(token);
-    }
-
-    public void revokeToken(AuthToken token) {
-        authTokens.remove(token);
+        return (int) (id ^ (id >>> 32));
     }
 }

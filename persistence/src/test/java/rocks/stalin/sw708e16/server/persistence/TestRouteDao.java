@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -130,7 +129,7 @@ public class TestRouteDao extends DatabaseTest {
             .withMake("Ford")
             .withModel("Lort")
             .withVintage(1999)
-            .withVin(new Vin("d"))
+            .withVin(new Vin("b"))
             .in(vehicleDao);
 
         Route r1 = new GivenRoute().withDriver(d1).withVehicle(v1).in(routeDao);
@@ -167,7 +166,7 @@ public class TestRouteDao extends DatabaseTest {
             .withMake("Ford")
             .withModel("Lort")
             .withVintage(1999)
-            .withVin(new Vin("d"))
+            .withVin(new Vin("c"))
             .in(vehicleDao);
 
         Route r1 = new GivenRoute().withDriver(d1).withVehicle(v1).withRouteState(RouteState.CREATED).in(routeDao);
@@ -204,7 +203,7 @@ public class TestRouteDao extends DatabaseTest {
             .withMake("Ford")
             .withModel("Lort")
             .withVintage(1999)
-            .withVin(new Vin("d"))
+            .withVin(new Vin("b"))
             .in(vehicleDao);
 
         Route r1 = new GivenRoute().withDriver(d1).withVehicle(v1).withRouteState(RouteState.CREATED).in(routeDao);
@@ -270,10 +269,9 @@ public class TestRouteDao extends DatabaseTest {
     @Test
     public void testById_NotExists() throws Exception {
         // Arrange
-        ObjectId bogusObjectId = new ObjectId();
 
         // Act
-        Route found = routeDao.byId(bogusObjectId);
+        Route found = routeDao.byId(-1);
 
         // Assert
         Assert.assertNull(found);
@@ -303,10 +301,9 @@ public class TestRouteDao extends DatabaseTest {
     @Test
     public void testById_ForDisplay_NotExists() throws Exception {
         // Arrange
-        ObjectId bogusObjectId = new ObjectId();
 
         // Act
-        Route found = routeDao.byId_ForDisplay(bogusObjectId);
+        Route found = routeDao.byId_ForDisplay(-1);
 
         // Assert
         Assert.assertNull(found);

@@ -1,8 +1,6 @@
 package rocks.stalin.sw708e16.server.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
 import javax.persistence.*;
@@ -14,8 +12,8 @@ import java.util.Collections;
 @Table(name = "Driver")
 public class Driver {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @OneToOne(optional = false)
     private User user;
@@ -30,7 +28,7 @@ public class Driver {
         this.user = user;
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 
@@ -53,20 +51,17 @@ public class Driver {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
-        Driver driver = (Driver) o;
+        Driver driver = (Driver) obj;
 
-        if (!id.equals(driver.id)) return false;
-        return user.equals(driver.user);
+        return id == driver.id;
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + user.hashCode();
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

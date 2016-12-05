@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -133,10 +132,9 @@ public class TestRouteService extends DatabaseTest {
     @Test(expected = NotFoundException.class)
     public void testGetById_NotExists() throws Exception {
         // Arrange
-        ObjectId objectId = new ObjectId();
 
         // Act
-        Route found = routeService.getRouteById(objectId);
+        Route found = routeService.getRouteById(new Long(-1));
 
         // Assert
         Assert.assertNull(found);
@@ -280,7 +278,7 @@ public class TestRouteService extends DatabaseTest {
         // Arrange
 
         // Act
-        routeService.modifyRoute(new ObjectId(), new RouteBuilder());
+        routeService.modifyRoute(new Long(-1), new RouteBuilder());
 
         // Assert
     }
@@ -462,7 +460,7 @@ public class TestRouteService extends DatabaseTest {
         // Arrange
 
         // Act
-        routeService.getAllRoutes(null, new ObjectId(), null, null,null);
+        routeService.getAllRoutes(null, new Long(-1), null, null,null);
 
         // Assert
     }

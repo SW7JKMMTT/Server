@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.Vehicle;
@@ -18,8 +17,8 @@ import java.util.stream.Collectors;
 @Table(name = "Route")
 public class Route {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @OneToMany(mappedBy = "route", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy("timestamp")
@@ -48,7 +47,7 @@ public class Route {
         this.routeState = this.points.isEmpty() ? RouteState.CREATED : RouteState.ACTIVE;
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 
@@ -108,11 +107,11 @@ public class Route {
 
         Route route = (Route) obj;
 
-        return id != null ? id.equals(route.id) : route.id == null;
+        return id == route.id;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return (int) (id ^ (id >>> 32));
     }
 }

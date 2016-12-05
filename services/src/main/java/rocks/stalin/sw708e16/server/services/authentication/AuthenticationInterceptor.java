@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services.authentication;
 
-import org.hibernate.Hibernate;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

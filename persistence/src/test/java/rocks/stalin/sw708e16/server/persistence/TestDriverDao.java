@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,7 +71,7 @@ public class TestDriverDao extends DatabaseTest {
         // Arrange
 
         // Act
-        Driver notfound = driverDao.byId(new ObjectId());
+        Driver notfound = driverDao.byId(-1);
 
         // Assert
         Assert.assertNull(notfound);

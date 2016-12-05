@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +43,9 @@ public class VehicleService {
     }
 
     /**
-     * Gets the {@link Vehicle} with the given {@link ObjectId}.
+     * Gets the {@link Vehicle} with the given {@link long id}.
      *
-     * @param id The {@link ObjectId} to find the {@link Vehicle} for.
+     * @param id The {@link long id} to find the {@link Vehicle} for.
      * @return The {@link Vehicle} found.
      *
      * @HTTP 404 Vehicle not found
@@ -55,7 +54,7 @@ public class VehicleService {
     @GET
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public Vehicle getVehicle(@PathParam("vid") ObjectId id) {
+    public Vehicle getVehicle(@PathParam("vid") Long id) {
         if (id == null)
             throw new IllegalArgumentException("Given id was null.");
 
@@ -111,7 +110,7 @@ public class VehicleService {
     @Path("/{vid}/icon")
     @Produces("image/png")
     @RolesAllowed({PermissionType.Constants.USER})
-    public InputStream getVehicleIcon(@PathParam("vid") ObjectId id) throws IOException {
+    public InputStream getVehicleIcon(@PathParam("vid") Long id) throws IOException {
         Vehicle vehicle = vehicleDao.byId(id);
         if (vehicle == null)
             throw new NotFoundException("Vehicle not found.");
@@ -138,7 +137,7 @@ public class VehicleService {
     @Consumes("image/png")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.SUPERUSER})
-    public Vehicle setOrUpdateVehicleIcon(@PathParam("vid") ObjectId id, InputStream is) throws IOException {
+    public Vehicle setOrUpdateVehicleIcon(@PathParam("vid") Long id, InputStream is) throws IOException {
         Vehicle vehicle = vehicleDao.byId(id);
         if (vehicle == null)
             throw new NotFoundException("Vehicle not found.");

@@ -5,6 +5,31 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
 
+    <beans>
+        <bean id="entityManagerFactory" abstract="true"
+              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                    <property name="showSql" value="true" />
+                    <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQL95Dialect" />
+                    <property name="generateDdl" value="false" />
+                </bean>
+            </property>
+            <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
+            <property name="packagesToScan">
+                <list>
+                    <value>rocks.stalin.sw708e16.server.core</value>
+                </list>
+            </property>
+            <property name="jpaProperties">
+                <props>
+                    <prop key="hibernate.search.lucene_version">LUCENE_54</prop>
+                    <prop key="hibernate.id.new_generator_mappings">true</prop>
+                </props>
+            </property>
+        </bean>
+    </beans>
+
     <!-- If the server is in full local mode -->
     <beans profile="default">
         <bean name="propertyConfigurer"
@@ -19,58 +44,28 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="mongo" class="rocks.stalin.sw708e16.server.spring.EmbeddedMongoFactoryBean"/>
-
-        <bean id="informationProvider"
-              class="rocks.stalin.sw708e16.server.spring.connection.EmbeddedConnectionInformationProviderBean">
-            <property name="process" ref="mongo" />
+        <bean id="h2Server" class="org.h2.tools.Server" factory-method="createTcpServer" init-method="start" destroy-method="stop" depends-on="h2WebServer">
+            <constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,9092"/>
+        </bean>
+        <bean id="h2WebServer" class="org.h2.tools.Server" factory-method="createWebServer" init-method="start" destroy-method="stop">
+            <constructor-arg value="-web,-webAllowOthers,-webPort,8082"/>
         </bean>
 
-        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.spring.HibernateOgmJpaVendorAdapter" depends-on="mongo">
-            <property name="informationProvider" ref="informationProvider" />
-            <property name="createDatabase" value="true" />
-            <property name="providerStr" value="mongodb" />
-            <property name="database" value="test" />
+        <bean id="datasource"
+              class="org.springframework.jdbc.datasource.DriverManagerDataSource" depends-on="h2Server">
+            <property name="username" value="sa" />
+            <property name="password" value="" />
+            <property name="url" value="jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;" />
+            <property name="driverClassName" value="org.h2.Driver" />
         </bean>
 
-        <bean id="entityManagerFactory"
-              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="vendorAdapter">
-            <property name="jpaVendorAdapter" ref="vendorAdapter" />
-            <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
-            <property name="packagesToScan">
-                <list>
-                    <value>rocks.stalin.sw708e16.server.core</value>
-                </list>
-            </property>
+        <bean id="entityFactory" parent="entityManagerFactory">
+            <property name="dataSource" ref="datasource" />
             <property name="jpaProperties">
-                <props>
-                    <prop key="wildfly.jpa.hibernate.search.module">none</prop>
-                    <prop key="jboss.as.jpa.providerModule">application</prop>
+                <props merge="true">
+                    <prop key="hibernate.hbm2ddl.auto">create</prop>
                 </props>
             </property>
-        </bean>
-    </beans>
-
-    <!-- If the server is in semi-local mode (Using the real database) -->
-    <beans profile="integration">
-        <bean name="propertyConfigurer"
-              class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-              p:ignoreUnresolvablePlaceholders="true"
-              p:ignoreResourceNotFound="true">
-            <property name="locations">
-                <list>
-                    <value>classpath:db-prod.properties</value>
-                    <value>classpath:files.properties</value>
-                </list>
-            </property>
-        </bean>
-
-        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.spring.HibernateOgmJpaVendorAdapter">
-            <property name="host" value="${mongo.db.host}" />
-            <property name="port" value="${mongo.db.port}" />
-            <property name="createDatabase" value="true" />
-            <property name="providerStr" value="${mongo.db.driver}" />
-            <property name="database" value="${mongo.db.database}" />
         </bean>
     </beans>
 
@@ -88,31 +83,32 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             </property>
         </bean>
 
-        <bean id="vendorAdapter" class="rocks.stalin.sw708e16.server.spring.HibernateOgmJpaVendorAdapter">
-            <property name="host" value="127.0.0.1" />
-            <property name="port" value="27017" />
-            <property name="createDatabase" value="true" />
-            <property name="providerStr" value="mongodb" />
-            <property name="database" value="test" />
+        <bean id="dataSource"
+              class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="PostgresDS" />
         </bean>
 
-        <bean id="entityManagerFactory"
-              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="vendorAdapter">
+        <bean id="entityFactory" parent="entityManagerFactory">
+            <property name="dataSource" ref="dataSource" />
             <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
-            <property name="jpaVendorAdapter" ref="vendorAdapter" />
-            <property name="packagesToScan">
-                <list>
-                    <value>rocks.stalin.sw708e16.server.core</value>
-                </list>
-            </property>
             <property name="jpaProperties">
-                <props>
+                <props merge="true">
                     <prop key="wildfly.jpa.hibernate.search.module">none</prop>
                     <prop key="jboss.as.jpa.providerModule">application</prop>
+                    <prop key="hibernate.search.default.indexmanager">near-real-time</prop>
                     <prop key="hibernate.search.default.directory_provider">filesystem</prop>
                     <prop key="hibernate.search.default.indexBase">/var/lucene/indexes</prop>
                 </props>
             </property>
+        </bean>
+
+        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+            <property name="locations">
+                <list>
+                    <value>classpath:sql</value>
+                </list>
+            </property>
+            <property name="dataSource" ref="dataSource" />
         </bean>
     </beans>
 
@@ -130,8 +126,6 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
         <bean id="vehicleIconFileDaoImpl" class="rocks.stalin.sw708e16.server.persistence.file.dao.hibernate.VehicleIconFileDaoImpl">
             <property name="storagePath" value="${vehicleicons.location}" />
         </bean>
-
-
 
         <tx:annotation-driven transaction-manager="transactionManager"/>
     </beans>

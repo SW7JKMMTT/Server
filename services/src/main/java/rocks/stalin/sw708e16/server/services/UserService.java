@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,7 +99,7 @@ public class UserService {
     @Path("/{uid}")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public User getUserById(@PathParam("uid") ObjectId id) {
+    public User getUserById(@PathParam("uid") Long id) {
         User user = userDao.byId_ForDisplay(id);
 
         if (user == null)
@@ -123,7 +122,7 @@ public class UserService {
     @Produces("application/json")
     @Consumes("application/json")
     @RolesAllowed({PermissionType.Constants.SUPERUSER})
-    public User modifyUser(@PathParam("uid") ObjectId id, UserBuilder userBuilder) {
+    public User modifyUser(@PathParam("uid") Long id, UserBuilder userBuilder) {
         User user = userDao.byId_ForDisplay(id);
         if (user == null)
             throw new NotFoundException();
@@ -149,7 +148,7 @@ public class UserService {
     @Path("/{uid}/icon")
     @Produces("image/png")
     @RolesAllowed({PermissionType.Constants.USER})
-    public InputStream getUserIcon(@PathParam("uid") ObjectId id) throws IOException {
+    public InputStream getUserIcon(@PathParam("uid") Long id) throws IOException {
         User user = userDao.byId(id);
         if (user == null)
             throw new NotFoundException("User not found");
@@ -176,7 +175,7 @@ public class UserService {
     @Consumes("image/png")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public User setUserIcon(@PathParam("uid") ObjectId id, InputStream is)
+    public User setUserIcon(@PathParam("uid") Long id, InputStream is)
             throws IOException
     {
         User user = userDao.byId_ForDisplay(id);

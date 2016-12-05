@@ -146,7 +146,7 @@ public class TestAuthenticationService extends DatabaseTest {
         AuthToken jeffToken1 = new GivenAuthToken().withToken("bomb").forUser(jeff).in(authDao);
         AuthToken jeffToken2 = new GivenAuthToken().withToken("bomb2").forUser(jeff).in(authDao);
         User carl = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Carl").withPassword("password").in(userDao);
-        AuthToken carlToken1 = new GivenAuthToken().withToken("bomb").forUser(carl).in(authDao);
+        AuthToken carlToken1 = new GivenAuthToken().withToken("bomb3").forUser(carl).in(authDao);
 
         // Act
         Collection<AuthToken> authTokens = authService.listTokens(jeff);

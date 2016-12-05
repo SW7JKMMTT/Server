@@ -1,21 +1,18 @@
 package rocks.stalin.sw708e16.server.core;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "Vehicle")
 public class Vehicle {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @Column(unique = false, nullable = false)
     private String make;
@@ -45,7 +42,7 @@ public class Vehicle {
         this.vin = vin;
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 

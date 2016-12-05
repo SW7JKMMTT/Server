@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,11 +75,12 @@ public class TestVehicleDao extends DatabaseTest {
         // Arrange
 
         // Act
-        Vehicle notfound = vehicleDao.byId(new ObjectId());
+        Vehicle notfound = vehicleDao.byId(-1);
 
         // Assert
         Assert.assertNull(notfound);
     }
+
     @Test
     public void testByVin_Found() throws Exception {
         // Arrange
@@ -104,7 +104,7 @@ public class TestVehicleDao extends DatabaseTest {
         // Arrange
 
         // Act
-        Vehicle notfound = vehicleDao.byId(new ObjectId());
+        Vehicle notfound = vehicleDao.byId(-1);
 
         // Assert
         Assert.assertNull(notfound);

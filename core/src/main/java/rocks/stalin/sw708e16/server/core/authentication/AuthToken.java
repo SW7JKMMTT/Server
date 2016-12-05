@@ -2,9 +2,7 @@ package rocks.stalin.sw708e16.server.core.authentication;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.User;
 
 import javax.persistence.*;
@@ -18,8 +16,8 @@ import java.util.Random;
 @Table
 public class AuthToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -64,7 +62,7 @@ public class AuthToken {
     protected AuthToken() {
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 

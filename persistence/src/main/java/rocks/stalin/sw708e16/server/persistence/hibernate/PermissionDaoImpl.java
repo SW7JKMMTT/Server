@@ -8,8 +8,6 @@ import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.persistence.PermissionDao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 @Transactional

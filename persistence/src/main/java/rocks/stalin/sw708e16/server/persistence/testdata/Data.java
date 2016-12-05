@@ -2,6 +2,7 @@ package rocks.stalin.sw708e16.server.persistence.testdata;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.*;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
@@ -14,6 +15,7 @@ import rocks.stalin.sw708e16.server.spring.datainserter.DevelopmentDataInserter;
 import java.util.Date;
 
 @Service
+@Transactional
 @DevelopmentData
 public class Data extends DevelopmentDataInserter {
     @Autowired

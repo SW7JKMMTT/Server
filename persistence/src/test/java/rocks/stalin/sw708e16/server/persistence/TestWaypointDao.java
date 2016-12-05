@@ -17,7 +17,7 @@ import rocks.stalin.sw708e16.server.core.Vin;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.given.*;
-import rocks.stalin.sw708e16.test.DatabaseTest;
+import rocks.stalin.sw708e16.test.SpatialDatabaseTest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,7 +30,7 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:dao-config.xml"})
 @Transactional
-public class TestWaypointDao extends DatabaseTest {
+public class TestWaypointDao extends SpatialDatabaseTest {
     @Autowired
     WaypointDao waypointDao;
 
@@ -45,19 +45,6 @@ public class TestWaypointDao extends DatabaseTest {
 
     @Autowired
     DriverDao driverDao;
-
-    @PersistenceContext
-    EntityManager em;
-    FullTextEntityManager ftem;
-
-    @Before
-    public void setupFullTextEntityManger() {
-        ftem = Search.getFullTextEntityManager(em);
-    }
-
-    protected void flushIndex() {
-        ftem.flushToIndexes();
-    }
 
     @Test
     public void testWithinRadius_WithTwo_FindTwo() throws Exception {

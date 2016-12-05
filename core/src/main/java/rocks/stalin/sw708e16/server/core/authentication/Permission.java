@@ -1,7 +1,6 @@
 package rocks.stalin.sw708e16.server.core.authentication;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.bson.types.ObjectId;
 import rocks.stalin.sw708e16.server.core.User;
 
 import javax.persistence.*;
@@ -10,8 +9,8 @@ import javax.persistence.*;
 @Table(name = "Permission")
 public class Permission {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -29,7 +28,7 @@ public class Permission {
         this.permission = permission;
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 

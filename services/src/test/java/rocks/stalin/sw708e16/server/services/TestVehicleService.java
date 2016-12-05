@@ -1,12 +1,10 @@
 package rocks.stalin.sw708e16.server.services;
 
 import org.apache.commons.io.IOUtils;
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,7 +99,7 @@ public class TestVehicleService extends DatabaseTest {
         // Arrange
 
         // Act
-        vehicleService.getVehicle(new ObjectId());
+        vehicleService.getVehicle(new Long(-1));
 
         // Assert
     }
@@ -260,7 +258,7 @@ public class TestVehicleService extends DatabaseTest {
         // Arrange
 
         // Act
-        vehicleService.getVehicleIcon(new ObjectId());
+        vehicleService.getVehicleIcon(new Long(-1));
 
         // Assert
 
@@ -271,7 +269,7 @@ public class TestVehicleService extends DatabaseTest {
         // Arrange
 
         // Act
-        vehicleService.setOrUpdateVehicleIcon(new ObjectId(), null);
+        vehicleService.setOrUpdateVehicleIcon(new Long(-1), null);
 
         // Assert
 

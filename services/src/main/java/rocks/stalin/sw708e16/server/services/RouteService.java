@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.bson.types.ObjectId;
 import org.hibernate.search.spatial.impl.GeometricConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -59,7 +58,7 @@ public class RouteService {
     @RolesAllowed({PermissionType.Constants.USER})
     public Collection<Route> getAllRoutes(
             @QueryParam("state") RouteState routeState,
-            @QueryParam("driver") ObjectId driverId,
+            @QueryParam("driver") Long driverId,
             @QueryParam("latitude") Double latitude,
             @QueryParam("longitude") Double longitude,
             @QueryParam("radius") Double radius)
@@ -105,7 +104,7 @@ public class RouteService {
      * @param radius A radius from the latitude and longitude to query for.
      * @return The result of the spatial query.
      */
-    private Collection<Route> spatialQuery(Coordinate coordinate, Double radius, ObjectId driverId, RouteState routeState)
+    private Collection<Route> spatialQuery(Coordinate coordinate, Double radius, Long driverId, RouteState routeState)
         throws OffThePlanetException, DriverNotFoundException
     {
         if (coordinate.getLatitude() == null)
@@ -195,7 +194,7 @@ public class RouteService {
     @Path("/{rid}/")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public Route modifyRoute(@PathParam("rid") ObjectId id, RouteBuilder routeBuilder) {
+    public Route modifyRoute(@PathParam("rid") Long id, RouteBuilder routeBuilder) {
         if (id == null)
             throw new IllegalArgumentException("No Id was given.");
 
@@ -225,7 +224,7 @@ public class RouteService {
     @Path("/{rid}/")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public Route getRouteById(@PathParam("rid") ObjectId id) {
+    public Route getRouteById(@PathParam("rid") Long id) {
         Route found = routeDao.byId_ForDisplay(id);
 
         if(found == null)
@@ -243,7 +242,7 @@ public class RouteService {
      */
     @Path("/{rid}/waypoint/")
     @RolesAllowed({PermissionType.Constants.USER})
-    public WaypointService getWaypointService(@PathParam("rid") ObjectId id) {
+    public WaypointService getWaypointService(@PathParam("rid") Long id) {
         Route found = routeDao.byId(id);
 
         if(found == null)

@@ -1,10 +1,8 @@
 package rocks.stalin.sw708e16.server.persistence.hibernate.magic;
 
-import org.bson.types.ObjectId;
 import org.hibernate.Hibernate;
 import org.springframework.util.ReflectionUtils;
 
-import javax.management.ReflectionException;
 import java.lang.reflect.Field;
 
 public class HibernateMagic {

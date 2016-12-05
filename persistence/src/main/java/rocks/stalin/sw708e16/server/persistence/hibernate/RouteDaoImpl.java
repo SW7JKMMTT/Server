@@ -1,8 +1,9 @@
 package rocks.stalin.sw708e16.server.persistence.hibernate;
 
 
-import org.bson.types.ObjectId;
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,20 +14,19 @@ import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.Coordinate;
 import rocks.stalin.sw708e16.server.persistence.RouteDao;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
-import rocks.stalin.sw708e16.server.persistence.hibernate.magic.HibernateMagic;
 
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.LinkedHashMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Transactional
 @Repository
 @Primary
 public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
+    private static Logger logger = LoggerFactory.getLogger(RouteDaoImpl.class);
+
     @Override
     public Collection<Route> getAll_ForDisplay() {
         TypedQuery<Route> query = em.createQuery("SELECT r FROM Route r", Route.class);
@@ -34,7 +34,7 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     }
 
     @Override
-    public Route byId(ObjectId id) {
+    public Route byId(long id) {
         TypedQuery<Route> query = em.createQuery(
                 "SELECT r " +
                         "FROM Route r " +
@@ -45,7 +45,7 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     }
 
     @Override
-    public Route byId_ForDisplay(ObjectId id) {
+    public Route byId_ForDisplay(long id) {
         TypedQuery<Route> query = em.createQuery(
             "SELECT r " +
                 "FROM Route r " +
@@ -89,7 +89,7 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         // I'm doing this in the most naive version ever, can get improved later if needed.
         Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
 
-        LinkedHashMap<Route, Boolean> routesMap = new LinkedHashMap<>();
+        HashMap<Route, Boolean> routesMap = new HashMap<>();
         for (Waypoint waypoint : waypoints) {
             Route route = waypoint.getRoute();
             if (!routesMap.containsKey(route)) {
@@ -99,7 +99,7 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
             }
         }
 
-        return routesMap.keySet();
+        return new ArrayList<>(routesMap.keySet());
     }
 
     @Override

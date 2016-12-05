@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.persistence.hibernate;
 
-import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public User byId(ObjectId id) {
+    public User byId(long id) {
         TypedQuery<User> query = em.createQuery(
             "SELECT u " +
                 "FROM User u " +
@@ -39,7 +38,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public User byId_ForDisplay(ObjectId id) {
+    public User byId_ForDisplay(long id) {
         User user = byId(id);
 
         if (user != null) {

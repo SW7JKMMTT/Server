@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services.exceptions;
 
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 

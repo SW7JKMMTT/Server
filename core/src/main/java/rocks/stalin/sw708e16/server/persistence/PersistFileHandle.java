@@ -1,7 +1,6 @@
 package rocks.stalin.sw708e16.server.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.bson.types.ObjectId;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,8 +8,8 @@ import java.io.Serializable;
 @MappedSuperclass
 public abstract class PersistFileHandle implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @Column(nullable = false, unique = true)
     @JsonIgnore
@@ -23,7 +22,7 @@ public abstract class PersistFileHandle implements Serializable {
         this.filePath = filePath;
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 

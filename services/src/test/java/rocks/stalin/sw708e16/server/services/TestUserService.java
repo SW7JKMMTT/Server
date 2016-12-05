@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -106,6 +105,7 @@ public class TestUserService extends DatabaseTest {
 
         // Assert
     }
+
     @Test(expected = ConflictException.class)
     public void testInsertUser_DuplicateSame() throws Exception {
         // Arrange
@@ -176,9 +176,7 @@ public class TestUserService extends DatabaseTest {
 
     @Test(expected = NotFoundException.class)
     public void testGetById_UnknownId() throws Exception {
-        ObjectId unknownId = new ObjectId();
-
-        userService.getUserById(unknownId);
+        userService.getUserById(new Long(-1));
     }
 
     @Test
@@ -209,7 +207,7 @@ public class TestUserService extends DatabaseTest {
 
     @Test(expected = NotFoundException.class)
     public void testModifyUser_UnknownId() throws Exception {
-        ObjectId id = new ObjectId();
+        Long id = new Long(-1);
         UserBuilder userBuilder = new UserBuilder();
 
         userService.modifyUser(id, userBuilder);

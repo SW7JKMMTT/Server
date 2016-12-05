@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
+import rocks.stalin.sw708e16.server.persistence.RouteDao;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 import rocks.stalin.sw708e16.server.services.builders.WaypointBuilder;
 

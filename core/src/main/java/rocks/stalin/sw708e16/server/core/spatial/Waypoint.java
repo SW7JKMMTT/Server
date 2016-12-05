@@ -1,10 +1,10 @@
 package rocks.stalin.sw708e16.server.core.spatial;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.bson.types.ObjectId;
-import org.hibernate.search.annotations.*;
-import org.hibernate.search.bridge.builtin.IntegerBridge;
-import rocks.stalin.sw708e16.server.persistence.ObjectIdBridge;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Latitude;
+import org.hibernate.search.annotations.Longitude;
+import org.hibernate.search.annotations.Spatial;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,9 +15,8 @@ import java.util.Date;
 @Table(name = "Waypoint")
 public class Waypoint {
     @Id
-    @FieldBridge(impl = ObjectIdBridge.class)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    long id;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -42,7 +41,7 @@ public class Waypoint {
         this.route = route;
     }
 
-    public ObjectId getId() {
+    public long getId() {
         return id;
     }
 
@@ -70,31 +69,11 @@ public class Waypoint {
 
         Waypoint waypoint = (Waypoint) obj;
 
-        if (this.getId() != null && waypoint.getId() != null) {
-            return this.getId().equals(waypoint.getId());
-        }
-
-        if (Double.compare(waypoint.latitude, latitude) != 0) return false;
-        if (Double.compare(waypoint.longitude, longitude) != 0) return false;
-        if (id != null ? !id.equals(waypoint.id) : waypoint.id != null) return false;
-        if (!timestamp.equals(waypoint.timestamp)) return false;
-        return route.equals(waypoint.route);
+        return id == waypoint.id;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        
-        if (id != null)
-            return id.hashCode();
-
-        result = timestamp.hashCode();
-        temp = Double.doubleToLongBits(latitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(longitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + route.hashCode();
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }
