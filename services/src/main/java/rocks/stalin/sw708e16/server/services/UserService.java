@@ -14,6 +14,7 @@ import rocks.stalin.sw708e16.server.persistence.file.dao.UserIconFileDao;
 import rocks.stalin.sw708e16.server.services.builders.PermissionBuilder;
 import rocks.stalin.sw708e16.server.services.builders.UserBuilder;
 import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
+import rocks.stalin.sw708e16.server.services.interceptor.BASE64;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -148,6 +149,7 @@ public class UserService {
     @Path("/{uid}/icon")
     @Produces("image/png")
     @RolesAllowed({PermissionType.Constants.USER})
+    @BASE64
     public InputStream getUserIcon(@PathParam("uid") Long id) throws IOException {
         User user = userDao.byId(id);
         if (user == null)

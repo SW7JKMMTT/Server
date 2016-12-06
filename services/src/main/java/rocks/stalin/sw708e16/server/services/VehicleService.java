@@ -11,6 +11,7 @@ import rocks.stalin.sw708e16.server.persistence.file.MemoryBackedRoFile;
 import rocks.stalin.sw708e16.server.persistence.file.dao.VehicleIconFileDao;
 import rocks.stalin.sw708e16.server.services.builders.VehicleBuilder;
 import rocks.stalin.sw708e16.server.services.exceptions.ConflictException;
+import rocks.stalin.sw708e16.server.services.interceptor.BASE64;
 
 import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
@@ -110,6 +111,7 @@ public class VehicleService {
     @Path("/{vid}/icon")
     @Produces("image/png")
     @RolesAllowed({PermissionType.Constants.USER})
+    @BASE64
     public InputStream getVehicleIcon(@PathParam("vid") Long id) throws IOException {
         Vehicle vehicle = vehicleDao.byId(id);
         if (vehicle == null)

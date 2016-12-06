@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -17,12 +18,12 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
     private HttpHeaders headers;
 
     @Override
-    @Produces("application/json")
     public Response toResponse(Exception except) {
         except.printStackTrace();
         return Response
             .status(Response.Status.INTERNAL_SERVER_ERROR)
             .entity(new JsonError(except.getMessage()))
+            .type(MediaType.APPLICATION_JSON_TYPE)
             .build();
     }
 
