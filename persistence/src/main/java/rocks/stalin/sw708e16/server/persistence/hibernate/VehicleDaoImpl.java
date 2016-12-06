@@ -16,7 +16,7 @@ import java.util.Collection;
 public class VehicleDaoImpl extends BaseDaoImpl<Vehicle> implements VehicleDao {
     @Override
     public Collection<Vehicle> getAll() {
-        TypedQuery<Vehicle> query = em.createQuery("SELECT v FROM Vehicle v", Vehicle.class);
+        TypedQuery<Vehicle> query = em.createQuery("SELECT v FROM Vehicle v LEFT JOIN FETCH v.routes", Vehicle.class);
         return query.getResultList();
     }
 

@@ -32,7 +32,6 @@ public class VehicleService {
 
     /**
      * Gets all {@link Vehicle}s.
-     *
      * @return All {@link Vehicle}s in the database.
      */
     @Path("/")

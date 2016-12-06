@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.core;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
@@ -94,5 +95,10 @@ public class Vehicle {
 
     public void addRoute(Route route) {
         this.routes.add(route);
+    }
+
+    @JsonGetter("isActive")
+    public boolean isActive() {
+        return this.routes.stream().anyMatch(route -> route.getRouteState().equals(RouteState.ACTIVE));
     }
 }
