@@ -26,7 +26,7 @@ public class AcceptedEncodingHackInterceptor implements ContainerRequestFilter {
             if (xAccept == null)
                 return;
 
-            if(xAccept.size() == 1)
+            if(xAccept.size() == 0)
                 return;
             String xAcceptHeader = xAccept.get(0);
 
