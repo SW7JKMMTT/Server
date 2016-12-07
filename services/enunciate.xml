@@ -20,6 +20,8 @@
         </jackson>
 
         <jackson1 disabled="true" />
-        <swagger host="server.stalin.rocks/services-1.0.0" />
+        <swagger host="server.stalin.rocks/services-1.0.0">
+            <scheme>http</scheme>
+        </swagger>
     </modules>
 </enunciate>
