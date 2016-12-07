@@ -13,8 +13,11 @@ import rocks.stalin.sw708e16.server.services.builders.WaypointBuilder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Transactional
 @Component
@@ -86,6 +89,19 @@ public class WaypointService {
         route.addWaypoint(waypoint);
         waypointDao.add(waypoint);
 
+        waiters.writeWaiters(waypoint);
+
         return waypoint;
+    }
+
+    @Autowired
+    WaypointWaiterRegistry waiters;
+
+    @GET
+    @Path("/poll")
+    @Produces("application/json")
+    public void pollOnWaypointAdd(@Suspended final AsyncResponse response) {
+        response.setTimeout(30, TimeUnit.SECONDS);
+        waiters.addwaiter(response);
     }
 }

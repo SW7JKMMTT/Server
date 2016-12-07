@@ -23,6 +23,8 @@
         </property>
     </bean>
 
+    <bean id="waypointWaiters" class="java.util.ha
+
     <tx:annotation-driven />
     <context:annotation-config />
     <context:component-scan base-package="rocks.stalin.sw708e16.server" />
