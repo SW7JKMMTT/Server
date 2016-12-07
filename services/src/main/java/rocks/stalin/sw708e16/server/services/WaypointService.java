@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
-import rocks.stalin.sw708e16.server.persistence.RouteDao;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 import rocks.stalin.sw708e16.server.services.builders.WaypointBuilder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import java.util.Collection;
+import java.util.Date;
 
 @Transactional
 @Component
@@ -37,17 +37,30 @@ public class WaypointService {
      * Gets all Waypoints for a given route, or a specified number of waypoints.
      *
      * @param maxCount The maximum number of waypoints to return, ordered by timestamp descending (newest first).
+     * @param since The earliest time (epoch millis) to include waypoints from (exclusive).
      * @return All waypoints in the route.
      */
     @GET
     @Path("/")
     @Produces("application/json")
     @RolesAllowed({PermissionType.Constants.USER})
-    public Collection<Waypoint> getWaypoints(@DefaultValue("0") @QueryParam("count") int maxCount) {
+    public Collection<Waypoint> getWaypoints(
+        @DefaultValue("0") @QueryParam("count") int maxCount,
+        @DefaultValue("0") @QueryParam("byRoute_after") long since)
+    {
+        if (since != 0) {
+            Date date = new Date(since);
+
+            if (maxCount != 0)
+                return waypointDao.byRoute_afterWithMaximum(route, date, maxCount);
+
+            return waypointDao.byRoute_after(route, date);
+        }
+
         if (maxCount == 0)
             return route.getWaypoints();
 
-        return route.getLastWaypoints(maxCount);
+        return waypointDao.byRoute(route, maxCount);
     }
 
     /**

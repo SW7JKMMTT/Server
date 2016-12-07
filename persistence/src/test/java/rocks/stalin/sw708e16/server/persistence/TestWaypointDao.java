@@ -1,9 +1,6 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +16,12 @@ import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.given.*;
 import rocks.stalin.sw708e16.test.SpatialDatabaseTest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:dao-config.xml"})
@@ -158,4 +154,425 @@ public class TestWaypointDao extends SpatialDatabaseTest {
     public void testWithinRadius_InvalidLongitude() throws Exception {
         waypointDao.withinRadius(new Coordinate(10.0, 190.0), 100);
     }
+
+    @Test
+    public void testWithMaximum_WithWaypointInRoute_OneWaypoint() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint waypoint = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+        new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute(route, 1);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(waypoint));
+        assertThat(found, hasSize(1));
+    }
+
+    @Test
+    public void testWithMaximum_WithWaypointInRoute_TestingForDifferentRoute() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Route otherRoute = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint waypoint = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+        new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute(otherRoute, 1);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasSize(0));
+    }
+
+    @Test
+    public void testWithMaximum_WithWaypointInRoute_TwoWaypoints() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute(route, 2);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(w1));
+        assertThat(found, hasItem(w2));
+        assertThat(found, hasSize(2));
+        // Check the order of the items.
+        assertThat(found, contains(w2, w1));
+    }
+
+    @Test
+    public void testWithMaximum_WithWaypointInRoute_MaxHigherThanItemCount() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute(route, 5);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(w1));
+        assertThat(found, hasItem(w2));
+        assertThat(found, hasSize(2));
+        // Check the order of the items.
+        assertThat(found, contains(w2, w1));
+    }
+
+    @Test
+    public void testSince_WithWaypointInRoute_SinceBeforeFirst() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_after(route, new Date(0));
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(w1));
+        assertThat(found, hasItem(w2));
+        assertThat(found, hasSize(2));
+        // Check the order of the items.
+        assertThat(found, contains(w2, w1));
+    }
+
+    @Test
+    public void testSince_WithWaypointInRoute_SinceSameAsFirst() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_after(route, new Date(1));
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(w2));
+        assertThat(found, hasSize(1));
+    }
+
+    @Test
+    public void testSince_WithWaypointInRoute_SameAsNewest() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_after(route, new Date(2));
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasSize(0));
+    }
+
+    @Test
+    public void testSince_WithWaypointInRoute_DifferentRoute() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Route otherRoute = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_after(otherRoute, new Date(0));
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasSize(0));
+    }
+
+    @Test
+    public void testSinceWithMaximum_WithWaypointInRoute_DifferentRoute() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Route otherRoute = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_afterWithMaximum(otherRoute, new Date(0),2);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasSize(0));
+    }
+
+    @Test
+    public void testSinceWithMaximum_WithWaypointInRoute_SinceBeforeFirstButWithMaximum() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_afterWithMaximum(route, new Date(0), 1);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(w2));
+        assertThat(found, hasSize(1));
+    }
+
+    @Test
+    public void testSinceWithMaximum_WithWaypointInRoute_SinceBeforeFirstButWithHighMaximum() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_afterWithMaximum(route, new Date(0), 10);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(w1));
+        assertThat(found, hasItem(w2));
+        assertThat(found, hasSize(2));
+        // Check the order of the items.
+        assertThat(found, contains(w2, w1));
+    }
+
+    @Test
+    public void testSinceWithMaximum_WithWaypointInRoute_HighMaximumSinceFirst() throws Exception {
+        // Arrange
+        User user = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("pass").in(userDao);
+        Driver driver = new GivenDriver().withUser(user).in(driverDao);
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("Ford")
+            .withModel("Escort")
+            .withVintage(1920)
+            .withVin(new Vin("100"))
+            .in(vehicleDao);
+        Route route = new GivenRoute().withDriver(driver).withVehicle(vehicle).in(routeDao);
+        Waypoint w1 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(57)
+            .withLongitude(10)
+            .withTimestamp(new Date(1))
+            .in(waypointDao);
+        Waypoint w2 = new GivenWaypoint()
+            .withRoute(route)
+            .withLatitude(40.71)
+            .withLongitude(-74.01)
+            .withTimestamp(new Date(2))
+            .in(waypointDao);
+
+        // Act
+        List<Waypoint> found = waypointDao.byRoute_afterWithMaximum(route, new Date(1), 10);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found, hasItem(w2));
+        assertThat(found, hasSize(1));
+    }
+
+
 }

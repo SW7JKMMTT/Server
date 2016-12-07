@@ -10,6 +10,7 @@ import rocks.stalin.sw708e16.server.core.Vehicle;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,20 +84,6 @@ public class Route {
 
     public void setRouteState(RouteState routeState) {
         this.routeState = routeState;
-    }
-
-    /**
-     * Gets the latest Waypoint in the Route.
-     * @return The latest Waypoint or null if non is present.
-     */
-    public List<Waypoint> getLastWaypoints(int count) {
-        List<Waypoint> waypoints = this.getWaypoints()
-                .stream()
-                .sorted((t1, t2) -> t2.getTimestamp().compareTo(t1.getTimestamp()))
-                .limit(count)
-                .collect(Collectors.toList());
-
-        return waypoints;
     }
 
     //TODO: Only supports persisted objects

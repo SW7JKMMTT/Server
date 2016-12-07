@@ -22,6 +22,9 @@ import rocks.stalin.sw708e16.test.DatabaseTest;
 import java.util.Collection;
 import java.util.Date;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-config.xml"})
 @Transactional
@@ -64,11 +67,11 @@ public class TestWaypointService extends DatabaseTest {
 
 
     @Test
-    public void getAllWaypointsInRoute_Empty() throws Exception {
+    public void getGetWaypoints_Empty() throws Exception {
         // Arrange
 
         // Act
-        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(0);
+        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(0, 0);
 
         // Assert
         Assert.assertNotNull(allWaypoints);
@@ -76,7 +79,7 @@ public class TestWaypointService extends DatabaseTest {
     }
 
     @Test
-    public void getAllWaypointsInRoute_WithOne() throws Exception {
+    public void getGetWaypoints_WithOne() throws Exception {
         // Arrange
         Waypoint waypoint = new GivenWaypoint()
                 .withRoute(waypointService.getRoute())
@@ -86,7 +89,7 @@ public class TestWaypointService extends DatabaseTest {
                 .in(waypointDao);
 
         // Act
-        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(0);
+        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(0, 0);
 
         // Assert
         Assert.assertNotNull(allWaypoints);
@@ -96,7 +99,7 @@ public class TestWaypointService extends DatabaseTest {
     }
 
     @Test
-    public void getAllWaypointsInRoute_WithTwoAndMaxOne() throws Exception {
+    public void getGetWaypoints_WithTwoAndMaxOne() throws Exception {
         // Arrange
         Waypoint wp1 = new GivenWaypoint()
                 .withRoute(waypointService.getRoute())
@@ -112,7 +115,7 @@ public class TestWaypointService extends DatabaseTest {
                 .in(waypointDao);
 
         // Act
-        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(1);
+        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(1, 0);
 
         // Assert
         Assert.assertNotNull(allWaypoints);
@@ -122,7 +125,7 @@ public class TestWaypointService extends DatabaseTest {
     }
 
     @Test
-    public void getAllWaypointsInRoute_WithTwoAndMaxTwo() throws Exception {
+    public void getGetWaypoints_WithTwoAndMaxTwo() throws Exception {
         // Arrange
         Waypoint wp1 = new GivenWaypoint()
                 .withRoute(waypointService.getRoute())
@@ -138,7 +141,7 @@ public class TestWaypointService extends DatabaseTest {
                 .in(waypointDao);
 
         // Act
-        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(2);
+        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(2, 0);
 
         // Assert
         Assert.assertNotNull(allWaypoints);
@@ -148,6 +151,73 @@ public class TestWaypointService extends DatabaseTest {
         Assert.assertTrue(allWaypoints.contains(wp2));
     }
 
+    @Test
+    public void testGetWaypoints_WithMaxAndDate_OneWaypoint_LatestIsSameAsQuery() throws Exception {
+        // Arrange
+        new GivenWaypoint()
+            .withRoute(waypointService.getRoute())
+            .withLatitude(1.0)
+            .withLatitude(1.1)
+            .withTimestamp(new Date(2L))
+            .in(waypointDao);
+
+        // Act
+        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(2, 2);
+
+        // Assert
+        assertThat(allWaypoints, notNullValue());
+        assertThat(allWaypoints, hasSize(0));
+    }
+
+    @Test
+    public void testGetWaypoints_WithMaxAndDate_TwoWaypoints_OneIsNewerThanQuery() throws Exception {
+        // Arrange
+        new GivenWaypoint()
+            .withRoute(waypointService.getRoute())
+            .withLatitude(1.0)
+            .withLatitude(1.1)
+            .withTimestamp(new Date(1L))
+            .in(waypointDao);
+        Waypoint wp2 = new GivenWaypoint()
+            .withRoute(waypointService.getRoute())
+            .withLatitude(1.2)
+            .withLatitude(1.3)
+            .withTimestamp(new Date(2L))
+            .in(waypointDao);
+
+        // Act
+        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(2, 1);
+
+        // Assert
+        assertThat(allWaypoints, notNullValue());
+        assertThat(allWaypoints, hasSize(1));
+        assertThat(allWaypoints, hasItem(wp2));
+    }
+
+    @Test
+    public void testGetWaypoints_WithDate_TwoWaypoints_OneIsNewerThanQuery() throws Exception {
+        // Arrange
+        new GivenWaypoint()
+            .withRoute(waypointService.getRoute())
+            .withLatitude(1.0)
+            .withLatitude(1.1)
+            .withTimestamp(new Date(1L))
+            .in(waypointDao);
+        Waypoint wp2 = new GivenWaypoint()
+            .withRoute(waypointService.getRoute())
+            .withLatitude(1.2)
+            .withLatitude(1.3)
+            .withTimestamp(new Date(2L))
+            .in(waypointDao);
+
+        // Act
+        Collection<Waypoint> allWaypoints = waypointService.getWaypoints(0, 1);
+
+        // Assert
+        assertThat(allWaypoints, notNullValue());
+        assertThat(allWaypoints, hasSize(1));
+        assertThat(allWaypoints, hasItem(wp2));
+    }
 
     @Test
     public void addWaypoint_ValidData() throws Exception {

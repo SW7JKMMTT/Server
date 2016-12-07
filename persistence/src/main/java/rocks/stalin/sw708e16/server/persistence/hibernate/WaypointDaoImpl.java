@@ -13,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.Coordinate;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 
+import javax.persistence.TypedQuery;
+import java.util.Date;
 import java.util.List;
 
 @Transactional
@@ -42,5 +45,44 @@ public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDa
         Query query = qb.spatial().within(kilometers, Unit.KM).ofCoordinates(cord).createQuery();
 
         return (List<Waypoint>) ftem.createFullTextQuery(query, Waypoint.class).getResultList();
+    }
+
+    @Override
+    public List<Waypoint> byRoute(Route route, int count) {
+        TypedQuery<Waypoint> query = em.createQuery(
+            "SELECT waypoint " +
+                "FROM Waypoint waypoint " +
+                "WHERE waypoint.route = :route " +
+                "ORDER BY waypoint.timestamp DESC", Waypoint.class);
+        query.setParameter("route", route);
+        query.setMaxResults(count);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Waypoint> byRoute_after(Route route, Date timestamp) {
+        TypedQuery<Waypoint> query = em.createQuery(
+            "SELECT waypoint " +
+                "FROM Waypoint waypoint " +
+                "WHERE waypoint.route = :route " +
+                "AND waypoint.timestamp > :timestamp " +
+                "ORDER BY waypoint.timestamp DESC", Waypoint.class);
+        query.setParameter("route", route);
+        query.setParameter("timestamp", timestamp);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Waypoint> byRoute_afterWithMaximum(Route route, Date timestamp, int count) {
+        TypedQuery<Waypoint> query = em.createQuery(
+            "SELECT waypoint " +
+                "FROM Waypoint waypoint " +
+                "WHERE waypoint.route = :route " +
+                "AND waypoint.timestamp > :timestamp " +
+                "ORDER BY waypoint.timestamp DESC", Waypoint.class);
+        query.setParameter("route", route);
+        query.setParameter("timestamp", timestamp);
+        query.setMaxResults(count);
+        return query.getResultList();
     }
 }

@@ -70,7 +70,7 @@ public class RouteBuilder {
      * Merges all info from the {@link RouteBuilder} into a {@link Route}.
      *
      * @param route The {@link Route} to merge into.
-     * @return The {@link Route} after being merged.
+     * @return The {@link Route} byRoute_after being merged.
      */
     public Route merge(VehicleDao vehicleDao, DriverDao driverDao, Route route) {
         if (route == null)
