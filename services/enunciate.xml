@@ -15,8 +15,6 @@
         </jaxrs>
 
         <jackson>
-            <mixin target="org.bson.types.ObjectId"
-                   source="rocks.stalin.sw708e16.server.services.serialize.ObjectIdMixIn" />
         </jackson>
 
         <jackson1 disabled="true" />
