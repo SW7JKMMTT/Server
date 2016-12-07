@@ -30,6 +30,8 @@ public class Route {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Driver driver;
 
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Vehicle vehicle;
 
