@@ -73,7 +73,7 @@ public class UserService {
             throw new IllegalArgumentException("No surname");
 
         User user = userBuilder.buildWithoutPermissions();
-        if (userDao.byUsername(user.getUsername()) != null)
+        if (userDao.usernameIsTaken(user.getUsername()))
             throw new ConflictException("A user with that username already exists.");
 
         userDao.add(user);
@@ -151,7 +151,7 @@ public class UserService {
     @RolesAllowed({PermissionType.Constants.USER})
     @BASE64
     public InputStream getUserIcon(@PathParam("uid") Long id) throws IOException {
-        User user = userDao.byId(id);
+        User user = userDao.byId_ForIcon(id);
         if (user == null)
             throw new NotFoundException("User not found");
 

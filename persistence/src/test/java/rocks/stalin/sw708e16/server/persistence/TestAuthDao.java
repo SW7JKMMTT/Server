@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.persistence;
 
+import org.hamcrest.core.Is;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,6 +15,7 @@ import rocks.stalin.sw708e16.test.DatabaseTest;
 import javax.annotation.Resource;
 import java.util.Collection;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,8 +38,7 @@ public class TestAuthDao extends DatabaseTest {
 
     @Test
     public void testAdd() throws Exception {
-        userDao.add(new User("Jeff", "password", "Jeff", "Lam"));
-        User jeff = userDao.byUsername("Jeff");
+        User jeff = new GivenUser().withName("Jeff", "Lam").withUsername("Jeff").withPassword("password").in(userDao);
         AuthToken token = new AuthToken("AABBCC", jeff);
 
         assertNull(authDao.byTokenStr_ForAuthorization("AABBCC"));
@@ -78,17 +79,9 @@ public class TestAuthDao extends DatabaseTest {
     @Test
     public void testByUser() throws Exception {
         User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("1000").in(userDao);
-        new GivenAuthToken().forUser(jeff).withToken("FAKETOKEN").in(authDao);
-        new GivenAuthToken().forUser(jeff).withToken("MOBILETOKEN").in(authDao);
 
-        User databaseJeff = userDao.byUsername("Jeff");
+        boolean wasFound = userDao.usernameIsTaken("Jeff");
 
-        AuthToken token1 = authDao.byTokenStr_ForAuthorization("FAKETOKEN");
-        AuthToken token2 = authDao.byTokenStr_ForAuthorization("MOBILETOKEN");
-
-        Collection<AuthToken> at = databaseJeff.getAuthTokens();
-        assertEquals(at.size(), 2);
-        assertTrue(at.contains(token1));
-        assertTrue(at.contains(token2));
+        assertThat(wasFound, is(true));
     }
 }

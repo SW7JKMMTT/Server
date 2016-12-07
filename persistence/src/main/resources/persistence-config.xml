@@ -57,6 +57,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
             <property name="jpaProperties">
                 <props merge="true">
                     <prop key="hibernate.hbm2ddl.auto">create</prop>
+                    <prop key="hibernate.search.default.directory_provider">ram</prop>
                 </props>
             </property>
         </bean>

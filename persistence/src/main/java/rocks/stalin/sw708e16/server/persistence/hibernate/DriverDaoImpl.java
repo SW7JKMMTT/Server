@@ -21,7 +21,11 @@ public class DriverDaoImpl extends BaseDaoImpl<Driver> implements DriverDao {
 
     @Override
     public Driver byId(long id) {
-        TypedQuery<Driver> query = em.createQuery("SELECT d FROM Driver d WHERE d.id = :id", Driver.class);
+        TypedQuery<Driver> query = em.createQuery(
+            "SELECT d " +
+                "FROM Driver d " +
+                "WHERE d.id = :id",
+            Driver.class);
         query.setParameter("id", id);
         return getFirst(query);
     }

@@ -8,6 +8,7 @@ import rocks.stalin.sw708e16.server.persistence.AuthDao;
 
 import javax.persistence.TypedQuery;
 import java.util.Collection;
+import java.util.List;
 
 @Transactional
 @Repository
@@ -19,15 +20,25 @@ public class AuthTokenDaoImpl extends BaseDaoImpl<AuthToken> implements AuthDao 
             em.createQuery(
                 "SELECT at FROM AuthToken at " +
                     "INNER JOIN FETCH at.user as u " +
+                    "LEFT JOIN FETCH u.driver " +
                     "LEFT JOIN FETCH u.permissions " +
                     "WHERE at.token = :token",
                 AuthToken.class);
         query.setParameter("token", tkn);
-        AuthToken tk  = getFirst(query);
-        if(tk == null)
-            return null;
+        return getFirst(query);
+    }
 
-        return tk;
+    @Override
+    public List<AuthToken> byUserId_ForDisplay(long userId) {
+        TypedQuery<AuthToken> query =
+            em.createQuery(
+                "SELECT at FROM AuthToken at " +
+                    "INNER JOIN FETCH at.user as u " +
+                    "LEFT JOIN FETCH u.driver " +
+                    "WHERE u.id = :userId",
+                AuthToken.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 
     @Override

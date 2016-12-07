@@ -11,6 +11,8 @@ public interface RouteDao extends BaseDao<Route> {
 
     Collection<Route> getAll_ForDisplay();
 
+    Route byId_ForWaypoint(long id);
+
     Route byId_ForDisplay(long id);
 
     Collection<Route> getByState_ForDisplay(RouteState routeState);

@@ -1,7 +1,10 @@
 package rocks.stalin.sw708e16.server.persistence.hibernate;
 
 import org.apache.lucene.search.Query;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;
@@ -43,8 +46,9 @@ public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDa
         Coordinates cord = Point.fromDegrees(coordinate.getLatitude(), coordinate.getLongitude());
 
         Query query = qb.spatial().within(kilometers, Unit.KM).ofCoordinates(cord).createQuery();
+        FullTextQuery fullTextQuery = ftem.createFullTextQuery(query, Waypoint.class);
 
-        return (List<Waypoint>) ftem.createFullTextQuery(query, Waypoint.class).getResultList();
+        return (List<Waypoint>) fullTextQuery.getResultList();
     }
 
     @Override

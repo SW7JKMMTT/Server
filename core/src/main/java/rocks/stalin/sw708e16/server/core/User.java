@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.core.authentication.Permission;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
@@ -39,10 +43,10 @@ public class User {
     @JsonIgnoreProperties({"user"})
     private Collection<Permission> permissions = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserIcon icon;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToOne(mappedBy = "user")
     private Driver driver;
 
 

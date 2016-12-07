@@ -21,7 +21,7 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @OneToMany(mappedBy = "route", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("timestamp")
     private List<Waypoint> points = new ArrayList<>();
 

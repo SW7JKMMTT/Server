@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.services;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,7 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 
 @Component
 @Path("/auth")
@@ -31,7 +30,7 @@ public class AuthenticationService {
      * in the format "Sleepy token='token'". You can only authenticate in the department you
      * are associated with.
      *
-     * @param obj The login credentials (username and password)
+     * @param credentials The login credentials (username and password)
      * @return A new {@link AuthToken token} for the user
      *
      * @HTTP 401 Wrong username or password
@@ -40,11 +39,11 @@ public class AuthenticationService {
     @POST
     @Produces("application/json")
     @Consumes("application/json")
-    //TODO: Simplify and improve, maybe don't use a map?
-    public AuthToken authenticate(Map<String, String> obj) {
-        if (!obj.containsKey("username") || !obj.containsKey("password"))
-            throw new BadRequestException("No username or password given. Did you misspell it?");
-        User user = userDao.byUsernameAndPassword(obj.get("username"), obj.get("password"));
+    public AuthToken authenticate(UserCredentials credentials) {
+        if(credentials.getUsername() == null || credentials.getPassword() == null)
+            throw new BadRequestException("Missing username or password");
+
+        User user = userDao.byUsernameAndPassword_ForLogin(credentials.getUsername(), credentials.getPassword());
         if(user == null)
             throw new NotAuthorizedException("Wrong username or password", "Sleepy");
 
@@ -70,10 +69,40 @@ public class AuthenticationService {
         if(user == null)
             throw new NotAuthorizedException("Unknown user");
 
-        user = userDao.update(user);
+        List<AuthToken> tokens = authDao.byUserId_ForDisplay(user.getId());
 
-        Hibernate.initialize(user.getAuthTokens());
+        return tokens;
+    }
 
-        return user.getAuthTokens();
+    /**
+     * Credentials of a system user.
+     */
+    public static class UserCredentials {
+        private String username;
+        private String password;
+
+        public UserCredentials() {
+        }
+
+        public UserCredentials(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 }

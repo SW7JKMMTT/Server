@@ -15,15 +15,20 @@ import java.util.Collection;
 @Primary
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     /**
-     * Find a {@link User} by the username.
+     * Does another user with the given username exist.
      * @param username The username to search by
      * @return The first {@link User} in the database with the username
      */
-    public User byUsername(final String username) {
-        TypedQuery<User> query =
-            em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
+    public boolean usernameIsTaken(final String username) {
+        TypedQuery<Long> query =
+            em.createQuery(
+                "SELECT count(u) " +
+                    "FROM User u " +
+                    "WHERE u.username = :username",
+                Long.class);
         query.setParameter("username", username);
-        return getFirst(query);
+        Long result = query.getSingleResult();
+        return result != 0;
     }
 
     @Override
@@ -38,32 +43,51 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
+    public User byId_ForIcon(long id) {
+        TypedQuery<User> query = em.createQuery(
+            "SELECT u " +
+                "FROM User u " +
+                "LEFT JOIN FETCH u.driver " +
+                "LEFT JOIN FETCH u.icon " +
+                "WHERE u.id = :id",
+            User.class);
+        query.setParameter("id", id);
+        return getFirst(query);
+    }
+
+    @Override
     public User byId_ForDisplay(long id) {
-        User user = byId(id);
-
-        if (user != null) {
-            // Init the lazy list.
-            HibernateMagic.initialize(user, "permissions");
-        }
-
-        return user;
+        TypedQuery<User> query = em.createQuery(
+            "SELECT u " +
+                "FROM User u " +
+                "LEFT JOIN FETCH u.permissions " +
+                "LEFT JOIN FETCH u.driver " +
+                "WHERE u.id = :id",
+            User.class);
+        query.setParameter("id", id);
+        return getFirst(query);
     }
 
     @Override
     public Collection<User> getAll_ForDisplay() {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
-        Collection<User> users = query.getResultList();
-
-        // Init lazy list
-        users.forEach(user -> HibernateMagic.initialize(user, "permissions"));
-
-        return users;
+        TypedQuery<User> query = em.createQuery(
+            "SELECT DISTINCT u " +
+                "FROM User u " +
+                "LEFT JOIN FETCH u.driver " +
+                "LEFT JOIN FETCH u.permissions",
+            User.class);
+        return query.getResultList();
     }
 
     @Override
-    public User byUsernameAndPassword(String username, String password) {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u " +
-            "WHERE u.username = :name AND u.password = :password", User.class);
+    public User byUsernameAndPassword_ForLogin(String username, String password) {
+        TypedQuery<User> query = em.createQuery(
+            "SELECT u " +
+                "FROM User u " +
+                "LEFT JOIN FETCH u.driver " +
+                "WHERE u.username = :name " +
+                "AND u.password = :password",
+            User.class);
         query.setParameter("name", username);
         query.setParameter("password", password);
         return getFirst(query);

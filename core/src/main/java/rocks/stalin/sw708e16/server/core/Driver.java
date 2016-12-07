@@ -1,6 +1,8 @@
 package rocks.stalin.sw708e16.server.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
 import javax.persistence.*;
@@ -15,7 +17,7 @@ public class Driver {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)

@@ -243,7 +243,7 @@ public class RouteService {
     @Path("/{rid}/waypoint/")
     @RolesAllowed({PermissionType.Constants.USER})
     public WaypointService getWaypointService(@PathParam("rid") Long id) {
-        Route found = routeDao.byId(id);
+        Route found = routeDao.byId_ForWaypoint(id);
 
         if(found == null)
             throw new NotFoundException("Route not found with given id");

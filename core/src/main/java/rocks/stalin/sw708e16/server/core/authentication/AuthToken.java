@@ -3,6 +3,8 @@ package rocks.stalin.sw708e16.server.core.authentication;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import rocks.stalin.sw708e16.server.core.User;
 
 import javax.persistence.*;
@@ -22,7 +24,7 @@ public class AuthToken {
     @Column(nullable = false, unique = true)
     private String token;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)

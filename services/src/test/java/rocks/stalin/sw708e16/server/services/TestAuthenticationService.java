@@ -40,13 +40,16 @@ public class TestAuthenticationService extends DatabaseTest {
     @Test
     public void testAuthenticate_Correct() throws Exception {
         //Arrange
-        User jeff = new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("username", "Jeff");
-        requestMap.put("password", "password");
+        User jeff = new GivenUser()
+            .withName("Jeff", "Jeffsen")
+            .withUsername("Jeff")
+            .withPassword("password")
+            .in(userDao);
+        AuthenticationService.UserCredentials creds =
+            new AuthenticationService.UserCredentials("Jeff", "password");
 
         // Act
-        AuthToken token = authService.authenticate(requestMap);
+        AuthToken token = authService.authenticate(creds);
 
         // Assert
         Assert.assertEquals(token.getUser(), jeff);
@@ -57,70 +60,66 @@ public class TestAuthenticationService extends DatabaseTest {
     public void testAuthenticate_WrongUsername() throws Exception {
         //Arrange
         new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("username", "john");
-        requestMap.put("password", "password");
+        AuthenticationService.UserCredentials creds =
+            new AuthenticationService.UserCredentials("john", "password");
 
         // Act
-        authService.authenticate(requestMap);
+        authService.authenticate(creds);
     }
 
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticate_WrongPassword() throws Exception {
         //Arrange
         new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("username", "Jeff");
-        requestMap.put("password", "passwrong");
+        AuthenticationService.UserCredentials creds =
+            new AuthenticationService.UserCredentials("Jeff", "passwrong");
 
         // Act
-        authService.authenticate(requestMap);
-    }
-
-    @Test(expected = BadRequestException.class)
-    public void testAuthenticate_UsernameSpelledWrong() throws Exception {
-        //Arrange
-        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("usename", "Jeff"); //@ATTENTION: Spelled wrong
-        requestMap.put("password", "password");
-
-        // Act
-        authService.authenticate(requestMap);
-    }
-
-    @Test(expected = BadRequestException.class)
-    public void testAuthenticate_PasswordSpelledWrong() throws Exception {
-        //Arrange
-        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("username", "Jeff");
-        requestMap.put("pasword", "password"); //@ATTENTION: Spelled wrong
-
-        // Act
-        authService.authenticate(requestMap);
+        authService.authenticate(creds);
     }
 
     @Test(expected = BadRequestException.class)
     public void testAuthenticate_MissingUsername() throws Exception {
         //Arrange
         new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("password", "password");
+        AuthenticationService.UserCredentials creds =
+            new AuthenticationService.UserCredentials(null, "passwrong");
 
         // Act
-        authService.authenticate(requestMap);
+        authService.authenticate(creds);
     }
 
     @Test(expected = BadRequestException.class)
     public void testAuthenticate_MissingPassword() throws Exception {
         //Arrange
         new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("username", "Jeff");
+        AuthenticationService.UserCredentials creds =
+            new AuthenticationService.UserCredentials("Jeff", null);
 
         // Act
-        authService.authenticate(requestMap);
+        authService.authenticate(creds);
+    }
+
+    @Test(expected = NotAuthorizedException.class)
+    public void testAuthenticate_UsernameCaseSensitive() throws Exception {
+        //Arrange
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
+        AuthenticationService.UserCredentials creds =
+            new AuthenticationService.UserCredentials("jeff", "password");
+
+        // Act
+        authService.authenticate(creds);
+    }
+
+    @Test(expected = NotAuthorizedException.class)
+    public void testAuthenticate_PasswordsCaseSensitive() throws Exception {
+        //Arrange
+        new GivenUser().withName("Jeff", "Jeffsen").withUsername("Jeff").withPassword("password").in(userDao);
+        AuthenticationService.UserCredentials creds =
+            new AuthenticationService.UserCredentials("Jeff", "Password");
+
+        // Act
+        authService.authenticate(creds);
     }
 
     @Test

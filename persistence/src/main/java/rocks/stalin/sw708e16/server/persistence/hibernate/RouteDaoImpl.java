@@ -29,17 +29,34 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
 
     @Override
     public Collection<Route> getAll_ForDisplay() {
-        TypedQuery<Route> query = em.createQuery("SELECT r FROM Route r", Route.class);
-        return initialize_ForDisplay(query.getResultList());
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT DISTINCT r " +
+                "FROM Route r " +
+                "JOIN FETCH r.driver " +
+                "JOIN FETCH r.vehicle",
+            Route.class);
+        return query.getResultList();
     }
 
     @Override
     public Route byId(long id) {
         TypedQuery<Route> query = em.createQuery(
-                "SELECT r " +
-                        "FROM Route r " +
-                        "WHERE r.id = :id",
+            "SELECT r " +
+                "FROM Route r " +
+                "WHERE r.id = :id",
                 Route.class);
+        query.setParameter("id", id);
+        return getFirst(query);
+    }
+
+    @Override
+    public Route byId_ForWaypoint(long id) {
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT r " +
+                "FROM Route r " +
+                "LEFT JOIN FETCH r.points " +
+                "WHERE r.id = :id",
+            Route.class);
         query.setParameter("id", id);
         return getFirst(query);
     }
@@ -49,85 +66,145 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         TypedQuery<Route> query = em.createQuery(
             "SELECT r " +
                 "FROM Route r " +
+                "JOIN FETCH r.driver " +
+                "JOIN FETCH r.vehicle " +
                 "WHERE r.id = :id",
             Route.class);
         query.setParameter("id", id);
-        return initialize_ForDisplay(getFirst(query));
+        return getFirst(query);
     }
 
     @Override
     public Collection<Route> getByState_ForDisplay(RouteState routeState) {
         TypedQuery<Route> query = em.createQuery(
             "SELECT r " +
-                    "FROM Route r " +
-                    "WHERE r.routeState = :state",
+                "FROM Route r " +
+                "JOIN FETCH r.driver " +
+                "JOIN FETCH r.vehicle " +
+                "WHERE r.routeState = :state",
                 Route.class);
         query.setParameter("state", routeState);
-        return initialize_ForDisplay(query.getResultList());
+        return query.getResultList();
     }
 
     @Override
     public Collection<Route> getByDriver_ForDisplay(Driver driver) {
-        return initialize_ForDisplay(driver.getRoutes());
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT DISTINCT r " +
+                "FROM Route r " +
+                "JOIN FETCH r.driver d " +
+                "JOIN FETCH r.vehicle " +
+                "WHERE d = :driver",
+            Route.class);
+        query.setParameter("driver", driver);
+        return query.getResultList();
     }
 
     @Override
     public Collection<Route> getByDriverAndState_ForDisplay(RouteState routeState, Driver driver) {
         TypedQuery<Route> query = em.createQuery(
-            "SELECT r " +
+            "SELECT DISTINCT r " +
                 "FROM Route r " +
-                "WHERE r.driver = :driver " +
-                "AND r.routeState = :state",
+                "JOIN FETCH r.driver d " +
+                "JOIN FETCH r.vehicle " +
+                "WHERE d = :driver " +
+                    "AND r.routeState = :state",
             Route.class);
         query.setParameter("driver", driver);
         query.setParameter("state", routeState);
-        return initialize_ForDisplay(query.getResultList());
+        return query.getResultList();
     }
 
     @Override
     public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius) {
-        // I'm doing this in the most naive version ever, can get improved later if needed.
         Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
 
-        HashMap<Route, Boolean> routesMap = new HashMap<>();
-        for (Waypoint waypoint : waypoints) {
-            Route route = waypoint.getRoute();
-            if (!routesMap.containsKey(route)) {
-                Hibernate.initialize(route.getVehicle());
-                Hibernate.initialize(route.getDriver());
-                routesMap.put(route, true);
-            }
-        }
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT DISTINCT r " +
+                "FROM Route r " +
+                "JOIN FETCH r.points p " +
+                "JOIN FETCH r.vehicle v " +
+                "JOIN FETCH r.driver d " +
+                "WHERE p IN :wayp",
+            Route.class);
 
-        return new ArrayList<>(routesMap.keySet());
+        query.setParameter("wayp", waypoints);
+        return query.getResultList();
     }
 
     @Override
-    public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, Driver driver) {
-        Collection<Route> routes = withinRadius_ForDisplay(waypointDao, coordinate, radius);
-        return routes
-            .stream()
-            .filter(route -> route.getDriver().equals(driver))
-            .collect(Collectors.toList());
+    public Collection<Route> withinRadius_ForDisplay(
+        WaypointDao waypointDao,
+        Coordinate coordinate,
+        Double radius,
+        Driver driver)
+    {
+        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT DISTINCT r " +
+                "FROM Route r " +
+                "JOIN FETCH r.points p " +
+                "JOIN FETCH r.vehicle v " +
+                "JOIN FETCH r.driver d " +
+                "WHERE p IN :wayp " +
+                "AND d = :driver",
+            Route.class);
+
+        query.setParameter("wayp", waypoints);
+        query.setParameter("driver", driver);
+        return query.getResultList();
     }
 
     @Override
-    public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, RouteState routeState) {
-        Collection<Route> routes = withinRadius_ForDisplay(waypointDao, coordinate, radius);
-        return routes
-            .stream()
-            .filter(route -> route.getRouteState().equals(routeState))
-            .collect(Collectors.toList());
+    public Collection<Route> withinRadius_ForDisplay(
+        WaypointDao waypointDao,
+        Coordinate coordinate,
+        Double radius,
+        RouteState state)
+    {
+        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT DISTINCT r " +
+                "FROM Route r " +
+                "JOIN FETCH r.points p " +
+                "JOIN FETCH r.vehicle v " +
+                "JOIN FETCH r.driver d " +
+                "WHERE p IN :wayp " +
+                "AND r.routeState = :state",
+            Route.class);
+
+        query.setParameter("wayp", waypoints);
+        query.setParameter("state", state);
+        return query.getResultList();
     }
 
     @Override
-    public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius, Driver driver, RouteState routeState) {
-        Collection<Route> routes = withinRadius_ForDisplay(waypointDao, coordinate, radius);
-        return routes
-            .stream()
-            .filter(route -> route.getDriver().equals(driver))
-            .filter(route -> route.getRouteState().equals(routeState))
-            .collect(Collectors.toList());
+    public Collection<Route> withinRadius_ForDisplay(
+        WaypointDao waypointDao,
+        Coordinate coordinate,
+        Double radius,
+        Driver driver,
+        RouteState state)
+    {
+        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT DISTINCT r " +
+                "FROM Route r " +
+                "JOIN FETCH r.points p " +
+                "JOIN FETCH r.vehicle v " +
+                "JOIN FETCH r.driver d " +
+                "WHERE p IN :wayp " +
+                "AND d = :driver " +
+                "AND r.routeState = :state",
+            Route.class);
+
+        query.setParameter("wayp", waypoints);
+        query.setParameter("driver", driver);
+        query.setParameter("state", state);
+        return query.getResultList();
     }
 
     /**
