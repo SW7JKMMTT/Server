@@ -105,13 +105,13 @@ public class TestWaypointService extends DatabaseTest {
                 .withRoute(waypointService.getRoute())
                 .withLatitude(1.0)
                 .withLatitude(1.1)
-                .withTimestamp(new Date(2L))
+                .withTimestamp(new Date(1L))
                 .in(waypointDao);
         new GivenWaypoint()
                 .withRoute(waypointService.getRoute())
                 .withLatitude(1.2)
                 .withLatitude(1.3)
-                .withTimestamp(new Date(1L))
+                .withTimestamp(new Date(2L))
                 .in(waypointDao);
 
         // Act

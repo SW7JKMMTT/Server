@@ -171,13 +171,13 @@ public class TestWaypointDao extends SpatialDatabaseTest {
             .withRoute(route)
             .withLatitude(57)
             .withLongitude(10)
-            .withTimestamp(new Date(2))
+            .withTimestamp(new Date(1))
             .in(waypointDao);
         new GivenWaypoint()
             .withRoute(route)
             .withLatitude(40.71)
             .withLongitude(-74.01)
-            .withTimestamp(new Date(1))
+            .withTimestamp(new Date(2))
             .in(waypointDao);
 
         // Act
@@ -257,7 +257,7 @@ public class TestWaypointDao extends SpatialDatabaseTest {
         assertThat(found, hasItem(w2));
         assertThat(found, hasSize(2));
         // Check the order of the items.
-        assertThat(found, contains(w2, w1));
+        assertThat(found, contains(w1, w2));
     }
 
     @Test
@@ -294,7 +294,7 @@ public class TestWaypointDao extends SpatialDatabaseTest {
         assertThat(found, hasItem(w2));
         assertThat(found, hasSize(2));
         // Check the order of the items.
-        assertThat(found, contains(w2, w1));
+        assertThat(found, contains(w1, w2));
     }
 
     @Test
@@ -331,7 +331,7 @@ public class TestWaypointDao extends SpatialDatabaseTest {
         assertThat(found, hasItem(w2));
         assertThat(found, hasSize(2));
         // Check the order of the items.
-        assertThat(found, contains(w2, w1));
+        assertThat(found, contains(w1, w2));
     }
 
     @Test
@@ -499,7 +499,7 @@ public class TestWaypointDao extends SpatialDatabaseTest {
 
         // Assert
         assertThat(found, notNullValue());
-        assertThat(found, hasItem(w2));
+        assertThat(found, hasItem(w1));
         assertThat(found, hasSize(1));
     }
 
@@ -537,7 +537,7 @@ public class TestWaypointDao extends SpatialDatabaseTest {
         assertThat(found, hasItem(w2));
         assertThat(found, hasSize(2));
         // Check the order of the items.
-        assertThat(found, contains(w2, w1));
+        assertThat(found, contains(w1, w2));
     }
 
     @Test

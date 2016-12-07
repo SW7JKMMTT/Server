@@ -1,8 +1,6 @@
 package rocks.stalin.sw708e16.server.persistence.hibernate;
 
 import org.apache.lucene.search.Query;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
@@ -57,7 +55,7 @@ public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDa
             "SELECT waypoint " +
                 "FROM Waypoint waypoint " +
                 "WHERE waypoint.route = :route " +
-                "ORDER BY waypoint.timestamp DESC", Waypoint.class);
+                "ORDER BY waypoint.timestamp ASC", Waypoint.class);
         query.setParameter("route", route);
         query.setMaxResults(count);
         return query.getResultList();
@@ -70,7 +68,7 @@ public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDa
                 "FROM Waypoint waypoint " +
                 "WHERE waypoint.route = :route " +
                 "AND waypoint.timestamp > :timestamp " +
-                "ORDER BY waypoint.timestamp DESC", Waypoint.class);
+                "ORDER BY waypoint.timestamp ASC", Waypoint.class);
         query.setParameter("route", route);
         query.setParameter("timestamp", timestamp);
         return query.getResultList();
@@ -83,7 +81,7 @@ public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDa
                 "FROM Waypoint waypoint " +
                 "WHERE waypoint.route = :route " +
                 "AND waypoint.timestamp > :timestamp " +
-                "ORDER BY waypoint.timestamp DESC", Waypoint.class);
+                "ORDER BY waypoint.timestamp ASC", Waypoint.class);
         query.setParameter("route", route);
         query.setParameter("timestamp", timestamp);
         query.setMaxResults(count);

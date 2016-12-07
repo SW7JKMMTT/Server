@@ -36,7 +36,7 @@ public class WaypointService {
     /**
      * Gets all Waypoints for a given route, or a specified number of waypoints.
      *
-     * @param maxCount The maximum number of waypoints to return, ordered by timestamp descending (newest first).
+     * @param maxCount The maximum number of waypoints to return, ordered by timestamp ascending (oldest first).
      * @param since The earliest time (epoch millis) to include waypoints from (exclusive).
      * @return All waypoints in the route.
      */
