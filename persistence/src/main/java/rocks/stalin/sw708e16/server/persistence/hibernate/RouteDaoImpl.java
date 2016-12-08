@@ -16,10 +16,7 @@ import rocks.stalin.sw708e16.server.persistence.RouteDao;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 @Transactional
 @Repository
@@ -50,11 +47,24 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     }
 
     @Override
-    public Route byId_ForWaypoint(long id) {
+    public Route byId_ForWaypointService(long id) {
         TypedQuery<Route> query = em.createQuery(
             "SELECT r " +
                 "FROM Route r " +
                 "LEFT JOIN FETCH r.points " +
+                "WHERE r.id = :id",
+            Route.class);
+        query.setParameter("id", id);
+        return getFirst(query);
+    }
+
+    @Override
+    public Route byId_ForVehicleDataService(long id) {
+        TypedQuery<Route> query = em.createQuery(
+            "SELECT r " +
+                "FROM Route r " +
+                "LEFT JOIN FETCH r.vehicleData as vd " +
+                "LEFT JOIN FETCH vd.vehicleDataPoints " +
                 "WHERE r.id = :id",
             Route.class);
         query.setParameter("id", id);

@@ -5,6 +5,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Latitude;
 import org.hibernate.search.annotations.Longitude;
 import org.hibernate.search.annotations.Spatial;
+import rocks.stalin.sw708e16.server.core.vehicledata.VehicleData;
 
 import javax.persistence.*;
 import java.util.Date;

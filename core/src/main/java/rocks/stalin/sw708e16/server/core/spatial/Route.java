@@ -4,15 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.mapping.*;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.Vehicle;
+import rocks.stalin.sw708e16.server.core.vehicledata.VehicleData;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Entity
 @Table(name = "Route")
@@ -24,6 +29,9 @@ public class Route {
     @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("timestamp")
     private List<Waypoint> points = new ArrayList<>();
+
+    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<VehicleData> vehicleData = new HashSet<>();
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -62,6 +70,15 @@ public class Route {
     @JsonIgnore
     public List<Waypoint> getWaypoints() {
         return points;
+    }
+
+    public void addVehicleData(VehicleData vehicleData) {
+        this.vehicleData.add(vehicleData);
+    }
+
+    @JsonIgnore
+    public Set<VehicleData> getVehicleData() {
+        return Collections.unmodifiableSet(vehicleData);
     }
 
     public Driver getDriver() {

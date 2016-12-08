@@ -7,6 +7,8 @@ import rocks.stalin.sw708e16.server.core.*;
 import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 import rocks.stalin.sw708e16.server.core.authentication.PermissionType;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
+import rocks.stalin.sw708e16.server.core.vehicledata.concretedatapoints.CurrentSpeedDataPoint;
+import rocks.stalin.sw708e16.server.core.vehicledata.concretedatapoints.FuelLevelDataPoint;
 import rocks.stalin.sw708e16.server.persistence.*;
 import rocks.stalin.sw708e16.server.persistence.given.*;
 import rocks.stalin.sw708e16.server.spring.datainserter.DevelopmentData;
@@ -38,6 +40,9 @@ public class Data extends DevelopmentDataInserter {
 
     @Autowired
     private WaypointDao waypointDao;
+
+    @Autowired
+    private VehicleDataDao vehicleDataDao;
 
     @Override
     public void insert() {
@@ -88,5 +93,6 @@ public class Data extends DevelopmentDataInserter {
         r2.setRouteState(RouteState.COMPLETE);
 
 
+        new GivenVehicleData().withTimestamp(new Date(1)).withRoute(r2).withDataPoint(new CurrentSpeedDataPoint(1.5)).withDataPoint(new FuelLevelDataPoint(92.3)).in(vehicleDataDao);
     }
 }

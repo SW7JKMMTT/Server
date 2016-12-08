@@ -38,6 +38,9 @@ public class RouteService {
     @Autowired
     private WaypointService waypointService;
 
+    @Autowired
+    private VehicleDataService vehicleDataService;
+
     /**
      * Gets {@link Route routes}, depending on query parameters of which all given are considered.
      * A spatial query is done by giving latitude, longitude and radius.
@@ -243,7 +246,7 @@ public class RouteService {
     @Path("/{rid}/waypoint/")
     @RolesAllowed({PermissionType.Constants.USER})
     public WaypointService getWaypointService(@PathParam("rid") Long id) {
-        Route found = routeDao.byId_ForWaypoint(id);
+        Route found = routeDao.byId_ForWaypointService(id);
 
         if(found == null)
             throw new NotFoundException("Route not found with given id");
@@ -251,5 +254,25 @@ public class RouteService {
         waypointService.setRoute(found);
 
         return waypointService;
+    }
+
+    /**
+     * Gets the {@link VehicleDataService} of a given {@link Route}.
+     * @param id the id of the {@link Route} to create a {@link VehicleDataService}.
+     * @return The {@link VehicleDataService}.
+     *
+     * @HTTP 404 Route not found.
+     */
+    @Path("/{rid}/datapoint/")
+    @RolesAllowed({PermissionType.Constants.USER})
+    public VehicleDataService getVehicleDataPointService(@PathParam("rid") Long id) {
+        Route found = routeDao.byId_ForVehicleDataService(id);
+
+        if(found == null)
+            throw new NotFoundException("Route not found with given id");
+
+        vehicleDataService.setRoute(found);
+
+        return vehicleDataService;
     }
 }
