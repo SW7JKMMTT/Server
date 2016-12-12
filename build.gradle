@@ -1,7 +1,7 @@
 apply plugin: 'ear'
 
 dependencies {
-    deploy project(path: ":services", configuration: "archives")
+    deploy project(path: ":services", configuration: "archives");
 }
 
 allprojects  {
@@ -62,8 +62,8 @@ subprojects {
 
     idea {
         module {
-            downloadJavadoc = true
-            downloadSources = true
+            downloadJavadoc = true;
+            downloadSources = true;
         }
     }
 
