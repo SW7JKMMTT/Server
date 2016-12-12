@@ -1,9 +1,6 @@
 package rocks.stalin.sw708e16.server.persistence.hibernate;
 
 
-import org.hibernate.Hibernate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +19,6 @@ import java.util.Collection;
 @Repository
 @Primary
 public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
-    private static Logger logger = LoggerFactory.getLogger(RouteDaoImpl.class);
-
     @Override
     public Collection<Route> getAll_ForDisplay() {
         TypedQuery<Route> query = em.createQuery(
@@ -215,33 +210,5 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         query.setParameter("driver", driver);
         query.setParameter("state", state);
         return query.getResultList();
-    }
-
-    /**
-     * Initializes the lazy fields in each element in the {@link Route routes}.
-     *
-     * @param routes {@link Route routes} to initialize.
-     * @return The {@link Route routes} with initialized fields.
-     */
-    private Collection<Route> initialize_ForDisplay(Collection<Route> routes) {
-        for (Route route : routes) {
-            initialize_ForDisplay(route);
-        }
-
-        return routes;
-    }
-
-    /**
-     * Initializes the lazy fields in the {@link Route}.
-     * @param route {@link Route} to initialize.
-     * @return The {@link Route} with initialized fields.
-     */
-    private Route initialize_ForDisplay(Route route) {
-        if (route == null)
-            return route;
-
-        Hibernate.initialize(route.getDriver());
-        Hibernate.initialize(route.getVehicle());
-        return route;
     }
 }

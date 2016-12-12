@@ -28,11 +28,9 @@ import java.util.List;
 @Primary
 public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDao {
     private static Logger logger = LoggerFactory.getLogger(WaypointDaoImpl.class);
-
     @Override
     public List<Waypoint> withinRadius(Coordinate coordinate, double kilometers) {
-        logger.info("Querying for within radius");
-
+        logger.info(String.format("Querying for within radius, lat: {}, long: {}, radius: {}", coordinate.getLatitude(), coordinate.getLongitude(), kilometers));
         if(coordinate.getLatitude() > GeometricConstants.LATITUDE_DEGREE_MAX || coordinate.getLatitude() < GeometricConstants.LATITUDE_DEGREE_MIN)
             throw new IllegalArgumentException("Illegal latitude");
         if(coordinate.getLongitude() > GeometricConstants.LONGITUDE_DEGREE_MAX || coordinate.getLongitude() < GeometricConstants.LONGITUDE_DEGREE_MIN)

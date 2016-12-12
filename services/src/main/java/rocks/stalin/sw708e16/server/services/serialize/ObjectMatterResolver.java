@@ -1,10 +1,7 @@
 package rocks.stalin.sw708e16.server.services.serialize;
 
-import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Produces;
@@ -23,9 +20,6 @@ public class ObjectMatterResolver implements ContextResolver<ObjectMapper> {
      */
     public ObjectMatterResolver() {
         mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule("bsonSerializer", new Version(1, 0, 0, "final", null, null));
-        module.setMixInAnnotation(ObjectId.class, ObjectIdMixIn.class);
-        mapper.registerModule(module);
         mapper.registerModule(new Hibernate5Module());
     }
 
