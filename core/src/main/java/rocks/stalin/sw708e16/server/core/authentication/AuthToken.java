@@ -3,8 +3,6 @@ package rocks.stalin.sw708e16.server.core.authentication;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import rocks.stalin.sw708e16.server.core.User;
 
 import javax.persistence.*;

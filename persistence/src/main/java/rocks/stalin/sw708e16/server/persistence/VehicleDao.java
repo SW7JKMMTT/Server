@@ -13,9 +13,4 @@ public interface VehicleDao extends BaseDao<Vehicle>  {
     Vehicle byVin(Vin vin);
 
     Vehicle byVin(String vin);
-
-    // TODO: By Make
-    // TODO: By Model
-    // TODO: By Year
-    // TODO: By Vin
 }

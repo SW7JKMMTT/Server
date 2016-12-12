@@ -18,8 +18,6 @@ import rocks.stalin.sw708e16.test.DatabaseTest;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 // Load the beans to configure, here the DAOs

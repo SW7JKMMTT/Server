@@ -4,10 +4,10 @@ import rocks.stalin.sw708e16.server.core.authentication.AuthToken;
 
 import java.security.Principal;
 
-public class GUser implements Principal {
+public class TUser implements Principal {
     private AuthToken token;
 
-    public GUser(AuthToken token) {
+    public TUser(AuthToken token) {
         this.token = token;
     }
 

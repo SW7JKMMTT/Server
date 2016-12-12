@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import rocks.stalin.sw708e16.server.core.User;
 import rocks.stalin.sw708e16.server.persistence.UserDao;
-import rocks.stalin.sw708e16.server.persistence.hibernate.magic.HibernateMagic;
 
 import javax.persistence.TypedQuery;
 import java.util.Collection;

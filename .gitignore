@@ -10,7 +10,6 @@
 
 # Intellij projects
 *.iml
-giraf-rest.ipr
 
 ## File-based project format:
 *.iws

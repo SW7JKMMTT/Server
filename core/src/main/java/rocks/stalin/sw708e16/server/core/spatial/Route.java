@@ -4,20 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.mapping.*;
 import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.Vehicle;
 import rocks.stalin.sw708e16.server.core.vehicledata.VehicleData;
 
 import javax.persistence.*;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.util.*;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "Route")
@@ -105,7 +98,6 @@ public class Route {
         this.routeState = routeState;
     }
 
-    //TODO: Only supports persisted objects
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

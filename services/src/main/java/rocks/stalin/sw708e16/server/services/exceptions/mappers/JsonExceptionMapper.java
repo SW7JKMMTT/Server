@@ -2,7 +2,6 @@ package rocks.stalin.sw708e16.server.services.exceptions.mappers;
 
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;

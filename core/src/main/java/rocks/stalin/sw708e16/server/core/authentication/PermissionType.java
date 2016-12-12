@@ -10,7 +10,7 @@ public enum PermissionType {
      */
     User(Constants.USER),
     /**
-     * A superuser is part of the giraf team. They are allowed to do things that impact multiple departments.
+     * A SuperUser is a permission used to access management features.
      */
     SuperUser(Constants.SUPERUSER);
 
@@ -27,12 +27,12 @@ public enum PermissionType {
     //Keep this updated with the enum values
     public static class Constants {
         /**
-         * SuperUser role string.
-         */
-        public static final String SUPERUSER = "SuperUser";
-        /**
          * User role string.
          */
         public static final String USER = "User";
+        /**
+         * SuperUser role string.
+         */
+        public static final String SUPERUSER = "SuperUser";
     }
 }

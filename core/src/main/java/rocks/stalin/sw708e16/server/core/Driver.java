@@ -1,8 +1,6 @@
 package rocks.stalin.sw708e16.server.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 
 import javax.persistence.*;

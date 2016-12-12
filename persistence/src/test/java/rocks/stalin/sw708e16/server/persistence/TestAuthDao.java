@@ -1,6 +1,5 @@
 package rocks.stalin.sw708e16.server.persistence;
 
-import org.hamcrest.core.Is;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -13,7 +12,6 @@ import rocks.stalin.sw708e16.server.persistence.given.GivenUser;
 import rocks.stalin.sw708e16.test.DatabaseTest;
 
 import javax.annotation.Resource;
-import java.util.Collection;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;

@@ -54,7 +54,7 @@ public class AuthenticationInterceptor implements ContainerRequestFilter {
             return;
         }
         //TODO: Extract the construction
-        containerRequestContext.setSecurityContext(new GSecurityContext(atoken, permissionDao));
+        containerRequestContext.setSecurityContext(new TSecurityContext(atoken, permissionDao));
 
         //Push the context, this allow the use of @Context in the method params for Users
         ResteasyProviderFactory.pushContext(User.class, atoken.getUser());

@@ -4,7 +4,7 @@ node("deployable") {
     stage("Copy Artifact") {
         step ([$class: 'CopyArtifact',
                 projectName: 'Server',
-                filter: 'services/build/libs/services-1.0.0.war']);
+                filter: 'services/build/libs/services-1.0.0.war'])
     }
 
     stage("Undeploy") {
@@ -21,7 +21,7 @@ node("deployable") {
 }
 
 
-void jboss(def args) {
+void jboss(args) {
     if (isUnix()) {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'wildfly',
                 usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {

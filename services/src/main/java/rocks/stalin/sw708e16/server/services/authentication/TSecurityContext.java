@@ -10,18 +10,18 @@ import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
 @Transactional
-public class GSecurityContext implements SecurityContext {
+public class TSecurityContext implements SecurityContext {
     private AuthToken token;
     private User user;
 
-    public GSecurityContext(AuthToken token, PermissionDao permissionDao) {
+    public TSecurityContext(AuthToken token, PermissionDao permissionDao) {
         this.token = token;
         this.user = token.getUser();
     }
 
     @Override
     public Principal getUserPrincipal() {
-        return new GUser(token);
+        return new TUser(token);
     }
 
     @Override

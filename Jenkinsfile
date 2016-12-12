@@ -54,7 +54,7 @@ stage('Enunciate') {
 }
 
 //Run gradle
-void gradle(def args) {
+void gradle(args) {
     if (isUnix()) {
         sh "./gradlew ${args}"
     } else {
