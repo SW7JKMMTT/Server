@@ -36,9 +36,9 @@ public class UserService {
     private PermissionDao permissionDao;
 
     /**
-     * Get all the {@link User users} in the department. Anyone can list the users.
+     * Get all the {@link User users}. Anyone can list the users.
      *
-     * @return A collection of the users of the department
+     * @return A collection of the users.
      */
     @GET
     @Path("/")

@@ -45,7 +45,6 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Driver driver;
 
-
     protected User() {
     }
 
