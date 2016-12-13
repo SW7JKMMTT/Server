@@ -24,6 +24,9 @@ import javax.ws.rs.NotFoundException;
 import java.io.InputStream;
 import java.util.Collection;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:test-config.xml"})
 @Transactional
@@ -321,5 +324,23 @@ public class TestVehicleService extends DatabaseTest {
         Assert.assertEquals("testSetOrUpdateVehicleIcon_IconDoesNotAlreadyExist" , filecontents);
     }
 
+    @Test
+    public void testModifyVehicle_AllGood() throws Exception {
+        // Arrange
+        Vehicle vehicle = new GivenVehicle()
+            .withMake("AAU")
+            .withModel("H.O.T.")
+            .withVintage(1969)
+            .withVin(new Vin("Capri Sonne"))
+            .in(vehicleDao);
+        VehicleBuilder builder = new VehicleBuilder().withMake("AU");
 
+        // Act
+        Vehicle found = vehicleService.modifyVehicle(vehicle.getId(), builder);
+
+        // Assert
+        assertThat(found, notNullValue());
+        assertThat(found.getId(), is(vehicle.getId()));
+        assertThat(found.getMake(), is(builder.getMake()));
+    }
 }
