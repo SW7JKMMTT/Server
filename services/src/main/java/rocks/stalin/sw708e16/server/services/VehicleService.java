@@ -63,7 +63,7 @@ public class VehicleService {
         if (vehicle == null)
             throw new NotFoundException("No vehicle with the given id was found.");
 
-        return vehicleDao.byId(id);
+        return vehicle;
     }
 
     /**
@@ -95,7 +95,43 @@ public class VehicleService {
         return vehicle;
     }
 
+    /**
+     * Modified the {@link Vehicle}.
+     * @param id the id of the {@link Vehicle} to modify.
+     * @param vehicleBuilder The elements to modify on the {@link Vehicle}
+     * @return The {@link Vehicle} after applying the changes.
+     *
+     * @HTTP 400 {@link Vehicle} not given, {@link VehicleBuilder} not given,
+     * or {@link Vehicle} with {@link rocks.stalin.sw708e16.server.core.Vin} already exists.
+     * @HTTP 404 {@link Vehicle} not found.
+     */
+    @Path("/{vid}")
+    @PUT
+    @Produces("application/json")
+    @Consumes("application/json")
+    @RolesAllowed({PermissionType.Constants.USER})
+    public Vehicle modifyVehicle(@PathParam("vid") Long id, VehicleBuilder vehicleBuilder) {
+        if (id == null)
+            throw new BadRequestException("Given id was null.");
 
+        if (vehicleBuilder == null) {
+            throw new BadRequestException("No Vehicle given.");
+        }
+
+        // Test to see if Vin is already in database.
+        if (vehicleBuilder.getVin() != null && vehicleDao.byVin(vehicleBuilder.getVin()) != null) {
+            throw new ConflictException("A vehicle with that Vin already exists.");
+        }
+
+        Vehicle vehicle = vehicleDao.byId(id);
+
+        if (vehicle == null)
+            throw new NotFoundException("No vehicle with the given id was found.");
+
+        vehicle = vehicleBuilder.merge(vehicle);
+
+        return vehicle;
+    }
 
     /**
      * Gets the {@link VehicleIcon} as a PNG.

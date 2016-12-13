@@ -22,7 +22,7 @@ public class VehicleDaoImpl extends BaseDaoImpl<Vehicle> implements VehicleDao {
 
     @Override
     public Vehicle byId(long id) {
-        TypedQuery<Vehicle> query = em.createQuery("SELECT v FROM Vehicle v WHERE v.id = :id", Vehicle.class);
+        TypedQuery<Vehicle> query = em.createQuery("SELECT v FROM Vehicle v LEFT JOIN FETCH v.routes WHERE v.id = :id", Vehicle.class);
         query.setParameter("id", id);
         return getFirst(query);
     }
