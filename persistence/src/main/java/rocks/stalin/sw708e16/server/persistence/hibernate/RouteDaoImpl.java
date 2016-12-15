@@ -13,6 +13,7 @@ import rocks.stalin.sw708e16.server.persistence.RouteDao;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Transactional
@@ -123,6 +124,8 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     @Override
     public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius) {
         Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+        if (waypoints.isEmpty())
+            return new ArrayList<Route>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
@@ -145,6 +148,8 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         Driver driver)
     {
         Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+        if (waypoints.isEmpty())
+            return new ArrayList<Route>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
@@ -169,6 +174,8 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         RouteState state)
     {
         Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+        if (waypoints.isEmpty())
+            return new ArrayList<Route>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
@@ -194,6 +201,8 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         RouteState state)
     {
         Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+        if (waypoints.isEmpty())
+            return new ArrayList<Route>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
