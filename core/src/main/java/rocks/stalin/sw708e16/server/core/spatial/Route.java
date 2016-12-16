@@ -21,7 +21,7 @@ public class Route {
 
     @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("timestamp")
-    private List<Waypoint> points = new ArrayList<>();
+    private SortedSet<Waypoint> points;
 
     @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<VehicleData> vehicleData = new HashSet<>();
@@ -42,10 +42,11 @@ public class Route {
 
     protected Route() {
         routeState = RouteState.CREATED;
+        points = Collections.synchronizedSortedSet(new TreeSet<Waypoint>());
     }
 
-    public Route(List<Waypoint> points, Driver driver, Vehicle vehicle) {
-        this.points = points;
+    public Route(Driver driver, Vehicle vehicle) {
+        this();
         this.driver = driver;
         this.vehicle = vehicle;
         this.routeState = this.points.isEmpty() ? RouteState.CREATED : RouteState.ACTIVE;
@@ -61,7 +62,7 @@ public class Route {
     }
 
     @JsonIgnore
-    public List<Waypoint> getWaypoints() {
+    public SortedSet<Waypoint> getWaypoints() {
         return points;
     }
 

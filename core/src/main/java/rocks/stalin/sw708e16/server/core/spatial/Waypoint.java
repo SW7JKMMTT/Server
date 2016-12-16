@@ -13,7 +13,7 @@ import java.util.Date;
 @Spatial
 @Indexed
 @Table(name = "Waypoint")
-public class Waypoint {
+public class Waypoint implements Comparable<Waypoint> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     long id;
@@ -75,5 +75,10 @@ public class Waypoint {
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
+    }
+
+    @Override
+    public int compareTo(Waypoint obj) {
+        return this.getTimestamp().compareTo(obj.getTimestamp());
     }
 }

@@ -4,11 +4,8 @@ import rocks.stalin.sw708e16.server.core.Driver;
 import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.Vehicle;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
-import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.DriverDao;
 import rocks.stalin.sw708e16.server.persistence.VehicleDao;
-
-import java.util.ArrayList;
 
 public class RouteBuilder {
     private Long vehicleid;
@@ -59,7 +56,7 @@ public class RouteBuilder {
         if (driver == null)
             throw new IllegalArgumentException("Driver given was not found.");
 
-        Route route = new Route(new ArrayList<Waypoint>(), driver, vehicle);
+        Route route = new Route(driver, vehicle);
         if (routeState != null)
             route.setRouteState(routeState);
 
