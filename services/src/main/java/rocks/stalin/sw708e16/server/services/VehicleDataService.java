@@ -12,7 +12,7 @@ import rocks.stalin.sw708e16.server.persistence.VehicleDataDao;
 import rocks.stalin.sw708e16.server.services.builders.VehicleDataBuilder;
 
 import javax.ws.rs.*;
-import java.util.Set;
+import java.util.List;
 
 @Transactional
 @Component
@@ -34,8 +34,8 @@ public class VehicleDataService {
     @GET
     @Path("/")
     @Produces("application/json")
-    public Set<VehicleData> getVehicleData() {
-        return route.getVehicleData();
+    public List<VehicleData> getVehicleData() {
+        return vehicleDataDao.byRoute(route);
     }
 
     /**

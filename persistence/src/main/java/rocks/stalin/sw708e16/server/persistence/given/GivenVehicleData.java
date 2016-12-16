@@ -35,7 +35,6 @@ public class GivenVehicleData {
     public VehicleData in(VehicleDataDao vehicleDataDao) {
         VehicleData vehicleData = new VehicleData(route, timestamp, vehicleDataPoints);
         vehicleDataPoints.forEach(vehicleDataPoint -> vehicleDataPoint.setVehicleData(vehicleData));
-        route.addVehicleData(vehicleData);
         vehicleDataDao.add(vehicleData);
         return vehicleData;
     }

@@ -58,7 +58,7 @@ public class WaypointService {
         }
 
         if (maxCount == 0)
-            return route.getWaypoints();
+            return waypointDao.byRoute(route);
 
         return waypointDao.byRoute(route, maxCount);
     }
@@ -83,7 +83,6 @@ public class WaypointService {
         }
 
         Waypoint waypoint = waypointBuilder.build(route);
-        route.addWaypoint(waypoint);
         waypointDao.add(waypoint);
 
         return waypoint;

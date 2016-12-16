@@ -1,5 +1,6 @@
 package rocks.stalin.sw708e16.server.persistence.given;
 
+import rocks.stalin.sw708e16.server.core.RouteState;
 import rocks.stalin.sw708e16.server.core.spatial.Route;
 import rocks.stalin.sw708e16.server.core.spatial.Waypoint;
 import rocks.stalin.sw708e16.server.persistence.WaypointDao;
@@ -38,7 +39,7 @@ public class GivenWaypoint {
     public Waypoint in(WaypointDao waypointDao) {
         Waypoint waypoint = new Waypoint(timestamp, latitude, longitude, route);
         waypointDao.add(waypoint);
-        route.addWaypoint(waypoint);
+        route.setRouteState(RouteState.ACTIVE);
         return waypoint;
     }
 }

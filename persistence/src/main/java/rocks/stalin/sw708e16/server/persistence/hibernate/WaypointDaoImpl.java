@@ -48,6 +48,17 @@ public class WaypointDaoImpl extends BaseDaoImpl<Waypoint> implements WaypointDa
     }
 
     @Override
+    public List<Waypoint> byRoute(Route route) {
+        TypedQuery<Waypoint> query = em.createQuery(
+            "SELECT waypoint " +
+                "FROM Waypoint waypoint " +
+                "WHERE waypoint.route = :route " +
+                "ORDER BY waypoint.timestamp ASC", Waypoint.class);
+        query.setParameter("route", route);
+        return query.getResultList();
+    }
+
+    @Override
     public List<Waypoint> byRoute(Route route, int count) {
         TypedQuery<Waypoint> query = em.createQuery(
             "SELECT waypoint " +

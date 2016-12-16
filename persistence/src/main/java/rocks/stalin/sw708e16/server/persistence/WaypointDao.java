@@ -9,6 +9,8 @@ import java.util.List;
 public interface WaypointDao extends BaseDao<Waypoint> {
     List<Waypoint> withinRadius(Coordinate coordinate, double kilometers);
 
+    List<Waypoint> byRoute(Route route);
+
     List<Waypoint> byRoute(Route route, int count);
 
     List<Waypoint> byRoute_after(Route route, Date timestamp);

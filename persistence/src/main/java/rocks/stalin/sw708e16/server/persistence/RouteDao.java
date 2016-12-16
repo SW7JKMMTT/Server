@@ -15,10 +15,6 @@ public interface RouteDao extends BaseDao<Route> {
 
     Route byId(long id);
 
-    Route byId_ForWaypointService(long id);
-
-    Route byId_ForVehicleDataService(long id);
-
     Collection<Route> getByDriver_ForDisplay(Driver driver);
 
     Collection<Route> getByDriverAndState_ForDisplay(RouteState routeState, Driver driver);

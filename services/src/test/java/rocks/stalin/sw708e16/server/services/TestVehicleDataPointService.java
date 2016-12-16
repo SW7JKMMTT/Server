@@ -21,7 +21,7 @@ import rocks.stalin.sw708e16.server.services.builders.VehicleDataBuilder;
 
 import javax.ws.rs.BadRequestException;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -170,7 +170,7 @@ public class TestVehicleDataPointService {
 
         // Act
         vehicleDataService.setRoute(route);
-        Set<VehicleData> made = vehicleDataService.getVehicleData();
+        List<VehicleData> made = vehicleDataService.getVehicleData();
 
         // Assert
         assertThat(made, notNullValue());

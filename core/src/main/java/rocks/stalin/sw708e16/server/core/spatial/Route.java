@@ -66,10 +66,6 @@ public class Route {
         return points;
     }
 
-    public void addVehicleData(VehicleData vehicleData) {
-        this.vehicleData.add(vehicleData);
-    }
-
     @JsonIgnore
     public Set<VehicleData> getVehicleData() {
         return Collections.unmodifiableSet(vehicleData);

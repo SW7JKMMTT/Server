@@ -43,31 +43,6 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     }
 
     @Override
-    public Route byId_ForWaypointService(long id) {
-        TypedQuery<Route> query = em.createQuery(
-            "SELECT r " +
-                "FROM Route r " +
-                "LEFT JOIN FETCH r.points " +
-                "WHERE r.id = :id",
-            Route.class);
-        query.setParameter("id", id);
-        return getFirst(query);
-    }
-
-    @Override
-    public Route byId_ForVehicleDataService(long id) {
-        TypedQuery<Route> query = em.createQuery(
-            "SELECT r " +
-                "FROM Route r " +
-                "LEFT JOIN FETCH r.vehicleData as vd " +
-                "LEFT JOIN FETCH vd.vehicleDataPoints " +
-                "WHERE r.id = :id",
-            Route.class);
-        query.setParameter("id", id);
-        return getFirst(query);
-    }
-
-    @Override
     public Route byId_ForDisplay(long id) {
         TypedQuery<Route> query = em.createQuery(
             "SELECT r " +

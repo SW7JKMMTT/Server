@@ -41,8 +41,6 @@ public class VehicleDataBuilder {
             point.setVehicleData(vehicleData);
         }
 
-        route.addVehicleData(vehicleData);
-
         return vehicleData;
     }
 }

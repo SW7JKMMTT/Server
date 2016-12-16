@@ -246,7 +246,7 @@ public class RouteService {
     @Path("/{rid}/waypoint/")
     @RolesAllowed({PermissionType.Constants.USER})
     public WaypointService getWaypointService(@PathParam("rid") Long id) {
-        Route found = routeDao.byId_ForWaypointService(id);
+        Route found = routeDao.byId(id);
 
         if(found == null)
             throw new NotFoundException("Route not found with given id");
@@ -266,7 +266,7 @@ public class RouteService {
     @Path("/{rid}/datapoint/")
     @RolesAllowed({PermissionType.Constants.USER})
     public VehicleDataService getVehicleDataService(@PathParam("rid") Long id) {
-        Route found = routeDao.byId_ForVehicleDataService(id);
+        Route found = routeDao.byId(id);
 
         if(found == null)
             throw new NotFoundException("Route not found with given id");
