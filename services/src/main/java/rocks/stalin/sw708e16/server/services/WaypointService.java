@@ -37,7 +37,7 @@ public class WaypointService {
      * Gets all Waypoints for a given route, or a specified number of waypoints.
      *
      * @param maxCount The maximum number of waypoints to return, ordered by timestamp ascending (oldest first).
-     * @param since The earliest time (epoch millis) to include waypoints from (exclusive).
+     * @param after The earliest time (epoch millis) to include waypoints from (exclusive).
      * @return All waypoints in the route.
      */
     @GET
@@ -46,10 +46,10 @@ public class WaypointService {
     @RolesAllowed({PermissionType.Constants.USER})
     public Collection<Waypoint> getWaypoints(
         @DefaultValue("0") @QueryParam("count") int maxCount,
-        @DefaultValue("0") @QueryParam("byRoute_after") long since)
+        @DefaultValue("0") @QueryParam("byRoute_after") long after)
     {
-        if (since != 0) {
-            Date date = new Date(since);
+        if (after != 0) {
+            Date date = new Date(after);
 
             if (maxCount != 0)
                 return waypointDao.byRoute_afterWithMaximum(route, date, maxCount);

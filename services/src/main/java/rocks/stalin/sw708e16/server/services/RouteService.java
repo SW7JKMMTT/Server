@@ -265,7 +265,7 @@ public class RouteService {
      */
     @Path("/{rid}/datapoint/")
     @RolesAllowed({PermissionType.Constants.USER})
-    public VehicleDataService getVehicleDataPointService(@PathParam("rid") Long id) {
+    public VehicleDataService getVehicleDataService(@PathParam("rid") Long id) {
         Route found = routeDao.byId_ForVehicleDataService(id);
 
         if(found == null)
