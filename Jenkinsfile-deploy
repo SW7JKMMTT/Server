@@ -26,7 +26,7 @@ void jboss(args) {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'wildfly',
                 usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             //available as an env variable, but will be masked if you try to print it out any which way
-            sh "/opt/wildfly/bin/jboss-cli.sh --connect --controller=172.25.11.114:9990 --user=$USERNAME --password=$PASSWORD \"${args}\""
+            sh "/opt/wildfly/bin/jboss-cli.sh --connect --controller=172.25.23.247:9990 --user=$USERNAME --password=$PASSWORD \"${args}\""
         }
     } else {
         error("We only have unix support")
