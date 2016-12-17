@@ -34,7 +34,7 @@ public class AcceptedEncodingHackInterceptor implements ContainerRequestFilter {
             if(accept == null)
                 accept = new ArrayList<>(1);
 
-            logger.info("Dumping the Accept-Encoding header, byRoute_after the X-Accept-Encoding is specified");
+            logger.info("Dumping the Accept-Encoding header, since the X-Accept-Encoding is specified");
             if(accept.size() >= 1) {
                 accept.set(0, xAcceptHeader);
             } else {
