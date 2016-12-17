@@ -16,13 +16,13 @@ import java.util.Collection;
 public class VehicleDaoImpl extends BaseDaoImpl<Vehicle> implements VehicleDao {
     @Override
     public Collection<Vehicle> getAll() {
-        TypedQuery<Vehicle> query = em.createQuery("SELECT v FROM Vehicle v LEFT JOIN FETCH v.routes", Vehicle.class);
+        TypedQuery<Vehicle> query = em.createQuery("SELECT DISTINCT v FROM Vehicle v LEFT JOIN FETCH v.routes", Vehicle.class);
         return query.getResultList();
     }
 
     @Override
     public Vehicle byId(long id) {
-        TypedQuery<Vehicle> query = em.createQuery("SELECT v FROM Vehicle v LEFT JOIN FETCH v.routes WHERE v.id = :id", Vehicle.class);
+        TypedQuery<Vehicle> query = em.createQuery("SELECT DISTINCT v FROM Vehicle v LEFT JOIN FETCH v.routes WHERE v.id = :id", Vehicle.class);
         query.setParameter("id", id);
         return getFirst(query);
     }

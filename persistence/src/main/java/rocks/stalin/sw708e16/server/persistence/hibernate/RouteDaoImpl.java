@@ -45,7 +45,7 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     @Override
     public Route byId_ForDisplay(long id) {
         TypedQuery<Route> query = em.createQuery(
-            "SELECT r " +
+            "SELECT DISTINCT r " +
                 "FROM Route r " +
                 "JOIN FETCH r.driver " +
                 "JOIN FETCH r.vehicle " +
@@ -58,7 +58,7 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
     @Override
     public Collection<Route> getByState_ForDisplay(RouteState routeState) {
         TypedQuery<Route> query = em.createQuery(
-            "SELECT r " +
+            "SELECT DISTINCT r " +
                 "FROM Route r " +
                 "JOIN FETCH r.driver " +
                 "JOIN FETCH r.vehicle " +
