@@ -15,6 +15,8 @@ import rocks.stalin.sw708e16.server.persistence.WaypointDao;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Transactional
 @Repository
@@ -96,22 +98,31 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         return query.getResultList();
     }
 
+    private Set<Long> routeIdsWithinRadius(WaypointDao waypointDao, Coordinate coordinate, Double radius) {
+        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
+        return waypoints
+            .stream()
+            .map((points) -> points.getRoute().getId())
+            .distinct()
+            .collect(Collectors.toSet());
+    }
+
     @Override
     public Collection<Route> withinRadius_ForDisplay(WaypointDao waypointDao, Coordinate coordinate, Double radius) {
-        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
-        if (waypoints.isEmpty())
-            return new ArrayList<Route>();
+        Set<Long> routes = routeIdsWithinRadius(waypointDao, coordinate, radius);
+        if (routes.isEmpty())
+            return new ArrayList<>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
                 "FROM Route r " +
-                "JOIN FETCH r.points p " +
+                "JOIN FETCH r.points " +
                 "JOIN FETCH r.vehicle v " +
                 "JOIN FETCH r.driver d " +
-                "WHERE p IN :wayp",
+                "WHERE r.id IN :routes",
             Route.class);
 
-        query.setParameter("wayp", waypoints);
+        query.setParameter("routes", routes);
         return query.getResultList();
     }
 
@@ -122,21 +133,21 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         Double radius,
         Driver driver)
     {
-        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
-        if (waypoints.isEmpty())
-            return new ArrayList<Route>();
+        Set<Long> routes = routeIdsWithinRadius(waypointDao, coordinate, radius);
+        if (routes.isEmpty())
+            return new ArrayList<>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
                 "FROM Route r " +
-                "JOIN FETCH r.points p " +
+                "JOIN FETCH r.points " +
                 "JOIN FETCH r.vehicle v " +
                 "JOIN FETCH r.driver d " +
-                "WHERE p IN :wayp " +
+                "WHERE r.id IN :routes " +
                 "AND d = :driver",
             Route.class);
 
-        query.setParameter("wayp", waypoints);
+        query.setParameter("routes", routes);
         query.setParameter("driver", driver);
         return query.getResultList();
     }
@@ -148,21 +159,21 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         Double radius,
         RouteState state)
     {
-        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
-        if (waypoints.isEmpty())
-            return new ArrayList<Route>();
+        Set<Long> routes = routeIdsWithinRadius(waypointDao, coordinate, radius);
+        if (routes.isEmpty())
+            return new ArrayList<>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
                 "FROM Route r " +
-                "JOIN FETCH r.points p " +
+                "JOIN FETCH r.points " +
                 "JOIN FETCH r.vehicle v " +
                 "JOIN FETCH r.driver d " +
-                "WHERE p IN :wayp " +
+                "WHERE r.id IN :routes " +
                 "AND r.routeState = :state",
             Route.class);
 
-        query.setParameter("wayp", waypoints);
+        query.setParameter("routes", routes);
         query.setParameter("state", state);
         return query.getResultList();
     }
@@ -175,9 +186,9 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
         Driver driver,
         RouteState state)
     {
-        Collection<Waypoint> waypoints = waypointDao.withinRadius(coordinate, radius);
-        if (waypoints.isEmpty())
-            return new ArrayList<Route>();
+        Set<Long> routes = routeIdsWithinRadius(waypointDao, coordinate, radius);
+        if (routes.isEmpty())
+            return new ArrayList<>();
 
         TypedQuery<Route> query = em.createQuery(
             "SELECT DISTINCT r " +
@@ -185,12 +196,12 @@ public class RouteDaoImpl extends BaseDaoImpl<Route> implements RouteDao {
                 "JOIN FETCH r.points p " +
                 "JOIN FETCH r.vehicle v " +
                 "JOIN FETCH r.driver d " +
-                "WHERE p IN :wayp " +
+                "WHERE r.id IN :routes " +
                 "AND d = :driver " +
                 "AND r.routeState = :state",
             Route.class);
 
-        query.setParameter("wayp", waypoints);
+        query.setParameter("routes", routes);
         query.setParameter("driver", driver);
         query.setParameter("state", state);
         return query.getResultList();
