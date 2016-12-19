@@ -118,12 +118,12 @@ public class VehicleService {
             throw new BadRequestException("No Vehicle given.");
         }
 
+        Vehicle vehicle = vehicleDao.byId(id);
+
         // Test to see if Vin is already in database.
-        if (vehicleBuilder.getVin() != null && vehicleDao.byVin(vehicleBuilder.getVin()) != null) {
+        if (vehicleBuilder.getVin() != null && vehicleDao.byVin(vehicleBuilder.getVin()).getId() != vehicle.getId()) {
             throw new ConflictException("A vehicle with that Vin already exists.");
         }
-
-        Vehicle vehicle = vehicleDao.byId(id);
 
         if (vehicle == null)
             throw new NotFoundException("No vehicle with the given id was found.");
